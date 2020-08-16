@@ -8,17 +8,18 @@ import javax.swing.plaf.synth.SynthScrollBarUI;
 
 public class World {
 
+	enum Layers{Floor,Floordecoration,Objects,Effekte}
+	
 	/**
 	 * Weltarray aus Tiles [x][y] layer0
 	 * 1. horizontal (x)
 	 * 2. vertikal (y)
 	 */
-	private ArrayList<ArrayList<Tile>> layer0tiles;
+	private ArrayList<ArrayList<Tile>> world;
 	
-	/**
-	 * Weltarray aus Tiles [x][y] layer1
-	 */
-	private ArrayList<ArrayList<Tile>> layer1tiles;
+	private Integer Whidth = 20;
+	private Integer Height = 20;
+	
 
 	/**
 	 * Listet alle Entitys in dieser Welt auf
@@ -27,8 +28,7 @@ public class World {
 
 	
 	public World() {
-		layer0tiles = getdefaultList(10,10);
-		layer1tiles = getdefaultList(10,10);
+		world = getdefaultList(Whidth,Height);
 		entitylist = new ArrayList<Entity>();
 	}
 	
@@ -37,7 +37,7 @@ public class World {
 		for (int x = 0; x < defaultwhidht; x++) {
 			ArrayList<Tile> temp = new ArrayList<Tile>();
 			for (int y = 0; y < defaultheight; y++) {
-				temp.add(new Tile(new Point(x,y)));
+				temp.add(null);
 			}
 			newList.add(temp);
 		}
