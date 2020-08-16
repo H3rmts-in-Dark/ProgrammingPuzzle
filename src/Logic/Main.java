@@ -1,4 +1,4 @@
-package Logic;
+package logic;
 
 import world.Tile;
 import world.World;
