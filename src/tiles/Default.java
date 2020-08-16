@@ -1,6 +1,6 @@
 package tiles;
 
-import Logic.ImageLoader;
+import logic.ImageLoader;
 import world.Tile;
 import world.World.Layers;
 

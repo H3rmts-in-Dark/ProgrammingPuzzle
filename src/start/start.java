@@ -1,6 +1,6 @@
 package start;
 
-import Logic.Main;
+import logic.Main;
 
 public class start {
 	public static void main(String[] args) {
