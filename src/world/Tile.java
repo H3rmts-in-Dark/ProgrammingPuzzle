@@ -11,6 +11,7 @@ public abstract class Tile {
 	protected Tile(Integer X,Integer Y,Boolean interactable) {
 		this.location = new Point(X,Y);
 		this.interactable = interactable;
+		images = new HashMap<Layers, BufferedImage>();
 	}
 
 	public final Point location;
@@ -34,6 +35,9 @@ public abstract class Tile {
 		return images.get(layer);
 	}
 	
+	public void setImage(Layers layer, BufferedImage image) {
+		this.images.put(layer,image);
+	}
 	public void setPassable(Boolean passable) {
 		this.passable = passable;
 	}

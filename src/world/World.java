@@ -2,9 +2,11 @@ package world;
 
 import java.util.ArrayList;
 
+import tiles.Default;
+
 public class World {
 
-	enum Layers{Floor,Floordecoration,Objects,Effekte}
+	public enum Layers{Floor,Floordecoration,Objects,Effekte}
 	
 	private Integer Whidth = 20;
 	private Integer Height = 20;
@@ -29,7 +31,7 @@ public class World {
 		for (int x = 0; x < defaultwhidht; x++) {
 			ArrayList<Tile> temp = new ArrayList<Tile>();
 			for (int y = 0; y < defaultheight; y++) {
-				temp.add(null);
+				temp.add(new Default(x,y));
 			}
 			newList.add(temp);
 		}
