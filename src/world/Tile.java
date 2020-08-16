@@ -3,6 +3,8 @@ package world;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import world.World.Layers;
 
@@ -38,6 +40,10 @@ public abstract class Tile {
 	public void setImage(Layers layer, BufferedImage image) {
 		this.images.put(layer,image);
 	}
+	public void setImage(Map<Layers,BufferedImage> map) {
+		images.putAll(map);
+	}
+	
 	public void setPassable(Boolean passable) {
 		this.passable = passable;
 	}

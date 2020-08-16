@@ -6,7 +6,7 @@ import tiles.Default;
 
 public class World {
 
-	public enum Layers{Floor,Floordecoration,Objects,Effekte}
+	public enum Layers{Floor,Floordecoration,Objects,Effects}
 	
 	private Integer Whidth = 20;
 	private Integer Height = 20;
