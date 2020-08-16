@@ -14,6 +14,8 @@ public class ClassJFrame {
 		frame.setLocationRelativeTo(null);
 		frame.addKeyListener(kl);
 		frame.addMouseListener(ml);
+		
+		frame.setVisible(true);
 	}
 
 	private static java.awt.event.KeyListener kl = new java.awt.event.KeyListener() {
