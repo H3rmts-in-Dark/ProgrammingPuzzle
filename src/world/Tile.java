@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import world.World.Layers;
 

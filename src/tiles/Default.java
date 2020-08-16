@@ -8,8 +8,8 @@ public class Default extends Tile {
 
 	public Default(Integer X,Integer Y) {
 		super(X,Y,false);
-		setImage(Layers.Floor,ImageLoader.loadImage("Default"));
-		setImage(Layers.Objects,ImageLoader.loadImage("Defaultdeco"));
+		setImage(ImageLoader.loadImage("Default",Layers.Floor));
+		setImage(ImageLoader.loadImage("Defaultobjekt",Layers.Objects));
 		setPassable(false);
 	}
 	
