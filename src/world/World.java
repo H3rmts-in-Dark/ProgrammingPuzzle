@@ -1,26 +1,70 @@
 package world;
 
+import java.awt.List;
+import java.awt.Point;
+import java.util.ArrayList;
+
+import javax.swing.plaf.synth.SynthScrollBarUI;
+
 public class World {
 
 	/**
-	 * Weltarray aus Tiles [x][y]
+	 * Weltarray aus Tiles [x][y] layer0
+	 * 1. horizontal (x)
+	 * 2. vertikal (y)
 	 */
-	private Tile[][] world;
+	private ArrayList<ArrayList<Tile>> layer0tiles;
+	
+	/**
+	 * Weltarray aus Tiles [x][y] layer1
+	 */
+	private ArrayList<ArrayList<Tile>> layer1tiles;
 
 	/**
 	 * Listet alle Entitys in dieser Welt auf
 	 */
-	private Entity[] entitylist;
+	private ArrayList<Entity> entitylist;
 
+	
+	public World() {
+		layer0tiles = getdefaultList(10,10);
+		layer1tiles = getdefaultList(10,10);
+		entitylist = new ArrayList<Entity>();
+	}
+	
+	private ArrayList<ArrayList<Tile>> getdefaultList(Integer defaultwhidht,Integer defaultheight) {
+		ArrayList<ArrayList<Tile>> newList = new ArrayList<ArrayList<Tile>>();
+		for (int x = 0; x < defaultwhidht; x++) {
+			ArrayList<Tile> temp = new ArrayList<Tile>();
+			for (int y = 0; y < defaultheight; y++) {
+				temp.add(new Tile(new Point(x,y)));
+			}
+			newList.add(temp);
+		}
+		return newList;
+	}
+	
 	/**
 	 * Setzt das tile an stelle [x][y]
 	 * 
 	 * @param x
 	 * @param y
+	 * @param layer
 	 * @param tile
 	 */
-	public void setTile(int x, int y, Tile tile) {
-		world[x][y] = tile;
+	public void setTile(int x, int y,Integer layer, Tile tile) {
+		switch (layer) {
+		case 0:
+			try {layer0tiles.get(x).set(y,tile);
+			} catch (IndexOutOfBoundsException e) {e.printStackTrace();}
+			break;
+		case 1:
+			layer1tiles.get(x).set(y,tile);
+			break;
+		default:
+			System.out.println(layer + "is not a valid option vor layer");
+			break;
+		}
 	}
 
 	/**
@@ -30,8 +74,21 @@ public class World {
 	 * @param y
 	 * @return Tile
 	 */
-	public Tile getTile(int x, int y) {
-		return world[x][y];
+	public Tile getTile(int x, int y,Integer layer) {
+		switch (layer) {
+		case 0:
+			try {return layer0tiles.get(x).get(y);
+			} catch (IndexOutOfBoundsException e) {e.printStackTrace();}
+			break;
+		case 1:
+			try {return layer0tiles.get(x).get(y);
+			} catch (IndexOutOfBoundsException e) {e.printStackTrace();}
+			break;
+		default:
+			System.out.println(layer + "is not a valid option vor layer");
+			break;
+		}
+		return null;
 	}
 
 	/**

@@ -3,9 +3,7 @@ package start;
 import Logic.Main;
 
 public class start {
-
-	public static void main(String args) {
+	public static void main(String[] args) {
 		new Main();
 	}
-
 }

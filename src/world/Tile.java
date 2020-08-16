@@ -4,25 +4,29 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 public class Tile {
-
+	
+	/**
+	 * Default = black;
+	 *
+	 */
 	public enum Floortype {
-		Factory
+		Factory,Default
 	}
 
 	/**
 	 * Bodentyp
 	 */
-	private Floortype floortype;
+	final private Floortype floortype;
 
 	/**
 	 * Gibt den Punkt des Tiles in der Map an
 	 */
-	private Point location;
+	final private Point location;
 
 	/**
 	 * der Name des Tiles
 	 */
-	private String name;
+	final private String name;
 
 	/**
 	 * Zeigt, ob der Spieler mit diesem Tile interagieren kann
@@ -37,8 +41,23 @@ public class Tile {
 	/**
 	 * das Aussehen des Tiles
 	 */
-	private BufferedImage image;
+	final private BufferedImage image;
 
+	public Tile(String name,BufferedImage image, Floortype floortype, Point location) {
+		this.floortype = floortype;
+		this.location = location;
+		this.name = name;
+		this.image = image;
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Tile(Point location) {
+		this.floortype = Floortype.Default;
+		this.location = location;
+		this.name = "default";
+		this.image = null;
+	}
+	
 	/**
 	 * Gibt den Bodentypen zurück
 	 * 
@@ -48,14 +67,6 @@ public class Tile {
 		return floortype;
 	}
 
-	/**
-	 * Setzt den Punkt des Tiles in der Map
-	 * 
-	 * @param p
-	 */
-	public void setLocation(Point p) {
-		location = p;
-	}
 
 	/**
 	 * Gibt den Punkt des Tiles in der Map zurück
@@ -91,15 +102,6 @@ public class Tile {
 	 */
 	public boolean getPassable() {
 		return passable;
-	}
-
-	/**
-	 * Bild setzen
-	 * 
-	 * @param img
-	 */
-	public void setImage(BufferedImage img) {
-		image = img;
 	}
 
 	/**
