@@ -3,10 +3,14 @@ package world;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-public class Tile {
+public abstract class Tile {
 
 	public enum Floortype {
 		Factory
+	}
+	
+	public Tile (){
+		// TODO Constructor
 	}
 
 	/**
@@ -17,27 +21,21 @@ public class Tile {
 	/**
 	 * Gibt den Punkt des Tiles in der Map an
 	 */
-	private Point location;
+	Point location;
 
-	/**
-	 * der Name des Tiles
-	 */
-	private String name;
+	String name;
 
 	/**
 	 * Zeigt, ob der Spieler mit diesem Tile interagieren kann
 	 */
-	private boolean interactable;
+	boolean interactable;
 
-	/**
-	 * Zeigt, ob der Spieler durch dieses Tile gehen kann
-	 */
-	private boolean passable;
+	boolean passable;
 
 	/**
 	 * das Aussehen des Tiles
 	 */
-	private BufferedImage image;
+	BufferedImage image;
 
 	/**
 	 * Gibt den Bodentypen zurück
@@ -115,12 +113,10 @@ public class Tile {
 	 * Wenn der Spieler versucht mit dem Tile zu interagieren wird diese Methode
 	 * aufgerufen
 	 */
-	public void onInteract() {
-	}
+	public abstract void onInteract();;
 
 	/**
 	 * Wird ausgelöst, wenn der Spieler das Tile betritt
 	 */
-	public void onSteppedUpon() {
-	}
+	public abstract void onSteppedUpon();;
 }

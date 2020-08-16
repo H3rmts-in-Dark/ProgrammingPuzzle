@@ -1,9 +1,8 @@
-package Logic;
+package logic;
 
 public class Main {
-	
-	public Main() {
-		// TODO Auto-generated constructor stubss
+
+	public static void main(String[] args) {
+		frame.ClassJFrame.start();
 	}
-	
 }

@@ -2,7 +2,7 @@ package world;
 
 import java.awt.Point;
 
-public class Entity {
+public abstract class Entity {
 
 	/**
 	 * Die position, an die sich dieses Entity befindet
