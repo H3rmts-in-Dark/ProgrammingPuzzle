@@ -26,18 +26,6 @@ public class World {
 		entitylist = new ArrayList<Entity>();
 	}
 	
-	private ArrayList<ArrayList<Tile>> getdefaultList(Integer defaultwhidht,Integer defaultheight) {
-		ArrayList<ArrayList<Tile>> newList = new ArrayList<ArrayList<Tile>>();
-		for (int x = 0; x < defaultwhidht; x++) {
-			ArrayList<Tile> temp = new ArrayList<Tile>();
-			for (int y = 0; y < defaultheight; y++) {
-				temp.add(new Default(x,y));
-			}
-			newList.add(temp);
-		}
-		return newList;
-	}
-	
 	/**
 	 * Setzt das tile an stelle [x][y]
 	 * 
@@ -87,5 +75,20 @@ public class World {
 	 */
 	public Entity getEntity(Integer index) {
 		return entitylist.get(index);
+	}
+	
+	
+	
+
+	private static ArrayList<ArrayList<Tile>> getdefaultList(Integer defaultwhidht,Integer defaultheight) {
+		ArrayList<ArrayList<Tile>> newList = new ArrayList<ArrayList<Tile>>();
+		for (int x = 0; x < defaultwhidht; x++) {
+			ArrayList<Tile> temp = new ArrayList<Tile>();
+			for (int y = 0; y < defaultheight; y++) {
+				temp.add(new Default(x,y));
+			}
+			newList.add(temp);
+		}
+		return newList;
 	}
 }

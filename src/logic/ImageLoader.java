@@ -23,7 +23,7 @@ public class ImageLoader {
 				temp.put(layer,ImageIO.read(new File("rsc/floordecoration pictures/" + name + ".png")));
 				break;
 			case Objects:
-				temp.put(layer,ImageIO.read(new File("rsc/floor pictures/" + name + ".png")));
+				temp.put(layer,ImageIO.read(new File("rsc/objekt pictures/" + name + ".png")));
 				break;
 			case Effects:
 				temp.put(layer,ImageIO.read(new File("rsc/effects pictures/" + name + ".png")));
