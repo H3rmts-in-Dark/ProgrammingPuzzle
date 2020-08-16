@@ -1,14 +1,13 @@
 package world;
 
-import java.awt.List;
-import java.awt.Point;
 import java.util.ArrayList;
-
-import javax.swing.plaf.synth.SynthScrollBarUI;
 
 public class World {
 
 	enum Layers{Floor,Floordecoration,Objects,Effekte}
+	
+	private Integer Whidth = 20;
+	private Integer Height = 20;
 	
 	/**
 	 * Weltarray aus Tiles [x][y] layer0
@@ -17,13 +16,6 @@ public class World {
 	 */
 	private ArrayList<ArrayList<Tile>> world;
 	
-	private Integer Whidth = 20;
-	private Integer Height = 20;
-	
-
-	/**
-	 * Listet alle Entitys in dieser Welt auf
-	 */
 	private ArrayList<Entity> entitylist;
 
 	
@@ -52,19 +44,8 @@ public class World {
 	 * @param layer
 	 * @param tile
 	 */
-	public void setTile(int x, int y,Integer layer, Tile tile) {
-		switch (layer) {
-		case 0:
-			try {layer0tiles.get(x).set(y,tile);
-			} catch (IndexOutOfBoundsException e) {e.printStackTrace();}
-			break;
-		case 1:
-			layer1tiles.get(x).set(y,tile);
-			break;
-		default:
-			System.out.println(layer + "is not a valid option vor layer");
-			break;
-		}
+	public void setTile(int x, int y, Tile tile) {
+		world.get(x).set(y,tile);
 	}
 
 	/**
@@ -74,21 +55,8 @@ public class World {
 	 * @param y
 	 * @return Tile
 	 */
-	public Tile getTile(int x, int y,Integer layer) {
-		switch (layer) {
-		case 0:
-			try {return layer0tiles.get(x).get(y);
-			} catch (IndexOutOfBoundsException e) {e.printStackTrace();}
-			break;
-		case 1:
-			try {return layer0tiles.get(x).get(y);
-			} catch (IndexOutOfBoundsException e) {e.printStackTrace();}
-			break;
-		default:
-			System.out.println(layer + "is not a valid option vor layer");
-			break;
-		}
-		return null;
+	public Tile getTile(int x, int y) {
+		return world.get(x).get(y);
 	}
 
 	/**
@@ -96,12 +64,8 @@ public class World {
 	 * 
 	 * @param e
 	 */
-	public void addEntity(Entity e) {
-		Entity[] list = new Entity[entitylist.length];
-		for (int i = 0; i < entitylist.length; i++) {
-			list[i] = entitylist[i];
-		}
-		list[list.length - 1] = e;
+	public void addEntity(Entity entity) {
+		entitylist.add(entity);
 	}
 
 	/**
@@ -109,16 +73,8 @@ public class World {
 	 * 
 	 * @param position
 	 */
-	public void removeEntity(int position) {
-		Entity[] list = new Entity[entitylist.length - 2];
-		int a = 0;
-		for (int i = 0; i < position; i++) {
-			list[i] = entitylist[i];
-			a++;
-		}
-		for (int i = a; i < (list.length - a); i++) { // TODO Überprüfen ob das so funktioniert, bin mir nicht sicher
-			list[i] = entitylist[i + 1];
-		}
+	public void removeEntity(Entity entity) {
+		entitylist.remove(entity);
 	}
 
 	/**
@@ -127,10 +83,7 @@ public class World {
 	 * @param position
 	 * @return Entity
 	 */
-	public Entity getEntity(int position) {
-		if (position < entitylist.length)
-			return entitylist[position];
-		else
-			return null;
+	public Entity getEntity(Integer index) {
+		return entitylist.get(index);
 	}
 }

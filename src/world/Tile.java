@@ -13,9 +13,9 @@ public abstract class Tile {
 		this.interactable = interactable;
 	}
 
-	final private Point location;
+	public final Point location;
 
-	final private Boolean interactable;
+	public final Boolean interactable;
 	
 	private Boolean passable;
 	

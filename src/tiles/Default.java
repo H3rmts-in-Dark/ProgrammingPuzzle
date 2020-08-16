@@ -10,13 +10,13 @@ public class Default extends Tile {
 	
 	@Override
 	public void onInteract() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("interacted with default tile on X:"
+				+ location.getX() + " Y:" + location.getY());
 	}
 
 	@Override
 	public void onSteppedUpon() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("stepped on default tile on X:"
+				+ location.getX() + " Y:" + location.getY());
 	}
 }
