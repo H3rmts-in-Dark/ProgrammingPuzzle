@@ -7,10 +7,13 @@ public class ClassJFrame extends JFrame{
 
 	public static int height = 400, width = 600;
 	
-	private JLayeredPane mainmenu;
-	private JLayeredPane pause;
-	private JLayeredPane running;
-	private JLayeredPane programming;
+	private JLayeredPane mainmenu; //mainpane
+	
+	private JLayeredPane level; //mainpane
+	
+	private JLayeredPane pause; //all on level
+	private JLayeredPane running; //all on level
+	private JLayeredPane programming; //all on level
 
 	public ClassJFrame() {
 		super("Programming Puzzle");
@@ -27,41 +30,32 @@ public class ClassJFrame extends JFrame{
 		setVisible(true);
 	}	
 	
-	void loadMainmenu() {
+	void loadMainmenuPane() {
 		mainmenu = new JLayeredPane();
 		mainmenu.setBounds(0,0,width,height);
 		mainmenu.setVisible(false);
 	}
 	
-	void loadpause() {
-		pause = new JLayeredPane();
-		pause.setBounds(0,0,width,height);
-		pause.setVisible(false);
-	}
-	
-	void loadrunning() {
-		running = new JLayeredPane();
-		running.setBounds(0,0,width,height);
-		running.setVisible(false);
-	}
-	
-	void loadprogramming() {
-		programming = new JLayeredPane();
-		programming.setBounds(0,0,width,height);
-		programming.setVisible(false);
-	}
-	
-	
-	public JLayeredPane getMainmenu() {
-		return mainmenu;
-	}
-	public JLayeredPane getPause() {
-		return pause;
-	}
-	public JLayeredPane getRunning() {
-		return running;
-	}
-	public JLayeredPane getProgramming() {
-		return programming;
+	void loadlevelPane() {
+		
+		level = new JLayeredPane();
+		level.setBounds(0,0,width,height);
+		level.setVisible(false);
+		
+			pause = new JLayeredPane();
+			pause.setBounds(0,0,level.getWidth(),level.getHeight());
+			pause.setVisible(false);
+			level.add(pause,JLayeredPane.PALETTE_LAYER);
+			
+			running = new JLayeredPane();
+			running.setBounds(0,0,width,height);
+			running.setVisible(false);
+			level.add(running,JLayeredPane.PALETTE_LAYER);
+			
+			programming = new JLayeredPane();
+			programming.setBounds(0,0,width,height);
+			programming.setVisible(false);
+			level.add(programming,JLayeredPane.PALETTE_LAYER);
+			
 	}
 }

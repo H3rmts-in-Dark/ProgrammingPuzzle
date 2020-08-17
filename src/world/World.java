@@ -2,8 +2,6 @@ package world;
 
 import java.util.ArrayList;
 
-import tiles.Default;
-
 public class World {
 
 	public enum Layers{Floor,Floordecoration,Objects,Effects}

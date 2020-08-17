@@ -27,12 +27,15 @@ public class Statemanager {
 		switch (actualState) {
 		case mainmenu:
 			System.out.println("changed to mainmenu");
+			Main.frame.getMainmenu().setVisible(true);
 			break;
 		case programming:
 			System.out.println("changed to programming");
+			Main.frame.getProgramming().setVisible(true);
 			break;
 		case running:
 			System.out.println("changed to running");
+			Main.frame.getRunning().setVisible(true);
 			break;
 		case pause:
 			System.out.println("changed to pause");
