@@ -15,13 +15,14 @@ public class Statemanager {
 	public States actualState;
 	
 	public Statemanager() {
-		actualState = States.mainmenu;
+		setState(States.mainmenu);
 	}
 	
 	private void stateSwitched() {
-		
-		// TODO switch all off
 		Main.frame.getMainmenu().setVisible(false);
+		Main.frame.getPause().setVisible(false);
+		Main.frame.getRunning().setVisible(false);
+		Main.frame.getProgramming().setVisible(false);
 		
 		switch (actualState) {
 		case mainmenu:
@@ -39,8 +40,8 @@ public class Statemanager {
 		}
 	}
 	
-	public void setState(States actualState) {
-		this.actualState = actualState;
+	public void setState(States newState) {
+		this.actualState = newState;
 		stateSwitched();
 	}
 	public States getState() {
