@@ -8,21 +8,21 @@ public class World {
 
 	public enum Layers{Floor,Floordecoration,Objects,Effects}
 	
-	private Integer Whidth = 20;
-	private Integer Height = 20;
+	private Integer DefaultWhidth = 20;
+	private Integer DefaultHeight = 20;
 	
 	/**
 	 * Weltarray aus Tiles [x][y] layer0
 	 * 1. horizontal (x)
 	 * 2. vertikal (y)
 	 */
-	private ArrayList<ArrayList<Tile>> world;
+	private Tile[][] world;
 	
 	private ArrayList<Entity> entitylist;
 
 	
 	public World() {
-		world = getdefaultList(Whidth,Height);
+		world = new Tile[DefaultWhidth][DefaultHeight];
 		entitylist = new ArrayList<Entity>();
 	}
 	
@@ -35,7 +35,7 @@ public class World {
 	 * @param tile
 	 */
 	public void setTile(int x, int y, Tile tile) {
-		world.get(x).set(y,tile);
+		world[x][y] = tile;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class World {
 	 * @return Tile
 	 */
 	public Tile getTile(int x, int y) {
-		return world.get(x).get(y);
+		return world[x][y];
 	}
 
 	/**
@@ -75,20 +75,5 @@ public class World {
 	 */
 	public Entity getEntity(Integer index) {
 		return entitylist.get(index);
-	}
-	
-	
-	
-
-	private static ArrayList<ArrayList<Tile>> getdefaultList(Integer defaultwhidht,Integer defaultheight) {
-		ArrayList<ArrayList<Tile>> newList = new ArrayList<ArrayList<Tile>>();
-		for (int x = 0; x < defaultwhidht; x++) {
-			ArrayList<Tile> temp = new ArrayList<Tile>();
-			for (int y = 0; y < defaultheight; y++) {
-				temp.add(new Default(x,y));
-			}
-			newList.add(temp);
-		}
-		return newList;
 	}
 }
