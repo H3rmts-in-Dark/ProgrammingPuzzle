@@ -1,6 +1,5 @@
 package logic;
 
-import States.Statemanager;
 import frame.ClassJFrame;
 import world.World;
 
