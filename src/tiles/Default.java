@@ -7,7 +7,7 @@ import world.World.Layers;
 public class Default extends Tile {
 
 	public Default(Integer x, Integer y) {
-		super(x, y, false);
+		super(x, y, false, false, ""); // TODO Need Path
 		setImage(ImageLoader.loadImage("Default", Layers.Floor));
 		setImage(ImageLoader.loadImage("Defaultobjekt", Layers.Objects));
 		setPassable(false);

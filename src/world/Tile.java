@@ -9,10 +9,12 @@ import world.World.Layers;
 
 public abstract class Tile {
 
-	protected Tile(Integer x, Integer y, Boolean interactable) {
+	protected Tile(Integer x, Integer y, Boolean passable, Boolean interactable, String path) {
 		this.location = new Point(x, y);
 		this.interactable = interactable;
+		this.passable = passable;
 		images = new HashMap<Layers, BufferedImage>();
+		// TODO Path ist zur Bildladung da
 	}
 
 	public final Point location;
