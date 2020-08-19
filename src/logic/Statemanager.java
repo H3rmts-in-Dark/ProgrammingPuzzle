@@ -10,15 +10,16 @@ public class Statemanager {
 	 * danach mainmenu
 	 */
 	
-	public States actualState;
+	private States actualState;
 	
 	public Statemanager() {
-		setState(States.mainmenu);
+		actualState = States.mainmenu;
+		//setState(States.mainmenu);
 	}
 	
 	public void setState(States newState) {
 		this.actualState = newState;
-		Main.frame.setState(newState);
+		Main.frame.setState(actualState);
 	}
 	public States getState() {
 		return actualState;

@@ -13,7 +13,7 @@ public class WorldLabel extends JLabel{
 	}
 	
 	@Override
-	public void paintComponents(Graphics g) {
+	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.DARK_GRAY);
 		g2.fillRect(0,0,getWidth(),getHeight());

@@ -1,6 +1,7 @@
 package logic;
 
 import frame.ClassJFrame;
+import logic.Statemanager.States;
 import world.World;
 
 public class Main {
@@ -12,6 +13,7 @@ public class Main {
 	public Main() {
 		statemanager = new Statemanager();
 		frame = new ClassJFrame();
+		statemanager.setState(States.mainmenu);
 		//world = new World();
 	}
 	
