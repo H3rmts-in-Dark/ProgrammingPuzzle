@@ -4,6 +4,7 @@ public class GameTick implements Runnable {
 
 	private static boolean running = false;
 	private static double currentTick = 0;
+	private static double delay = 100; // Wartezeit zwischen Ticks im Millisekunden
 	private static java.util.ArrayList<Task> taskList;
 
 	@Override
@@ -17,7 +18,7 @@ public class GameTick implements Runnable {
 				}
 
 				try {
-					Thread.sleep(100);
+					Thread.sleep(delay);
 				} catch (Exception e) {
 				}
 				currentTick++;
