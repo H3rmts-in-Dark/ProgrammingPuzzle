@@ -1,9 +1,9 @@
 package tiles;
 
-public class Empty extends world.Tile {
+public class Empty extends tiles.Tile {
 
 	public Empty(Integer x, Integer y) {
-		super(x, y, true, false, ""); // TODO Path einfügen
+		super(x, y, true, false); // TODO Path einfügen
 	}
 
 	@Override

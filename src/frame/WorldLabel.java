@@ -6,15 +6,10 @@ import java.awt.Graphics2D;
 
 import javax.swing.JLabel;
 
-@SuppressWarnings("serial")
 public class WorldLabel extends JLabel {
 
 	public WorldLabel() {
-		// draws the world
-		/*
-		 * Sollte das nicht eigentlich unten stehen? Und wofür braucht das überhaupt
-		 * einen Konstruktor wenn da nix drinsteht? -Jan
-		 */
+		
 	}
 
 	@Override
