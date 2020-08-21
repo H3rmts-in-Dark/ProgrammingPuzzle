@@ -40,6 +40,10 @@ public class GameTick implements Runnable {
 	public static double getTick() {
 		return currentTick;
 	}
+	
+	public static double getTickIn(double time) {
+		return currentTick + time;
+	}
 
 	public static void resetTick() {
 		currentTick = 0;
