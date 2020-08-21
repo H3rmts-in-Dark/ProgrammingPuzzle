@@ -1,9 +1,10 @@
 package start;
 
-import logic.Main;
-
 public class start {
+
+	static logic.Main main;
+
 	public static void main(String[] args) {
-		new Main();
+		main = new logic.Main();
 	}
 }

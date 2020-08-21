@@ -2,30 +2,24 @@ package world;
 
 import java.util.ArrayList;
 
-import tiles.Default;
-
 public class World {
 
-	public enum Layers{Floor,Floordecoration,Objects,Effects}
-	
-	private Integer DefaultWhidth = 20;
-	private Integer DefaultHeight = 20;
-	
+	public enum Layers {
+		Floor, Floordecoration, Objects, Effects
+	}
+
 	/**
-	 * Weltarray aus Tiles [x][y] layer0
-	 * 1. horizontal (x)
-	 * 2. vertikal (y)
+	 * Weltarray aus Tiles [x][y] layer0 1. horizontal (x) 2. vertikal (y)
 	 */
 	private Tile[][] world;
-	
+
 	private ArrayList<Entity> entitylist;
 
-	
-	public World() {
-		world = new Tile[DefaultWhidth][DefaultHeight];
+	public World(Integer width, Integer height) {
+		world = new Tile[width][height];
 		entitylist = new ArrayList<Entity>();
 	}
-	
+
 	/**
 	 * Setzt das tile an stelle [x][y]
 	 * 
@@ -34,12 +28,12 @@ public class World {
 	 * @param layer
 	 * @param tile
 	 */
-	public void setTile(int x, int y, Tile tile) {
-		world[x][y] = tile;
+	public void setTile(Tile tile) {
+		world[(int) (tile.getLocation().getX())][(int) (tile.getLocation().getY())] = tile;
 	}
 
 	/**
-	 * gibt das tile an stelle [x][y] zurück
+	 * gibt das Tile an Stelle [x][y] zurück
 	 * 
 	 * @param x
 	 * @param y
@@ -47,6 +41,21 @@ public class World {
 	 */
 	public Tile getTile(int x, int y) {
 		return world[x][y];
+	}
+
+	/**
+	 * Entfernt das Tile an Stelle [x][y] (und ersetzt es durch Default) sowie alle
+	 * auf diesem Feld befindenden Entities
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public void eraseTile(int x, int y) {
+		setTile(new tiles.Default(x, y));
+		for (int i = 0; i < entitylist.size(); i++) {
+			if (entitylist.get(i).getPosition().equals(new java.awt.Point(x, y)))
+				entitylist.remove(i);
+		}
 	}
 
 	/**
@@ -75,5 +84,15 @@ public class World {
 	 */
 	public Entity getEntity(Integer index) {
 		return entitylist.get(index);
+	}
+
+	public Integer searchEntity(Entity e) {
+		Integer i;
+		for (i = 0; i < entitylist.size(); i++) {
+			if (entitylist.get(i) == e) {
+				break;
+			}
+		}
+		return i;
 	}
 }
