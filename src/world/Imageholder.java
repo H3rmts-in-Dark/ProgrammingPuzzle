@@ -28,14 +28,19 @@ public class Imageholder {
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 			System.err.println("problem with " + source.getAbsolutePath());
+			
+			// load missing image
+			try {images.add(ImageIO.read(new File("Missing.png")));
+			} catch (IOException e2) {e2.printStackTrace();}
 		}
-		
-		try {images.add(ImageIO.read(new File("Missing.png")));
-		} catch (IOException e) {e.printStackTrace();}
 	}
 	
 	public BufferedImage getActualImg() {
 		return images.get(actualimage);
+	}
+	
+	public Integer getImageslength() {
+		return images.size();
 	}
 	
 	public void nextImage() {

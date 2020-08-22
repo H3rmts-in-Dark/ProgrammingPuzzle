@@ -64,7 +64,7 @@ public class ClassJFrame extends JFrame{
 			mainmenustartButton.setBounds((mainmenupane.getWidth() / 2) - 50,(mainmenupane.getHeight() / 2) - 25,100,50);
 			mainmenupane.add(mainmenustartButton,JLayeredPane.PALETTE_LAYER);
 		
-		add(mainmenupane);
+		getContentPane().add(mainmenupane);
 	}
 	
 	void loadlevelPane() {
@@ -93,7 +93,7 @@ public class ClassJFrame extends JFrame{
 			levelpane.add(programming,JLayeredPane.PALETTE_LAYER);
 			
 		
-		add(levelpane);
+		getContentPane().add(levelpane);
 	}
 	
 	public void setState(States newstate) {

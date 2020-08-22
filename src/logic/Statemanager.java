@@ -14,11 +14,10 @@ public class Statemanager {
 	
 	public Statemanager() {
 		actualState = States.mainmenu;
-		//setState(States.mainmenu);
 	}
 	
 	public void setState(States newState) {
-		this.actualState = newState;
+		actualState = newState;
 		Main.frame.setState(actualState);
 	}
 	public States getState() {
