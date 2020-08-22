@@ -2,17 +2,16 @@ package logic;
 
 public abstract class Task {
 
-	private final double runTick;
+	private final Double runTick;
 
-	protected Task(double timeDifference) {
-		runTick = GameTick.getTick() + timeDifference;
+	protected Task(Double timeDifference) {
+		runTick = Main.gameTicker.getTick() + timeDifference;
 	}
 
-	public boolean doRun(double tick) {
-		if (tick == runTick)
+	public boolean doRun(Double tick) {
+		if (tick >= runTick)
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	public abstract void runCode();

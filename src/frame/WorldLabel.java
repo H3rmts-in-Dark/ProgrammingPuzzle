@@ -6,23 +6,44 @@ import java.awt.Graphics2D;
 
 import javax.swing.JLabel;
 
-@SuppressWarnings("serial")
+import logic.Main;
+import world.World;
+
 public class WorldLabel extends JLabel {
 
-	public WorldLabel() {
-		// draws the world
-		/*
-		 * Sollte das nicht eigentlich unten stehen? Und wofür braucht das überhaupt
-		 * einen Konstruktor wenn da nix drinsteht? -Jan
-		 */
-	}
-
 	@Override
-	public void paintComponents(Graphics g) {
+	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-
 		g2.setColor(Color.DARK_GRAY);
 		g2.fillRect(0, 0, getWidth(), getHeight());
+		
+		for (int x = 0; x < Main.world.getWidth(); x++) {
+			for (int y = 0; y < Main.world.getHeight(); y++) {
+				Main.world.getTile(x, y).draw(g2, World.Layers.Floor);
+			}
+		}
+
+		for (int x = 0; x < Main.world.getWidth(); x++) {
+			for (int y = 0; y < Main.world.getHeight(); y++) {
+				Main.world.getTile(x, y).draw(g2, World.Layers.Floordecoration);
+			}
+		}
+
+		for (int x = 0; x < Main.world.getWidth(); x++) {
+			for (int y = 0; y < Main.world.getHeight(); y++) {
+				Main.world.getTile(x, y).draw(g2, World.Layers.Objects);
+			}
+		}
+
+		for (int i = 0; i < Main.world.getEntitylistLength(); i++) {
+			Main.world.getEntity(i).draw(g2);
+		}
+
+		for (int x = 0; x < Main.world.getWidth(); x++) {
+			for (int y = 0; y < Main.world.getHeight(); y++) {
+				Main.world.getTile(x, y).draw(g2, World.Layers.Effects);
+			}
+		}
 	}
 
 }

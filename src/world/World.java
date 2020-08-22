@@ -1,6 +1,10 @@
 package world;
 
+import java.awt.Point;
 import java.util.ArrayList;
+
+import logic.Main;
+import tiles.Default;
 
 public class World {
 
@@ -20,79 +24,74 @@ public class World {
 		entitylist = new ArrayList<Entity>();
 	}
 
-	/**
-	 * Setzt das tile an stelle [x][y]
-	 * 
-	 * @param x
-	 * @param y
-	 * @param layer
-	 * @param tile
-	 */
-	public void setTile(Tile tile) {
-		world[(int) (tile.getLocation().getX())][(int) (tile.getLocation().getY())] = tile;
+	public void setTile(Integer x,Integer y,Tile tile) {
+		world[x][y] = tile;
 	}
 
-	/**
-	 * gibt das Tile an Stelle [x][y] zurück
-	 * 
-	 * @param x
-	 * @param y
-	 * @return Tile
-	 */
 	public Tile getTile(int x, int y) {
 		return world[x][y];
 	}
 
 	/**
 	 * Entfernt das Tile an Stelle [x][y] (und ersetzt es durch Default) sowie alle
-	 * auf diesem Feld befindenden Entities
-	 * 
-	 * @param x
-	 * @param y
+	 * auf diesem Feld befindenden Entitiess
 	 */
 	public void eraseTile(int x, int y) {
-		setTile(new tiles.Default(x, y));
-		for (int i = 0; i < entitylist.size(); i++) {
-			if (entitylist.get(i).getPosition().equals(new java.awt.Point(x, y)))
-				entitylist.remove(i);
+		setTile(x,y,new Default());
+		for (Entity entity : entitylist) {
+			if (entity.getPosition().equals(new Point(x,y)))
+				entitylist.remove(entity);
 		}
 	}
+	
+	public Point getTilePoint(Tile tile) {
+		Integer x = -1, y = -1;
+		for (int x1 = 0; x1 < getWidth(); x1++) {
+			for (int y1 = 0; y1 < getHeight(); y1++) {
+				if (world[x1][y1].equals(tile)) {
+					x = x1;
+					y = y1;
+					return new Point(x,y);
+				}
+			}
+		}
+		return new Point(x,y);
+	}
 
-	/**
-	 * Fügt Entity e am ende der entitylist an
-	 * 
-	 * @param e
-	 */
 	public void addEntity(Entity entity) {
 		entitylist.add(entity);
 	}
 
-	/**
-	 * Entfernt das Entity an position im Array entitylist
-	 * 
-	 * @param position
-	 */
 	public void removeEntity(Entity entity) {
 		entitylist.remove(entity);
 	}
 
-	/**
-	 * Gibt das Entity an position zurück
-	 * 
-	 * @param position
-	 * @return Entity
-	 */
 	public Entity getEntity(Integer index) {
 		return entitylist.get(index);
 	}
 
-	public Integer searchEntity(Entity e) {
-		Integer i;
-		for (i = 0; i < entitylist.size(); i++) {
-			if (entitylist.get(i) == e) {
-				break;
+	public Integer getIndex(Entity e) {
+		return entitylist.lastIndexOf(e);
+	}
+
+	public Integer getWidth() {
+		return world.length;
+	}
+
+	public Integer getHeight() {
+		return world[0].length;
+	}
+
+	public Integer getEntitylistLength() {
+		return entitylist.size();
+	}
+
+	public void fillempty() {
+		for (int x = 0; x < Main.world.getWidth(); x++) {
+			for (int y = 0; y < Main.world.getHeight(); y++) {
+				setTile(x,y,new Default());
 			}
 		}
-		return i;
+		System.out.println("fin");
 	}
 }

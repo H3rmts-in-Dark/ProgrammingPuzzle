@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class GameTick implements Runnable {
 
-	private static Boolean running = false;
-	private static Double currentTick = 0.0;
-	private static Long delay = (long) 100; // Wartezeit zwischen Ticks im Millisekunden
-	private static ArrayList<Task> taskList;
+	private Boolean running = false;
+	private Double currentTick = 0.0;
+	private Long delay = (long) 100; // Wartezeit zwischen Ticks im Millisekunden
+	private ArrayList<Task> taskList;
 
 	@Override
 	public void run() {
@@ -32,27 +32,27 @@ public class GameTick implements Runnable {
 		}
 	}
 
-	public static boolean isRunning() {
+	public boolean isRunning() {
 		return running;
 	}
 
-	public static void setRunning(boolean running) {
-		GameTick.running = running;
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 
-	public static double getTick() {
+	public double getTick() {
 		return currentTick;
 	}
 	
-	public static double getTickIn(double time) {
+	public double getTickIn(Double time) {
 		return currentTick + time;
 	}
 
-	public static void resetTick() {
+	public void resetTick() {
 		currentTick = 0.0;
 	}
 
-	public static void addTask(Task task) {
+	public void addTask(Task task) {
 		taskList.add(task);
 	}
 }

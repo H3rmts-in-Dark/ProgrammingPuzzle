@@ -1,18 +1,27 @@
 package logic;
 
-import frame.ClassJFrame;
+import frame.JFrame;
+import logic.Statemanager.States;
 import world.World;
 
 public class Main {
 
-	public static Statemanager stateManager;
+	public static Statemanager statemanager;
 	public static World world;
-	public static ClassJFrame gameFrame;
-
+	public static JFrame frame;
+	public static GameTick gameTicker;
+	
+	public static Integer tilewitdh = 64;
+	
 	public Main() {
-		stateManager = new Statemanager();
-		gameFrame = new ClassJFrame();
-		// world = new World();
+		statemanager = new Statemanager();
+		gameTicker = new GameTick();
+		
+		frame = new JFrame();
+		statemanager.setState(States.mainmenu);
+		
+		world = new World(10,10);
+		world.fillempty();
 	}
 
 }
