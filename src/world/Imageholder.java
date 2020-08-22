@@ -26,7 +26,7 @@ public class Imageholder {
 				images.add(ImageIO.read(new File(source.getPath() + ".png")));
 			}
 		} catch (IOException e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 			System.err.println("problem with " + source.getAbsolutePath());
 			
 			// load missing image
