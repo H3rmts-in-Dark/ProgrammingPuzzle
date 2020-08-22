@@ -44,7 +44,7 @@ public class GameTick implements Runnable {
 		return currentTick;
 	}
 	
-	public double getTickIn(double time) {
+	public double getTickIn(Double time) {
 		return currentTick + time;
 	}
 

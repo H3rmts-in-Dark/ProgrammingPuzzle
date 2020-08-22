@@ -4,16 +4,17 @@ import java.awt.Point;
 
 import logic.Main;
 import logic.Task;
-import tiles.Tile;
+import world.Tile;
 
 public class ChangeTile extends Task {
 
-	private Tile newTile;
-	private Point point;
+	final private Tile newTile;
+	final private Point point;
 
-	protected ChangeTile(Double timeDifference,Tile tile,Point pos) {
+	protected ChangeTile(Double timeDifference,Tile tile,Point point) {
 		super(timeDifference);
 		newTile = tile;
+		this.point = point;
 	}
 
 	@Override

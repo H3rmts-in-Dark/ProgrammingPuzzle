@@ -1,17 +1,17 @@
-package tiles;
+package world;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-import world.Imageholder;
-import world.World;
+import logic.Main;
 import world.World.Layers;
 
 public abstract class Tile {
-
-	public final Point location;
 
 	public final Boolean interactable;
 
@@ -19,19 +19,14 @@ public abstract class Tile {
 
 	private HashMap<Layers,Imageholder> images;
 
-	protected Tile(Integer x, Integer y, Boolean passable, Boolean interactable) {
-		this.location = new Point(x, y);
+	protected Tile(Boolean passable, Boolean interactable) {
 		this.interactable = interactable;
 		this.passable = passable;
 		images = new HashMap<Layers,Imageholder>();
 	}
 
 	public boolean hasLayer(World.Layers layer) {
-		return !images.get(layer).equals(null);
-	}
-
-	public Point getLocation() {
-		return location;
+		return !(images.get(layer) == null);
 	}
 
 	public Boolean getInteractable() {
@@ -58,6 +53,10 @@ public abstract class Tile {
 		this.passable = passable;
 	}
 	
+	public Point getPosition() {
+		return Main.world.getTilePoint(this);
+	}
+	
 	/**
 	 * Wenn der Spieler mit dem Tile zu interagiert wird diese Methode aufgerufen
 	 */
@@ -67,4 +66,15 @@ public abstract class Tile {
 	 * Wird ausgelöst, wenn der Spieler das Tile betritt
 	 */
 	public abstract void onSteppedUpon();
+
+	public void draw(Graphics2D g2, Layers layer) {
+		if (hasLayer(layer)) {
+			g2.drawImage(getImage(layer),(int)(getPosition().getX() * Main.tilewitdh),(int)(getPosition().getY() * Main.tilewitdh),Main.tilewitdh,Main.tilewitdh,null);
+			
+			g2.setStroke(new BasicStroke(2));
+			g2.setColor(Color.CYAN);
+			g2.drawRect((int)(getPosition().getX() * Main.tilewitdh),(int)(getPosition().getY() * Main.tilewitdh),Main.tilewitdh,Main.tilewitdh);
+		}
+	}
+
 }

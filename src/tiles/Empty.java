@@ -1,9 +1,14 @@
 package tiles;
 
-public class Empty extends tiles.Tile {
+import logic.ImageLoader;
+import world.World.Layers;
+
+public class Empty extends world.Tile {
 
 	public Empty(Integer x, Integer y) {
-		super(x, y, true, false); // TODO Path einfügen
+		super(true, false);
+		setPassable(true);
+		addImage(ImageLoader.loadImage("Missing",Layers.Floor));
 	}
 
 	@Override
