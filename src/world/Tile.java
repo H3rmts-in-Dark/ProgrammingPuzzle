@@ -1,12 +1,10 @@
-package tiles;
+package world;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-import world.Imageholder;
-import world.World;
 import world.World.Layers;
 
 public abstract class Tile {

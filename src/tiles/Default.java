@@ -1,6 +1,7 @@
 package tiles;
 
 import logic.ImageLoader;
+import world.Tile;
 import world.World.Layers;
 
 public class Default extends Tile {

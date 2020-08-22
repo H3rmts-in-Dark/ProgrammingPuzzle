@@ -1,6 +1,6 @@
 package tiles;
 
-public class Empty extends tiles.Tile {
+public class Empty extends world.Tile {
 
 	public Empty(Integer x, Integer y) {
 		super(x, y, true, false); // TODO Path einfügen

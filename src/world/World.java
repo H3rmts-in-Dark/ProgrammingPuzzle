@@ -2,8 +2,6 @@ package world;
 
 import java.util.ArrayList;
 
-import tiles.Tile;
-
 public class World {
 
 	public enum Layers {
@@ -30,8 +28,8 @@ public class World {
 	 * @param layer
 	 * @param tile
 	 */
-	public void setTile(int x, int y, Tile tile) {
-		world[x][y] = tile;
+	public void setTile(Tile tile) {
+		world[(int) (tile.getLocation().getX())][(int) (tile.getLocation().getY())] = tile;
 	}
 
 	/**
@@ -53,7 +51,7 @@ public class World {
 	 * @param y
 	 */
 	public void eraseTile(int x, int y) {
-		setTile(x, y, new tiles.Default(x, y));
+		setTile(new tiles.Default(x, y));
 		for (int i = 0; i < entitylist.size(); i++) {
 			if (entitylist.get(i).getPosition().equals(new java.awt.Point(x, y)))
 				entitylist.remove(i);
