@@ -1,18 +1,23 @@
 package tasks;
 
+import java.awt.Point;
+
 import logic.Main;
+import logic.Task;
+import tiles.Tile;
 
-public class ChangeTile extends logic.Task {
+public class ChangeTile extends Task {
 
-	private world.Tile newTile;
+	private Tile newTile;
+	private Point point;
 
-	protected ChangeTile(double timeDifference, world.Tile tile) {
+	protected ChangeTile(Double timeDifference,Tile tile,Point pos) {
 		super(timeDifference);
 		newTile = tile;
 	}
 
 	@Override
 	public void runCode() {
-		Main.world.setTile(newTile);
+		Main.world.setTile((int)point.getX(),(int)point.getY(),newTile);
 	}
 }
