@@ -20,7 +20,8 @@ public class Entity {
 
 	public void draw(Graphics2D g2) {
 		g2.setColor(Color.BLUE);
-		g2.drawOval((int)(getPosition().getX() * Main.tilewitdh),(int)(getPosition().getY() * Main.tilewitdh),Main.tilewitdh,Main.tilewitdh);
+		g2.drawOval((int) (getPosition().getX() * Main.tilewidth), (int) (getPosition().getY() * Main.tilewidth),
+				Main.tilewidth, Main.tilewidth);
 	}
 
 }

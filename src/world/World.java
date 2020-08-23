@@ -24,7 +24,7 @@ public class World {
 		entitylist = new ArrayList<Entity>();
 	}
 
-	public void setTile(Integer x,Integer y,Tile tile) {
+	public void setTile(Integer x, Integer y, Tile tile) {
 		world[x][y] = tile;
 	}
 
@@ -37,22 +37,22 @@ public class World {
 	 * auf diesem Feld befindenden Entitiess
 	 */
 	public void eraseTile(int x, int y) {
-		setTile(x,y,new Default());
+		setTile(x, y, new Default());
 		for (Entity entity : entitylist) {
-			if (entity.getPosition().equals(new Point(x,y)))
+			if (entity.getPosition().equals(new Point(x, y)))
 				entitylist.remove(entity);
 		}
 	}
-	
+
 	public Point getTilePoint(Tile tile) {
 		for (Integer x = 0; x < getWidth(); x++) {
 			for (Integer y = 0; y < getHeight(); y++) {
 				if (world[x][y].equals(tile)) {
-					return new Point(x,y);
+					return new Point(x, y);
 				}
 			}
 		}
-		return new Point(-1,-1);
+		return new Point(-1, -1);
 	}
 
 	public void addEntity(Entity entity) {
@@ -86,7 +86,7 @@ public class World {
 	public void fillempty() {
 		for (int x = 0; x < Main.world.getWidth(); x++) {
 			for (int y = 0; y < Main.world.getHeight(); y++) {
-				setTile(x,y,new Default());
+				setTile(x, y, new Default());
 			}
 		}
 		System.out.println("finished");

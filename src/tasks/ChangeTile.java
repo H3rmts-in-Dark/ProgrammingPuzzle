@@ -11,14 +11,14 @@ public class ChangeTile extends Task {
 	final private Tile newTile;
 	final private Point point;
 
-	public ChangeTile(Double timeDifference,Tile tile,Point point) {
-		super(timeDifference,false);
+	public ChangeTile(Double timeDifference, Tile tile, Point point) {
+		super(timeDifference, false);
 		newTile = tile;
 		this.point = point;
 	}
 
 	@Override
 	public void runCode() {
-		Main.world.setTile((int)point.getX(),(int)point.getY(),newTile);
+		Main.world.setTile((int) point.getX(), (int) point.getY(), newTile);
 	}
 }
