@@ -11,8 +11,8 @@ public class ChangeTile extends Task {
 	final private Tile newTile;
 	final private Point point;
 
-	public ChangeTile(Double timeDifference,Tile tile,Point point) {
-		super(timeDifference,false);
+	public ChangeTile(Integer tickDifference,Tile tile,Point point) {
+		super(tickDifference,false);
 		newTile = tile;
 		this.point = point;
 	}

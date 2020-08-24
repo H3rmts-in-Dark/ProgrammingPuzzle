@@ -4,12 +4,13 @@ public abstract class Task {
 
 	private Double runTick;
 	private final Boolean Loop;
-	private final Double tickDifference;
+	private final Integer tickDifference;
 
-	protected Task(Double tickDifference,Boolean loop) {
+	protected Task(Integer tickDifference,Boolean loop) {
 		this.tickDifference = tickDifference;
 		this.Loop = loop;
 		setTickDifference();
+		Main.gameTicker.addTask(this);
 	}
 
 	private void setTickDifference() {
@@ -20,7 +21,7 @@ public abstract class Task {
 		//System.out.println("tryed" + tick + "-" + runTick);
 		if (tick >= runTick) {
 			runCode();
-			System.out.println("currenttime:" + System.currentTimeMillis());
+			//System.out.println("currenttime:" + System.currentTimeMillis());
 			if (!Loop)
 				return true;
 			setTickDifference();

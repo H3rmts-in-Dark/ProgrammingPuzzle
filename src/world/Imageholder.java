@@ -19,15 +19,15 @@ public class Imageholder {
 			if (source.exists()) {
 				// directory with many pics (named 1.png ...)
 				for (Integer i = 0; i < source.listFiles().length; i++) {
-					images.add(ImageIO.read(new File(source.getPath() + i.toString() + ".png")));
+					images.add(ImageIO.read(new File(source.getPath() + "/" + i + ".png")));
 				}
 			} else {
 				// single pic
 				images.add(ImageIO.read(new File(source.getPath() + ".png")));
 			}
 		} catch (IOException e) {
-			//e.printStackTrace();
-			System.err.println("problem with " + source.getAbsolutePath());
+			e.printStackTrace();
+			System.err.println("problem with " + source.getAbsolutePath() + "  exists:" + source.exists());
 
 			// load missing image instead
 			try {
@@ -39,7 +39,13 @@ public class Imageholder {
 	}
 
 	public BufferedImage getActualImg() {
-		return images.get(actualimage);
+		try {
+			return images.get(actualimage);
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println("ioobe");
+			System.err.println(images.size() + "-" + actualimage);
+		}
+		return images.get(0);
 	}
 
 	public Integer getImageslength() {
@@ -47,7 +53,7 @@ public class Imageholder {
 	}
 
 	public void nextImage() {
-		if (actualimage < images.size())
+		if (actualimage < images.size()-1)
 			actualimage++;
 		else
 			actualimage = 0;

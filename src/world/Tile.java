@@ -57,15 +57,9 @@ public abstract class Tile {
 		return Main.world.getTilePoint(this);
 	}
 	
-	/**
-	 * Wenn der Spieler mit dem Tile zu interagiert wird diese Methode aufgerufen
-	 */
-	public abstract void onInteract();
-
-	/**
-	 * Wird ausgelöst, wenn der Spieler das Tile betritt
-	 */
-	public abstract void onSteppedUpon();
+	public Imageholder getImageholder(Layers layer) {
+		return images.get(layer);
+	}
 
 	public void draw(Graphics2D g2, Layers layer) {
 		if (hasLayer(layer)) {

@@ -2,7 +2,6 @@ package logic;
 
 import frame.JFrame;
 import logic.Statemanager.States;
-import tasks.ChangeImage;
 import world.World;
 
 public class Main {
@@ -24,8 +23,6 @@ public class Main {
 		
 		world = new World(10,10);
 		world.fillempty();
-		
-		//gameTicker.addTask(new ChangeImage((double) 10,null,true));
 	}
 
 }

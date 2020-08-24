@@ -44,6 +44,7 @@ public class WorldLabel extends JLabel {
 				Main.world.getTile(x, y).draw(g2, World.Layers.Effects);
 			}
 		}
+		repaint();
 	}
 
 }

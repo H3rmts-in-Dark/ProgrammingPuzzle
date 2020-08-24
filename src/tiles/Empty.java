@@ -10,12 +10,4 @@ public class Empty extends world.Tile {
 		setPassable(true);
 		addImage(ImageLoader.loadImage("Missing",Layers.Floor));
 	}
-
-	@Override
-	public void onInteract() {
-	}
-
-	@Override
-	public void onSteppedUpon() {
-	}
 }

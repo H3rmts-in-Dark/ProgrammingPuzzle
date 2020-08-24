@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GameTicker extends Thread {
 
@@ -18,7 +19,8 @@ public class GameTicker extends Thread {
 			
 			Long continueTime = System.currentTimeMillis();
 			
-			for (Task task : taskList) {
+			for (Iterator<Task> iterator = taskList.iterator(); iterator.hasNext();) {
+				Task task = iterator.next();
 				if (task.tryRun(currentTick))
 					taskList.remove(task);
 			}
@@ -29,7 +31,6 @@ public class GameTicker extends Thread {
 			}
 			
 			currentTick++;
-			
 		}
 	}
 
