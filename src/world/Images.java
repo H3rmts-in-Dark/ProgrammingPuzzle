@@ -10,13 +10,9 @@ import javax.imageio.ImageIO;
 
 public class Images {
 	
-	static HashMap<File,BufferedImage> allimages;
+	static HashMap<File,BufferedImage> allimages = new HashMap<File,BufferedImage>();
 
 	private Images() {}
-	
-	static {
-		allimages = new HashMap<File,BufferedImage>();
-	}
 	
 	public static BufferedImage getImage(File file) {
 		if (allimages.get(file) != null)
