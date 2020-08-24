@@ -11,12 +11,16 @@ import world.World;
 
 public class WorldLabel extends JLabel {
 
+	/**
+	 * Zeichnet die ganze Welt indem es Layer für Layer alle übereinanderzeichnet,
+	 * diese Reihenfolge: Floor, Floordecoration, Objects, Entities, Effects
+	 */
 	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.DARK_GRAY);
 		g2.fillRect(0, 0, getWidth(), getHeight());
-		
+
 		for (int x = 0; x < Main.world.getWidth(); x++) {
 			for (int y = 0; y < Main.world.getHeight(); y++) {
 				Main.world.getTile(x, y).draw(g2, World.Layers.Floor);
