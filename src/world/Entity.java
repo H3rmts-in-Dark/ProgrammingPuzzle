@@ -6,7 +6,7 @@ import java.awt.Point;
 
 import logic.Main;
 
-public class Entity {
+public abstract class Entity {
 
 	private Point position;
 
@@ -23,5 +23,7 @@ public class Entity {
 		g2.drawOval((int) (getPosition().getX() * Main.tilewidth), (int) (getPosition().getY() * Main.tilewidth),
 				Main.tilewidth, Main.tilewidth);
 	}
+
+	public abstract void onTick();
 
 }
