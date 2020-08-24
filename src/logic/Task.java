@@ -6,7 +6,7 @@ public abstract class Task {
 	private final Boolean Loop;
 	private final Double tickDifference;
 
-	protected Task(Double tickDifference,Boolean loop) {
+	protected Task(Double tickDifference, Boolean loop) {
 		this.tickDifference = tickDifference;
 		this.Loop = loop;
 		setTickDifference();
@@ -17,7 +17,7 @@ public abstract class Task {
 	}
 
 	public Boolean tryRun(Double tick) {
-		//System.out.println("tryed" + tick + "-" + runTick);
+		// System.out.println("tryed" + tick + "-" + runTick);
 		if (tick >= runTick) {
 			runCode();
 			System.out.println("currenttime:" + System.currentTimeMillis());

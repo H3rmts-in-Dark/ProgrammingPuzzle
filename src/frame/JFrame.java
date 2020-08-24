@@ -7,26 +7,27 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 
-import ListenersandHandlers.MainmenuListener;
+import listenersAndHandlers.MainmenuListener;
 import logic.Statemanager.States;
 
 public class JFrame extends javax.swing.JFrame {
 
 	public static int height = 400, width = 600;
 
-	private JLayeredPane mainMenuPane; // mainpane
+	private JLayeredPane mainMenuPane;
 	private MainMenuBackground mainMenuBackground;
 	public JButton mainMenuStartButton;
 
 	private WorldLabel worldlabel;
-	private JLayeredPane levelpane, pause, running, programming; // mainpane
+	private JLayeredPane levelpane, pause, running, programming;
 
 	public JFrame() {
 		super("ProgrammingPuzzle");
 		setSize(width, height);
 		setLayout(null);
-		setResizable(false); // TODO Die Funktion, dass das Fenster die größe ändern kann, sollte noch
-								// eingefügt werden
+		setResizable(false);
+		// TODO Die Funktion, dass das Fenster die größe ändern kann, sollte noch
+		// eingefügt werden
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		addMouseListener(new MouseListener());
@@ -36,7 +37,7 @@ public class JFrame extends javax.swing.JFrame {
 		loadMainmenuPane();
 
 		setSize(width + 22, height + 45);
-		
+
 		repaint();
 		setVisible(true);
 	}
@@ -69,24 +70,24 @@ public class JFrame extends javax.swing.JFrame {
 		levelpane.setBounds(0, 0, width, height);
 		levelpane.setVisible(false);
 
-			worldlabel = new WorldLabel();
-			worldlabel.setBounds(50, 50, levelpane.getWidth() - 100, levelpane.getHeight() - 100);
-			levelpane.add(worldlabel, JLayeredPane.DEFAULT_LAYER);
-	
-			pause = new JLayeredPane();
-			pause.setBounds(0, 0, levelpane.getWidth(), levelpane.getHeight());
-			pause.setVisible(false);
-			levelpane.add(pause, JLayeredPane.PALETTE_LAYER);
-	
-			running = new JLayeredPane();
-			running.setBounds(0, 0, width, height);
-			running.setVisible(false);
-			levelpane.add(running, JLayeredPane.PALETTE_LAYER);
+		worldlabel = new WorldLabel();
+		worldlabel.setBounds(50, 50, levelpane.getWidth() - 100, levelpane.getHeight() - 100);
+		levelpane.add(worldlabel, JLayeredPane.DEFAULT_LAYER);
 
-			programming = new JLayeredPane();
-			programming.setBounds(0, 0, width, height);
-			programming.setVisible(false);
-			levelpane.add(programming, JLayeredPane.PALETTE_LAYER);
+		pause = new JLayeredPane();
+		pause.setBounds(0, 0, levelpane.getWidth(), levelpane.getHeight());
+		pause.setVisible(false);
+		levelpane.add(pause, JLayeredPane.PALETTE_LAYER);
+
+		running = new JLayeredPane();
+		running.setBounds(0, 0, width, height);
+		running.setVisible(false);
+		levelpane.add(running, JLayeredPane.PALETTE_LAYER);
+
+		programming = new JLayeredPane();
+		programming.setBounds(0, 0, width, height);
+		programming.setVisible(false);
+		levelpane.add(programming, JLayeredPane.PALETTE_LAYER);
 
 		getContentPane().add(levelpane);
 	}

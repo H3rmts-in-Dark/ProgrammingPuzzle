@@ -26,14 +26,12 @@ public class Imageholder {
 				images.add(ImageIO.read(new File(source.getPath() + ".png")));
 			}
 		} catch (IOException e) {
-			//e.printStackTrace();
 			System.err.println("problem with " + source.getAbsolutePath());
-
-			// load missing image instead
 			try {
+				// If no other Image is found, load the Missing Image instead
 				images.add(ImageIO.read(new File("rsc/UI/Missing.png")));
 			} catch (IOException e2) {
-				System.out.println("could not find missing");
+				System.out.println("could not even find Missing.png");
 			}
 		}
 	}

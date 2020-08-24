@@ -8,7 +8,7 @@ public class Empty extends world.Tile {
 	public Empty(Integer x, Integer y) {
 		super(true, false);
 		setPassable(true);
-		addImage(ImageLoader.loadImage("Missing",Layers.Floor));
+		addImage(ImageLoader.loadImage("Missing", Layers.Floor));
 	}
 
 	@Override
