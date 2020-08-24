@@ -27,6 +27,7 @@ public class ImageLoader {
 			break;
 		}
 		temp.put(layer, imageholder);
+
 		return temp;
 	}
 

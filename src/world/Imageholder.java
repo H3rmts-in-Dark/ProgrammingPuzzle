@@ -2,69 +2,51 @@ package world;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 
 public class Imageholder {
 
-	final ArrayList<BufferedImage> images;
-	Integer actualimage;
+	private final ArrayList<File> files;
+	private Integer actualfile;
+	private File source;
 
 	public Imageholder(File source) {
-		images = new ArrayList<BufferedImage>();
-		actualimage = 0;
-		try {
-			if (source.exists()) {
-				// directory with many pics (named 1.png ...)
-				for (Integer i = 0; i < source.listFiles().length; i++) {
-					images.add(ImageIO.read(new File(source.getPath() + "/" + i + ".png")));
-				}
-			} else {
-				// single pic
-				images.add(ImageIO.read(new File(source.getPath() + ".png")));
-			}
-		} catch (IOException e) {
-<<<<<<< HEAD
-			e.printStackTrace();
-			System.err.println("problem with " + source.getAbsolutePath() + "  exists:" + source.exists());
-
-			// load missing image instead
-=======
-			System.err.println("problem with " + source.getAbsolutePath());
->>>>>>> 704ce74452233b45c6ce6e181e249505ac92d1a6
-			try {
-				// If no other Image is found, load the Missing Image instead
-				images.add(ImageIO.read(new File("rsc/UI/Missing.png")));
-			} catch (IOException e2) {
-				System.out.println("could not even find Missing.png");
-			}
-		}
+		files = new ArrayList<File>();
+		actualfile = 0;
+		this.source = source;
+		loadimages();
 	}
-
+	
 	public BufferedImage getActualImg() {
-		try {
-			return images.get(actualimage);
-		} catch (IndexOutOfBoundsException e) {
-			System.err.println("ioobe");
-			System.err.println(images.size() + "-" + actualimage);
-		}
-		return images.get(0);
+		return Images.getImage(files.get(actualfile));
 	}
-
+	
 	public Integer getImageslength() {
-		return images.size();
+		return files.size();
 	}
 
 	public void nextImage() {
-		if (actualimage < images.size()-1)
-			actualimage++;
+		if (actualfile < files.size()-1)
+			actualfile++;
 		else
-			actualimage = 0;
+			actualfile = 0;
 	}
 
 	public int getCurrentImage() {
-		return actualimage;
+		return actualfile;
+	}
+	
+	private void loadimages() {
+		if (source.exists()) {
+			// directory with many pics (named 1.png ...)
+			for (Integer i = 0; i < source.listFiles().length; i++) {
+				files.add(new File(source.getPath() + "/" + i + ".png"));
+			}
+		} else {
+			// single pic
+			System.out.println(System.currentTimeMillis() + "b");
+			files.add(new File(source.getPath() + ".png"));
+			System.out.println(System.currentTimeMillis() + "a");
+		}
 	}
 }

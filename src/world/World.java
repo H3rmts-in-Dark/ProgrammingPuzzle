@@ -2,6 +2,7 @@ package world;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import logic.Main;
 import tiles.Default;
@@ -38,9 +39,11 @@ public class World {
 	 */
 	public void eraseTile(int x, int y) {
 		setTile(x, y, new Default());
-		for (Entity entity : entitylist) {
+		for (Iterator<Entity> iterator = entitylist.iterator(); iterator.hasNext();) {
+			Entity entity = iterator.next();
 			if (entity.getPosition().equals(new Point(x, y)))
 				entitylist.remove(entity);
+			
 		}
 	}
 

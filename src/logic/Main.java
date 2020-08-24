@@ -22,12 +22,9 @@ public class Main {
 		statemanager.setState(States.mainmenu);
 
 		world = new World(10, 10);
+		System.out.println(System.currentTimeMillis());
 		world.fillempty();
-<<<<<<< HEAD
-=======
-
-		// gameTicker.addTask(new tasks.ChangeImage((double) 10, null, true));
->>>>>>> 704ce74452233b45c6ce6e181e249505ac92d1a6
+		System.out.println(System.currentTimeMillis());
 	}
 
 }

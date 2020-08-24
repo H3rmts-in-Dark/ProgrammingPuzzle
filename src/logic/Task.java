@@ -6,11 +6,7 @@ public abstract class Task {
 	private final Boolean Loop;
 	private final Integer tickDifference;
 
-<<<<<<< HEAD
-	protected Task(Integer tickDifference,Boolean loop) {
-=======
-	protected Task(Double tickDifference, Boolean loop) {
->>>>>>> 704ce74452233b45c6ce6e181e249505ac92d1a6
+	protected Task(Integer tickDifference, Boolean loop) {
 		this.tickDifference = tickDifference;
 		this.Loop = loop;
 		setTickDifference();
