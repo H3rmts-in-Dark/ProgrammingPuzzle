@@ -3,18 +3,17 @@ package tasks;
 import logic.Task;
 import world.Imageholder;
 
-public class ChangeImage extends Task {
+public class ChangeImageTask extends Task {
 
 	Imageholder imageholder;
 
-	public ChangeImage(Integer tickDifference,Imageholder imageholder,Boolean loop) {
-		super(tickDifference,loop);
+	public ChangeImageTask(Integer tickDifference,Imageholder imageholder,Boolean loop) {
+		super(tickDifference,loop ? -1:0);
 		this.imageholder = imageholder;
 	}
 
 	@Override
 	public void runCode() {
-		//System.out.println("nxt");
 		imageholder.nextImage();
 	}
 }

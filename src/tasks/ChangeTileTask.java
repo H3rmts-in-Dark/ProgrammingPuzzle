@@ -6,12 +6,13 @@ import logic.Main;
 import logic.Task;
 import world.Tile;
 
-public class ChangeTile extends Task {
+public class ChangeTileTask extends Task {
 
 	final private Tile newTile;
 	final private Point point;
-	public ChangeTile(Integer tickDifference,Tile tile,Point point) {
-		super(tickDifference,false);
+	
+	public ChangeTileTask(Integer tickDifference,Tile tile,Point point) {
+		super(tickDifference);
 		newTile = tile;
 		this.point = point;
 	}

@@ -1,6 +1,6 @@
 package tiles;
 
-import tasks.ChangeImage;
+import tasks.ChangeImageTask;
 import world.Images;
 import world.Tile;
 import world.World.Layers;
@@ -12,7 +12,7 @@ public class Default extends Tile {
 		setPassable(false);
 		addImage(Images.loadImage("Default",Layers.Floor));
 		//addImage(Images.loadImage("Defaultobjekt",Layers.Objects));
-		new ChangeImage(5,getImageholder(Layers.Floor),true);
+		new ChangeImageTask(5,getImageholder(Layers.Floor),true);
 	}
 
 	@Override

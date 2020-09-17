@@ -3,29 +3,44 @@ package logic;
 public abstract class Task {
 
 	private Double runTick;
-	private final Boolean Loop;
+	private Integer Loop;
 	private final Integer tickDifference;
 
-	protected Task(Integer tickDifference, Boolean loop) {
+	protected Task(Integer tickDifference,Integer loop) {
 		this.tickDifference = tickDifference;
 		this.Loop = loop;
-		setTickDifference();
+		updateTickDifference();
+		Main.gameTicker.addTask(this);
+	}
+	
+	protected Task(Integer tickDifference) {
+		this.tickDifference = tickDifference;
+		this.Loop = 0;
+		updateTickDifference();
 		Main.gameTicker.addTask(this);
 	}
 
-	private void setTickDifference() {
+	private void updateTickDifference() {
 		runTick = Main.gameTicker.getTick() + tickDifference;
 	}
 
+	/**
+	 * 
+	 * @param tick
+	 * @return true -) remove
+	 */
 	public Boolean tryRun(Double tick) {
-		// System.out.println("tryed" + tick + "-" + runTick);
 		if (tick >= runTick) {
 			runCode();
-			//System.out.println("currenttime:" + System.currentTimeMillis());
-			if (!Loop)
-				return true;
-			setTickDifference();
-			return false;
+			if (Loop > 0) {
+				updateTickDifference();
+				Loop--;
+				return false;
+			} else if (Loop == -1) {
+				updateTickDifference();
+				return false;
+			}
+			return true;
 		}
 		return false;
 	}

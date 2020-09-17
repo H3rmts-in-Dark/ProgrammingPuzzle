@@ -17,7 +17,7 @@ public class GameTicker extends Thread {
 	@Override
 	public void run() {
 		while (true) {
-			Long continueTime = System.currentTimeMillis();
+			Long lastTicktime = System.currentTimeMillis();
 			
 			for (Iterator<Task> iterator = taskList.iterator(); iterator.hasNext();) {
 				try {
@@ -28,8 +28,16 @@ public class GameTicker extends Thread {
 					e.printStackTrace();
 				}
 			}
-
-			while ((System.currentTimeMillis() - continueTime) <= (1000 / tps)) {
+			currentTick++;
+			
+			/** repaint Frame
+			 */
+			try {Main.frame.repaint();
+			} catch (NullPointerException e) {}
+			
+			/** wait for next tick
+			 */
+			while ((System.currentTimeMillis() - lastTicktime) <= (1000 / tps)) {
 				try {
 					Thread.sleep(0, 1);
 				} catch (InterruptedException e) {
@@ -37,19 +45,20 @@ public class GameTicker extends Thread {
 					Thread.currentThread().interrupt();
 				}
 			}
-			currentTick++;
 		}
 	}
 
-	public double getTick() {
+	public Double getTick() {
 		return currentTick;
 	}
 
-	public double getTickIn(Double time) {
+	@SuppressWarnings("unused")
+	private Double getTickIn(Double time) {
 		return currentTick + time;
 	}
 
-	public void resetTick() {
+	@SuppressWarnings("unused")
+	private void resetTick() {
 		currentTick = 0.0;
 	}
 

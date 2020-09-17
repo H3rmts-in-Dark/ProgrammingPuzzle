@@ -12,7 +12,7 @@ import logic.Statemanager.States;
 
 public class JFrame extends javax.swing.JFrame {
 
-	public static int height = 400, width = 600;
+	public static int height = 600, width = 700;
 
 	private JLayeredPane mainMenuPane;
 	private MainMenuBackground mainMenuBackground;
@@ -30,8 +30,6 @@ public class JFrame extends javax.swing.JFrame {
 		// eingefügt werden
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-		addMouseListener(new MouseListener());
-		addKeyListener(new KeyListener());
 
 		loadlevelPane();
 		loadMainmenuPane();
@@ -71,7 +69,7 @@ public class JFrame extends javax.swing.JFrame {
 		levelpane.setVisible(false);
 
 		worldlabel = new WorldLabel();
-		worldlabel.setBounds(50, 50, levelpane.getWidth() - 100, levelpane.getHeight() - 100);
+		worldlabel.setBounds(20, 20, levelpane.getWidth() - 40, levelpane.getHeight() - 40);
 		levelpane.add(worldlabel, JLayeredPane.DEFAULT_LAYER);
 
 		pause = new JLayeredPane();

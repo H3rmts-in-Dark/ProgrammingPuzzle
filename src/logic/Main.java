@@ -2,6 +2,7 @@ package logic;
 
 import frame.JFrame;
 import logic.Statemanager.States;
+import tiles.Computer;
 import world.World;
 
 public class Main {
@@ -21,9 +22,11 @@ public class Main {
 		frame = new JFrame();
 		statemanager.setState(States.mainmenu);
 
-		world = new World(10, 10);
+		world = new World(10,7);
 		System.out.println(System.currentTimeMillis());
 		world.fillempty();
+		world.setTile(5,3,new Computer());
+		world.setTile(6,3,new Computer());
 		System.out.println(System.currentTimeMillis());
 	}
 

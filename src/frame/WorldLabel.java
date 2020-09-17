@@ -4,16 +4,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import javax.swing.JLabel;
+import javax.swing.JComponent;
 
 import logic.Main;
 import world.World;
 
-public class WorldLabel extends JLabel {
+public class WorldLabel extends JComponent {
 
 	/**
 	 * Zeichnet die ganze Welt indem es Layer für Layer alle übereinanderzeichnet,
 	 * diese Reihenfolge: Floor, Floordecoration, Objects, Entities, Effects
+	 * 
+	 * wird vom gameticker aufgerufen
 	 */
 	@Override
 	public void paint(Graphics g) {
@@ -48,7 +50,5 @@ public class WorldLabel extends JLabel {
 				Main.world.getTile(x, y).draw(g2, World.Layers.Effects);
 			}
 		}
-		repaint();
 	}
-
 }

@@ -1,7 +1,4 @@
-/world/
-/tiles/
 /tasks/
-/logic/
+/tiles/
 /frame/
-/ListenersandHandlers/
-/start/
+/logic/

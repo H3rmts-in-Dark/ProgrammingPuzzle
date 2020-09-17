@@ -17,14 +17,14 @@ public class Images {
 
 	private Images() {}
 	
-	public static BufferedImage getImage(File file) {
-		if (allimages.get(file) != null)
-			return allimages.get(file);
-		BufferedImage newim = null;
-		try {newim = ImageIO.read(file);
+	public static BufferedImage getImage(String path) {
+		if (allimages.get(new File(path)) != null)
+			return allimages.get(new File(path));
+		BufferedImage newimage = null;
+		try {newimage = ImageIO.read(new File(path));
+			allimages.put(new File(path),newimage);
 		} catch (IOException e) {}
-		allimages.put(file,newim);
-		return newim;
+		return newimage;
 	}
 	
 	public static Map<Layers,Imageholder> loadImage(String name, Layers layer) {
