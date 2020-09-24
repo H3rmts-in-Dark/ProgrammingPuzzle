@@ -22,11 +22,11 @@ public class Main {
 		frame = new JFrame();
 		statemanager.setState(States.mainmenu);
 
-		world = new World(10,7);
+		world = new World(10, 7);
 		System.out.println(System.currentTimeMillis());
 		world.fillempty();
-		world.setTile(5,3,new Computer());
-		world.setTile(6,3,new Computer());
+		world.setTile(5, 3, new Computer());
+		world.setTile(6, 3, new Computer());
 		System.out.println(System.currentTimeMillis());
 	}
 

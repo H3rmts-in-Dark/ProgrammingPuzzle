@@ -1,5 +1,6 @@
 package tiles;
 
+import world.Entity;
 import world.Images;
 import world.Tile;
 import world.World.Layers;
@@ -13,12 +14,10 @@ public class Empty extends Tile {
 	}
 
 	@Override
-	public void onInteract() {
-		
+	public void onInteract(Entity entity) {
 	}
 
 	@Override
-	public void onSteppedUpon() {
-		
+	public void onSteppedUpon(Entity entity) {
 	}
 }

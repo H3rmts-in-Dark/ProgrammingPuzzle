@@ -1,19 +1,22 @@
 package tasks;
 
 import logic.Task;
-import world.Imageholder;
+import world.Tile;
+import world.World.Layers;
 
 public class ChangeImageTask extends Task {
 
-	Imageholder imageholder;
+	Tile tile;
+	Layers layer;
 
-	public ChangeImageTask(Integer tickDifference,Imageholder imageholder,Boolean loop) {
-		super(tickDifference,loop ? -1:0);
-		this.imageholder = imageholder;
+	public ChangeImageTask(Integer tickDifference, Tile tile, Layers layer, Boolean loop) {
+		super(tickDifference, loop ? -1 : 0);
+		this.tile = tile;
+		this.layer = layer;
 	}
 
 	@Override
 	public void runCode() {
-		imageholder.nextImage();
+		tile.nextImage(layer);
 	}
 }
