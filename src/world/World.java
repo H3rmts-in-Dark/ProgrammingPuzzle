@@ -92,6 +92,5 @@ public class World {
 				setTile(x, y, new Default());
 			}
 		}
-		System.out.println("finished");
 	}
 }
