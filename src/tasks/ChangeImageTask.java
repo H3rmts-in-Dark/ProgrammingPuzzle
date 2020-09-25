@@ -6,8 +6,8 @@ import world.World.Layers;
 
 public class ChangeImageTask extends Task {
 
-	Tile tile;
-	Layers layer;
+	final private Tile tile;
+	final private Layers layer;
 
 	public ChangeImageTask(Integer tickDifference, Tile tile, Layers layer, Boolean loop) {
 		super(tickDifference, loop ? -1 : 0);

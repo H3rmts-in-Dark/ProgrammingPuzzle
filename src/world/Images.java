@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
@@ -47,13 +46,5 @@ public class Images {
 		temp.put(layer, imageholder);
 
 		return temp;
-	}
-
-	
-	public static void print() {
-		System.out.println(allimages.size());
-		for (Entry<File, BufferedImage> entry : allimages.entrySet()) {
-			System.out.println(entry.toString());
-		}
 	}
 }

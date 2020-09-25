@@ -28,6 +28,7 @@ public abstract class Tile {
 	protected Tile(Boolean passable, Boolean interactable) {
 		this.interactable = interactable;
 		this.passable = passable;
+		this.description = "default description";
 		images = new HashMap<World.Layers, Imageholder>();
 	}
 
@@ -67,9 +68,13 @@ public abstract class Tile {
 	public Point getPosition() {
 		return Main.world.getTilePoint(this);
 	}
-
-	public Imageholder getImageholder(Layers layer) {
-		return images.get(layer);
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public abstract void onInteract(Entity entity);

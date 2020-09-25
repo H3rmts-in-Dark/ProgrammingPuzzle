@@ -13,6 +13,7 @@ public class Default extends Tile {
 		setPassable(false);
 		addImage(Images.loadImage("Default", Layers.Floor));
 		// addImage(Images.loadImage("Defaultobjekt",Layers.Objects));
+		setDescription("Default Tile (for testing purposes)");
 		new ChangeImageTask(5, this, Layers.Floor, true);
 	}
 

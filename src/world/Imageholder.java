@@ -45,9 +45,7 @@ public class Imageholder {
 			}
 		} else {
 			// single pic
-			System.out.println(System.currentTimeMillis() + "b");
 			paths.add(source.getPath() + ".png");
-			System.out.println(System.currentTimeMillis() + "a");
 		}
 	}
 }

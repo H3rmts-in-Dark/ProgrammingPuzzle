@@ -1,7 +1,6 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 public class GameTicker extends Thread {
@@ -21,13 +20,9 @@ public class GameTicker extends Thread {
 
 			Iterator<Task> iterator = taskList.iterator();
 			while (iterator.hasNext()) {
-				try {
-					Task task = iterator.next();
-					if (task.tryRun(currentTick))
-						taskList.remove(task);
-				} catch (ConcurrentModificationException e) {
-					e.printStackTrace();
-				}
+				Task task = iterator.next();
+				if (task.tryRun(currentTick))
+					iterator.remove();
 			}
 			currentTick++;
 

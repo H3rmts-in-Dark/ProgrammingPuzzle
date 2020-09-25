@@ -12,8 +12,8 @@ import world.World;
 
 public class WorldLabel extends JComponent {
 
-	private float zoom = 1;
-	private boolean redrawRequired = false;
+	private Float zoom = (float) 1;
+	private Boolean redrawRequired = false;
 
 	/**
 	 * Zeichnet die ganze Welt indem es Layer für Layer alle übereinanderzeichnet,
@@ -30,7 +30,7 @@ public class WorldLabel extends JComponent {
 		g2.drawImage(paintWorld(getHeight(), getWidth()), 0, 0, (int) (getWidth() * zoom), (int) (getHeight() * zoom),
 				null);
 
-		redrawRequired = false;
+		this.redrawRequired = false;
 	}
 
 	/**
@@ -83,27 +83,28 @@ public class WorldLabel extends JComponent {
 	}
 
 	/**
-	 * Returns wether a redraw is needed
-	 * 
-	 * @return
+	 * @return wether a redraw is needed
 	 */
 	public boolean needsRedraw() {
 		return redrawRequired;
 	}
-
+	
 	/**
-	 * set Zoom to 1 * zoom
-	 * 
-	 * @param zoom
+	 * rounds imput zoom to 2 decimal digits
+	 * and assigns it to zoom
 	 */
-	public void setZoom(float zoom) {
-		this.zoom = zoom;
+	public void setZoom(Float zoom) {
+		this.zoom = (float) (Math.round(zoom * 100.0) / 100.0);
+	}
+	
+	public Float getZoom() {
+		return zoom;
 	}
 
 	/**
 	 * resets the zoom back to 1
 	 */
 	public void resetZoom() {
-		this.zoom = 1;
+		this.zoom = (float) 1;
 	}
 }
