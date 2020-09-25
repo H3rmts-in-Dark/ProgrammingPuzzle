@@ -1,12 +1,9 @@
 package tiles;
 
-<<<<<<< HEAD
+
 import world.Entity;
 import world.Images;
 import world.Tile;
-=======
-import world.*;
->>>>>>> 34f27f43ef66ee073176b88dfc3a5b60c5bad254
 import world.World.Layers;
 
 public class Empty extends Tile {
@@ -20,17 +17,9 @@ public class Empty extends Tile {
 
 	@Override
 	public void onInteract(Entity entity) {
-<<<<<<< HEAD
-		
-=======
->>>>>>> 34f27f43ef66ee073176b88dfc3a5b60c5bad254
 	}
 
 	@Override
 	public void onSteppedUpon(Entity entity) {
-<<<<<<< HEAD
-		
-=======
->>>>>>> 34f27f43ef66ee073176b88dfc3a5b60c5bad254
 	}
 }
