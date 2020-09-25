@@ -68,7 +68,7 @@ public abstract class Tile {
 	public void draw(Graphics2D g2, World.Layers layer) {
 		if (hasLayer(layer)) {
 			g2.drawImage(getImage(layer), (int) (getPosition().getX() * Main.tilewidth),
-					(int) (getPosition().getY() * Main.tilewidth), Main.tilewidth, Main.tilewidth,null);
+					(int) (getPosition().getY() * Main.tilewidth),null);
 
 			g2.setStroke(new BasicStroke(2));
 			g2.setColor(Color.CYAN);
