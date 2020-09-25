@@ -115,4 +115,8 @@ public class JFrame extends javax.swing.JFrame {
 			break;
 		}
 	}
+
+	public WorldLabel getWorldLabel() {
+		return worldlabel;
+	}
 }

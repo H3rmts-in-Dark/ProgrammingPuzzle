@@ -22,12 +22,27 @@ public class Main {
 		frame = new JFrame();
 		statemanager.setState(States.mainmenu);
 
-		world = new World(10,7);
-		System.out.println(System.currentTimeMillis());
+		world = new World(10, 7);
+		System.out.println("start "+System.currentTimeMillis());
 		world.fillempty();
-		world.setTile(5,3,new Computer());
-		world.setTile(6,3,new Computer());
-		System.out.println(System.currentTimeMillis());
+		world.setTile(5, 3, new Computer());
+		world.setTile(6, 3, new Computer());
+		System.out.println("fin "+System.currentTimeMillis());
+		
+		try {Thread.sleep(2000);
+		} catch (InterruptedException e) {}
+		
+		new Thread() {
+			@Override
+			public void run() {
+				while (true) {
+					try {Thread.sleep(400);
+					} catch (InterruptedException e) {}
+					frame.getWorldLabel().setZoom((frame.getWorldLabel().getZoom() + (float) 0.02));
+					System.out.println("add" + frame.getWorldLabel().getZoom());
+				}
+			};
+		}.start();
 	}
 
 }

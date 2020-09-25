@@ -1,7 +1,6 @@
 package tiles;
 
-import world.Images;
-import world.Tile;
+import world.*;
 import world.World.Layers;
 
 public class Empty extends Tile {
@@ -9,16 +8,15 @@ public class Empty extends Tile {
 	public Empty(Integer x, Integer y) {
 		super(true, false);
 		setPassable(true);
+		setDescription("");  //no description should be shown if clicked on tile
 		addImage(Images.loadImage("Missing", Layers.Floor));
 	}
 
 	@Override
-	public void onInteract() {
-		
+	public void onInteract(Entity entity) {
 	}
 
 	@Override
-	public void onSteppedUpon() {
-		
+	public void onSteppedUpon(Entity entity) {
 	}
 }
