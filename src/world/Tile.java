@@ -61,9 +61,9 @@ public abstract class Tile {
 		return images.get(layer);
 	}
 
-	public abstract void onInteract();
+	public abstract void onInteract(Entity entity);
 
-	public abstract void onSteppedUpon();
+	public abstract void onSteppedUpon(Entity entity);
 
 	public void draw(Graphics2D g2, World.Layers layer) {
 		if (hasLayer(layer)) {
