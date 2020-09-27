@@ -11,7 +11,7 @@ public class Computer extends Tile {
 		super(false, false);
 		addImage(Images.loadImage("Default", Layers.Floor));
 		addImage(Images.loadImage("Computer", Layers.Objects));
-		setDescription("Computer tile that gives you some information when interacted");
+		setDescription("Computer tile that gives you some information when interacted with");
 	}
 
 	@Override

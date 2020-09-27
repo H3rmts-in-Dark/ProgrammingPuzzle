@@ -4,13 +4,13 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import frame.WorldLabel;
+import frame.WorldWindow;
 import logic.Main;
 import tiles.Default;
 
 public class World {
 	
-	private WorldLabel worldLabel;
+	private WorldWindow worldLabel;
 
 	public enum Layers {Floor, Floordecoration, Objects, Entitys, Effects}
 
@@ -26,7 +26,7 @@ public class World {
 		entitylist = new ArrayList<>();
 		fillempty();
 		
-		worldLabel = new WorldLabel(this);
+		worldLabel = new WorldWindow(this);
 		Main.frame.addWindow(worldLabel);
 	}
 

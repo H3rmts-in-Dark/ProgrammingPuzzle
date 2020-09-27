@@ -89,7 +89,7 @@ public class JFrame extends javax.swing.JFrame {
 			mainMenuPane.setVisible(true);
 			break;
 		case programming: case running: case pause:
-			getGraphicsConfiguration().getDevice().setFullScreenWindow(this);
+			//getGraphicsConfiguration().getDevice().setFullScreenWindow(this);
 			levelpane.setSize(getGraphicsConfiguration().getDevice().getDisplayMode().getWidth(),getGraphicsConfiguration().getDevice().getDisplayMode().getHeight());
 			levelpane.setVisible(true);
 			break;

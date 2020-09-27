@@ -38,7 +38,6 @@ public abstract class CustomWindow extends JComponent {
 
 	public CustomWindow(Integer defaultWidht, Integer defaultHeight, Point defaultPosition) {
 		setLocation(defaultPosition);
-		
 		setSize(Main.frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht : Main.frame.getWidth() - defaultPosition.x * 2,
 				Main.frame.getHeight() > defaultHeight + defaultPosition.getY() ? defaultHeight : Main.frame.getHeight() - defaultPosition.y * 2);
 		
@@ -70,6 +69,11 @@ public abstract class CustomWindow extends JComponent {
 		g2.setColor(Color.BLACK);
 		g2.drawRoundRect(2, 2, getWidth() - 4, getHeight() - 4, 9, 9);
 		g2.drawRoundRect(8, 20, getWidth() - 16, getHeight() - 28, 9, 9);
+	}
+	
+	BufferedImage getEmptyImage() {
+		BufferedImage image = new BufferedImage(getWidth() - 18, getHeight() - 30, BufferedImage.TYPE_INT_RGB);
+		return image;
 	}
 
 	private BufferedImage getnullimage() {

@@ -9,7 +9,7 @@ import world.Tile;
 import world.World;
 import world.World.Layers;
 
-public class WorldLabel extends CustomWindow {
+public class WorldWindow extends CustomWindow {
 
 	private Float zoom = 1f;
 	private static Integer tilewidth = 64;
@@ -20,7 +20,7 @@ public class WorldLabel extends CustomWindow {
 	 * calles by World
 	 * @param world this
 	 */
-	public WorldLabel(World world) {
+	public WorldWindow(World world) {
 		super(world.getWidth()*tilewidth+18,world.getHeight()*tilewidth+30);
 		this.world = world;
 	}

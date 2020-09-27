@@ -3,6 +3,7 @@ package logic;
 import java.awt.Point;
 
 import entitys.Box;
+import frame.DescriptionWindow;
 import frame.JFrame;
 import logic.Statemanager.States;
 import tiles.Computer;
@@ -28,5 +29,7 @@ public class Main {
 		world.setTile(2, 3, new Computer());
 		world.setTile(1, 3, new Computer());
 		world.addEntity(new Box(new Point(5,6)));
+		
+		frame.addWindow(new DescriptionWindow(world.getTile(2,3)));
 	}
 }
