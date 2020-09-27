@@ -9,7 +9,6 @@ public class Computer extends Tile {
 
 	public Computer() {
 		super(false, false);
-		setPassable(false);
 		addImage(Images.loadImage("Default", Layers.Floor));
 		addImage(Images.loadImage("Computer", Layers.Objects));
 		setDescription("Computer tile that gives you some information when interacted");

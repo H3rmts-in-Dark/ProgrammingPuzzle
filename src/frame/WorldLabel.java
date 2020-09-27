@@ -1,36 +1,43 @@
 package frame;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JComponent;
-
-import logic.Main;
+import world.Entity;
+import world.Tile;
 import world.World;
+import world.World.Layers;
 
-public class WorldLabel extends JComponent {
+public class WorldLabel extends CustomWindow {
 
-	private Float zoom = (float) 1;
-	private Boolean redrawRequired = false;
-
+	private Float zoom = 1f;
+	private static Integer tilewidth = 64;
+	
+	private World world;
+	
 	/**
-	 * Zeichnet die ganze Welt indem es Layer für Layer alle übereinanderzeichnet,
-	 * diese Reihenfolge: Floor, Floordecoration, Objects, Entities, Effects
-	 * 
-	 * wird vom gameticker aufgerufen
+	 * calles by World
+	 * @param world this
 	 */
+	public WorldLabel(World world) {
+		super(world.getWidth()*tilewidth+18,world.getHeight()*tilewidth+30);
+		this.world = world;
+	}
+	
 	@Override
-	public void paint(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(Color.DARK_GRAY);
-		g2.fillRect(0, 0, getWidth(), getHeight());
-
-		g2.drawImage(paintWorld(getHeight(), getWidth()), 0, 0, (int) (getWidth() * zoom), (int) (getHeight() * zoom),
-				null);
-
-		this.redrawRequired = false;
+	BufferedImage draw() {
+		if (world.isEmty()) {
+			return null;
+		}
+		// creates worldimage 
+		BufferedImage image = getWorldimage(); 
+		
+		// rezise Image
+		BufferedImage scaledimage = getBufferedImage(image.getScaledInstance((int) (image.getWidth() * zoom),
+				(int) (image.getHeight() * zoom),Image.SCALE_SMOOTH));
+		
+		return scaledimage;
 	}
 
 	/**
@@ -40,54 +47,50 @@ public class WorldLabel extends JComponent {
 	 * @param width
 	 * @return
 	 */
-	private BufferedImage paintWorld(int height, int width) {
-		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = (Graphics2D) bi.getGraphics();
+	private BufferedImage getWorldimage() {
+		BufferedImage image = new BufferedImage(world.getWidth()*tilewidth,world.getHeight()*tilewidth,
+				BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = (Graphics2D) image.getGraphics();
 
-		for (int x = 0; x < Main.world.getWidth(); x++) {
-			for (int y = 0; y < Main.world.getHeight(); y++) {
-				Main.world.getTile(x, y).draw(g2, World.Layers.Floor);
+		for (int x = 0; x < world.getWidth(); x++) {
+			for (int y = 0; y < world.getHeight(); y++) {
+				Tile temptile = world.getTile(x,y);
+				if (temptile.hasLayer(Layers.Floor)) 
+					g2.drawImage(temptile.getImage(Layers.Floor), temptile.getX() * tilewidth,temptile.getY() * tilewidth,null);
 			}
 		}
 
-		for (int x = 0; x < Main.world.getWidth(); x++) {
-			for (int y = 0; y < Main.world.getHeight(); y++) {
-				Main.world.getTile(x, y).draw(g2, World.Layers.Floordecoration);
+		for (int x = 0; x < world.getWidth(); x++) {
+			for (int y = 0; y < world.getHeight(); y++) {
+				Tile temptile = world.getTile(x,y);
+				if (temptile.hasLayer(Layers.Floordecoration)) 
+					g2.drawImage(temptile.getImage(Layers.Floordecoration), temptile.getX() * tilewidth,temptile.getY() * tilewidth,null);
 			}
 		}
 
-		for (int x = 0; x < Main.world.getWidth(); x++) {
-			for (int y = 0; y < Main.world.getHeight(); y++) {
-				Main.world.getTile(x, y).draw(g2, World.Layers.Objects);
+		for (int x = 0; x < world.getWidth(); x++) {
+			for (int y = 0; y < world.getHeight(); y++) {
+				Tile temptile = world.getTile(x,y);
+				if (temptile.hasLayer(Layers.Objects)) 
+					g2.drawImage(temptile.getImage(Layers.Objects), temptile.getX() * tilewidth,temptile.getY() * tilewidth,null);
 			}
 		}
 
-		for (int i = 0; i < Main.world.getEntitylistLength(); i++) {
-			Main.world.getEntity(i).draw(g2);
+		for (int i = 0; i < world.getEntitylistLength(); i++) {
+			Entity tempentity = world.getEntity(i);
+			g2.drawImage(tempentity.getImage(),tempentity.getX() * tilewidth,tempentity.getY() * tilewidth,null);
 		}
 
-		for (int x = 0; x < Main.world.getWidth(); x++) {
-			for (int y = 0; y < Main.world.getHeight(); y++) {
-				Main.world.getTile(x, y).draw(g2, World.Layers.Effects);
+		for (int x = 0; x < world.getWidth(); x++) {
+			for (int y = 0; y < world.getHeight(); y++) {
+				Tile temptile = world.getTile(x,y);
+				if (temptile.hasLayer(Layers.Effects)) 
+					g2.drawImage(temptile.getImage(Layers.Effects), temptile.getX() * tilewidth,temptile.getY() * tilewidth,null);
 			}
 		}
-
-		return bi;
+		return image;
 	}
 
-	/**
-	 * sets redrawRequired to true
-	 */
-	public void needRedraw() {
-		redrawRequired = true;
-	}
-
-	/**
-	 * @return wether a redraw is needed
-	 */
-	public boolean needsRedraw() {
-		return redrawRequired;
-	}
 	
 	/**
 	 * rounds imput zoom to 2 decimal digits
@@ -105,6 +108,26 @@ public class WorldLabel extends JComponent {
 	 * resets the zoom back to 1
 	 */
 	public void resetZoom() {
-		this.zoom = (float) 1;
+		this.zoom = 1f;
+	}
+	
+	/**
+	 * Converts a given Image into a BufferedImage
+	 *
+	 * @param img The Image to be converted
+	 * @return The converted BufferedImage
+	 */
+	public static BufferedImage getBufferedImage(Image img)
+	{
+	    BufferedImage image = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+	    // Draw the image on to the buffered image
+	    Graphics2D g2 = image.createGraphics();
+	    g2.drawImage(img,0,0,null);
+	    g2.dispose();
+
+	    // Return the buffered image
+	    return image;
 	}
 }
+

@@ -1,35 +1,40 @@
 package world;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import logic.Main;
 import world.World.Layers;
 
 /**
  * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das
  * Objekt sich nicht bewegen können.
  */
-public abstract class Tile {
+public abstract class Tile implements Serializable {
 
-	public final Boolean interactable;
-
+	private Boolean interactable;
 	private Boolean passable;
-
-	private HashMap<World.Layers, Imageholder> images;
-
 	private String description;
-
-	protected Tile(Boolean passable, Boolean interactable) {
+	private HashMap<World.Layers, Imageholder> images;
+	
+	private World world;
+	
+	protected Tile(Boolean passable,Boolean interactable) {
 		this.interactable = interactable;
 		this.passable = passable;
 		this.description = "default description";
-		images = new HashMap<World.Layers, Imageholder>();
+		this.world = null;
+		images = new HashMap<>();
+	}
+	
+	/**
+	 * is calles when added to a world
+	 * @param world
+	 */
+	public void setWorld(World world) {
+		this.world = world;
 	}
 
 	public boolean hasLayer(World.Layers layer) {
@@ -48,17 +53,12 @@ public abstract class Tile {
 		return images.get(layer).getActualImg();
 	}
 
-	public void setImage(World.Layers layer, Imageholder imageholder) {
-		this.images.put(layer, imageholder);
-	}
-
 	public void addImage(Map<World.Layers, Imageholder> map) {
 		images.putAll(map);
 	}
 
 	public void nextImage(Layers layer) {
 		images.get(layer).nextImage();
-		Main.frame.getWorldLabel().needRedraw();
 	}
 
 	public void setPassable(Boolean passable) {
@@ -66,11 +66,22 @@ public abstract class Tile {
 	}
 
 	public Point getPosition() {
-		return Main.world.getTilePoint(this);
+		return world.getTilePoint(this);
+	}
+	
+	public Integer getX() {
+		return (int) getPosition().getX();
+	}
+	public Integer getY() {
+		return (int) getPosition().getY();
 	}
 	
 	public String getDescription() {
 		return description;
+	}
+	
+	public World getWorld() {
+		return world;
 	}
 	
 	public void setDescription(String description) {
@@ -80,15 +91,5 @@ public abstract class Tile {
 	public abstract void onInteract(Entity entity);
 
 	public abstract void onSteppedUpon(Entity entity);
-
-	public void draw(Graphics2D g2, World.Layers layer) {
-		if (hasLayer(layer)) {
-			g2.drawImage(getImage(layer), (int) (getPosition().getX() * Main.tilewidth),(int) (getPosition().getY() * Main.tilewidth),null);
-
-			g2.setStroke(new BasicStroke(2));
-			g2.setColor(Color.CYAN);
-			g2.drawRect((int) (getPosition().getX() * Main.tilewidth), (int) (getPosition().getY() * Main.tilewidth),
-					Main.tilewidth, Main.tilewidth);
-		}
-	}
+	
 }

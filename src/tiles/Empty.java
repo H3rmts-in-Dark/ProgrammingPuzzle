@@ -8,9 +8,8 @@ import world.World.Layers;
 
 public class Empty extends Tile {
 
-	public Empty(Integer x, Integer y) {
+	public Empty() {
 		super(true, false);
-		setPassable(true);
 		setDescription("");  //no description should be shown if clicked on tile
 		addImage(Images.loadImage("Missing", Layers.Floor));
 	}

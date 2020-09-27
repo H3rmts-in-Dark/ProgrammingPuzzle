@@ -12,7 +12,7 @@ import world.World.Layers;
 
 public class Images {
 	
-	static HashMap<File,BufferedImage> allimages = new HashMap<File,BufferedImage>();
+	static HashMap<File,BufferedImage> allimages = new HashMap<>();
 
 	private Images() {}
 	
@@ -27,7 +27,9 @@ public class Images {
 	}
 	
 	public static Map<Layers,Imageholder> loadImage(String name, Layers layer) {
-		Map<Layers,Imageholder> temp = new HashMap<Layers,Imageholder>();
+		if(name.equals(""))
+			return null;
+		Map<Layers,Imageholder> temp = new HashMap<>();
 		Imageholder imageholder = null;
 		switch (layer) {
 		case Floor:
@@ -41,6 +43,9 @@ public class Images {
 			break;
 		case Effects:
 			imageholder = new Imageholder(new File("rsc/effects pictures/" + name));
+			break;
+		case Entitys:
+			imageholder = new Imageholder(new File("rsc/entity pictures/" + name));
 			break;
 		}
 		temp.put(layer, imageholder);

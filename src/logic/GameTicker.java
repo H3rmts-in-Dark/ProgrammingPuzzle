@@ -28,7 +28,7 @@ public class GameTicker extends Thread {
 
 			// Repaints frame if needed
 			try {
-				if (Main.frame.getWorldLabel().needsRedraw())
+				if (true)
 					Main.frame.repaint();
 			} catch (NullPointerException npe) {
 			}

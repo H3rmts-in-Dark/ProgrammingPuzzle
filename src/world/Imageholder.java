@@ -11,7 +11,7 @@ public class Imageholder {
 	private File source;
 
 	public Imageholder(File source) {
-		paths = new ArrayList<String>();
+		paths = new ArrayList<>();
 		actualfile = 0;
 		this.source = source;
 		loadimages();

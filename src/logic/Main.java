@@ -1,5 +1,8 @@
 package logic;
 
+import java.awt.Point;
+
+import entitys.Box;
 import frame.JFrame;
 import logic.Statemanager.States;
 import tiles.Computer;
@@ -8,11 +11,10 @@ import world.World;
 public class Main {
 
 	public static Statemanager statemanager;
-	public static World world;
 	public static JFrame frame;
 	public static GameTicker gameTicker;
-
-	public static Integer tilewidth = 64;
+	
+	private World world;
 
 	public Main() {
 		statemanager = new Statemanager();
@@ -20,29 +22,11 @@ public class Main {
 		gameTicker.start();
 
 		frame = new JFrame();
-		statemanager.setState(States.mainmenu);
+		statemanager.setState(States.programming);
 
-		world = new World(10, 7);
-		System.out.println("start "+System.currentTimeMillis());
-		world.fillempty();
-		world.setTile(5, 3, new Computer());
-		world.setTile(6, 3, new Computer());
-		System.out.println("fin "+System.currentTimeMillis());
-		
-		try {Thread.sleep(2000);
-		} catch (InterruptedException e) {}
-		
-		new Thread() {
-			@Override
-			public void run() {
-				while (true) {
-					try {Thread.sleep(400);
-					} catch (InterruptedException e) {}
-					frame.getWorldLabel().setZoom((frame.getWorldLabel().getZoom() + (float) 0.02));
-					System.out.println("add" + frame.getWorldLabel().getZoom());
-				}
-			};
-		}.start();
+		world = new World(8,8);
+		world.setTile(2, 3, new Computer());
+		world.setTile(1, 3, new Computer());
+		world.addEntity(new Box(new Point(5,6)));
 	}
-
 }
