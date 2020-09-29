@@ -12,12 +12,10 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
-import logic.Main;
-
 public abstract class CustomWindow extends JComponent {
 
-	private Integer scrollbarwidth = 4;
-	private Integer cornerwidht = 6;
+	private static Integer scrollbarwidth = 4;
+	private static Integer cornerwidht = 6;
 	
 	private static Integer defaultX = 40;
 	private static Integer defaultY = 40;
@@ -25,22 +23,28 @@ public abstract class CustomWindow extends JComponent {
 	private static Integer defaultHeight = 100;
 	private static Integer defaultMinWidht = 60;
 	private static Integer defaultMinHeight = 45;
-	private static Integer defaultMaxWidht = Main.frame.getWidth();
-	private static Integer defaultMaxHeight = Main.frame.getHeight();
+	private static Integer defaultMaxWidht = Frame.getWidth();
+	private static Integer defaultMaxHeight = Frame.getHeight();
 	
-	public CustomWindow() {
-		this(defaultWidht,defaultHeight);
+	private String title = "Default";
+	
+	public CustomWindow(String title) {
+		this(defaultWidht,defaultHeight,title);
 	}
 
-	public CustomWindow(Integer defaultWidht, Integer defaultHeight) {
-		this(defaultWidht, defaultHeight, new Point(defaultX,defaultY));
+	public CustomWindow(Integer defaultWidht, Integer defaultHeight,String title) {
+		this(defaultWidht, defaultHeight, new Point(defaultX,defaultY),title);
 	}
 
-	public CustomWindow(Integer defaultWidht, Integer defaultHeight, Point defaultPosition) {
+	public CustomWindow(Integer defaultWidht, Integer defaultHeight, Point defaultPosition,String title) {
 		setLocation(defaultPosition);
-		setSize(Main.frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht : Main.frame.getWidth() - defaultPosition.x * 2,
-				Main.frame.getHeight() > defaultHeight + defaultPosition.getY() ? defaultHeight : Main.frame.getHeight() - defaultPosition.y * 2);
-		
+		setSize(Frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht : Frame.getWidth() - defaultPosition.x * 2,
+				Frame.getHeight() > defaultHeight + defaultPosition.getY() ? defaultHeight : Frame.getHeight() - defaultPosition.y * 2);
+		setTitle(title);
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	@Override
@@ -69,6 +73,9 @@ public abstract class CustomWindow extends JComponent {
 		g2.setColor(Color.BLACK);
 		g2.drawRoundRect(2, 2, getWidth() - 4, getHeight() - 4, 9, 9);
 		g2.drawRoundRect(8, 20, getWidth() - 16, getHeight() - 28, 9, 9);
+		
+		g2.setColor(Color.BLACK);
+		g2.drawString(title,cornerwidht,15);
 	}
 	
 	BufferedImage getEmptyImage() {
@@ -94,9 +101,9 @@ public abstract class CustomWindow extends JComponent {
 		new Thread() {
 			@Override
 			public void run() {
-				switch (Main.frame.getCursor().getType()) {
+				switch (Frame.getFrame().getCursor().getType()) {
 				case Cursor.MOVE_CURSOR:
-					setLocation(e.getLocationOnScreen().x - Main.frame.getX() - pos.x,e.getLocationOnScreen().y - Main.frame.getY() - pos.y);
+					setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - pos.x,e.getLocationOnScreen().y - Frame.getFrame().getY() - pos.y);
 					break;
 				case Cursor.E_RESIZE_CURSOR:
 					setSize(e.getPoint().x-getX(),getHeight());
@@ -105,26 +112,26 @@ public abstract class CustomWindow extends JComponent {
 					setSize(getWidth(),e.getPoint().y-getY());
 					break;
 				case Cursor.N_RESIZE_CURSOR:
-					setLocation(getX(),e.getLocationOnScreen().y - Main.frame.getY() - pos.y);
+					setLocation(getX(),e.getLocationOnScreen().y - Frame.getFrame().getY() - pos.y);
 					setSize(getWidth(),pos2.y - getY());
 					break;
 				case Cursor.W_RESIZE_CURSOR:
-					setLocation(e.getLocationOnScreen().x - Main.frame.getX() - pos.x,getY());
+					setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - pos.x,getY());
 					setSize(pos2.x - getX(),getHeight());
 					break;
 				case Cursor.SE_RESIZE_CURSOR:
 					setSize(e.getPoint().x-getX(),e.getPoint().y-getY());
 					break;
 				case Cursor.SW_RESIZE_CURSOR:
-					setLocation(e.getLocationOnScreen().x - Main.frame.getX() - pos.x,getY());
+					setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - pos.x,getY());
 					setSize(pos2.x - getX(),e.getPoint().y-getY());
 					break;
 				case Cursor.NW_RESIZE_CURSOR:
-					setLocation(e.getLocationOnScreen().x - Main.frame.getX() - pos.x,e.getLocationOnScreen().y - Main.frame.getY() - pos.y);
+					setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - pos.x,e.getLocationOnScreen().y - Frame.getFrame().getY() - pos.y);
 					setSize(pos2.x - getX(),pos2.y - getY());
 					break;
 				case Cursor.NE_RESIZE_CURSOR:
-					setLocation(getX(),e.getLocationOnScreen().y - Main.frame.getY() - pos.y);
+					setLocation(getX(),e.getLocationOnScreen().y - Frame.getFrame().getY() - pos.y);
 					setSize(e.getPoint().x-getX(),pos2.y - getY());
 					break;
 				}
@@ -154,45 +161,45 @@ public abstract class CustomWindow extends JComponent {
 		// edges
 		if (mousePoint.getX() >= 0 && mousePoint.getX() <= scrollbarwidth && mousePoint.getY() < getHeight() - cornerwidht
 				&& mousePoint.getY() > cornerwidht)
-			Main.frame.setCursor(new Cursor(Cursor.W_RESIZE_CURSOR)); // left
+			Frame.getFrame().setCursor(new Cursor(Cursor.W_RESIZE_CURSOR)); // left
 		else if (mousePoint.getX() >= getWidth() - scrollbarwidth && mousePoint.getX() <= getWidth()
 				&& mousePoint.getY() < getHeight() - cornerwidht && mousePoint.getY() > cornerwidht)
-			Main.frame.setCursor(new Cursor(Cursor.E_RESIZE_CURSOR)); // right
+			Frame.getFrame().setCursor(new Cursor(Cursor.E_RESIZE_CURSOR)); // right
 		else if (mousePoint.getX() > cornerwidht && mousePoint.getX() < getWidth() - cornerwidht && mousePoint.getY() <= scrollbarwidth
 				&& mousePoint.getY() >= 0)
-			Main.frame.setCursor(new Cursor(Cursor.N_RESIZE_CURSOR)); // top
+			Frame.getFrame().setCursor(new Cursor(Cursor.N_RESIZE_CURSOR)); // top
 		else if (mousePoint.getX() > cornerwidht && mousePoint.getX() < getWidth() - cornerwidht && mousePoint.getY() <= getHeight()
 				&& mousePoint.getY() >= getHeight() - scrollbarwidth)
-			Main.frame.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR)); // bottom
+			Frame.getFrame().setCursor(new Cursor(Cursor.S_RESIZE_CURSOR)); // bottom
 		// corners
 		else if (mousePoint.getX() >= 0 && mousePoint.getX() <= scrollbarwidth && mousePoint.getY() <= cornerwidht && mousePoint.getY() >= 0)
-			Main.frame.setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top left
+			Frame.getFrame().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top left
 		else if (mousePoint.getX() >= 0 && mousePoint.getX() <= cornerwidht && mousePoint.getY() <= scrollbarwidth && mousePoint.getY() >= 0)
-			Main.frame.setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top top
+			Frame.getFrame().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top top
 		else if (mousePoint.getX() >= getWidth() - cornerwidht && mousePoint.getX() <= getWidth()
 				&& mousePoint.getY() <= scrollbarwidth && mousePoint.getY() >= 0)
-			Main.frame.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top top
+			Frame.getFrame().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top top
 		else if (mousePoint.getX() >= getWidth() - scrollbarwidth && mousePoint.getX() <= getWidth()
 				&& mousePoint.getY() <= cornerwidht && mousePoint.getY() >= 0)
-			Main.frame.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top right
+			Frame.getFrame().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top right
 		else if (mousePoint.getX() >= getWidth() - cornerwidht && mousePoint.getX() <= getWidth()
 				&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - scrollbarwidth)
-			Main.frame.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom bottom
+			Frame.getFrame().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom bottom
 		else if (mousePoint.getX() >= getWidth() - scrollbarwidth && mousePoint.getX() <= getWidth()
 				&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - cornerwidht)
-			Main.frame.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom right
+			Frame.getFrame().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom right
 		else if (mousePoint.getX() >= 0 && mousePoint.getX() <= scrollbarwidth && mousePoint.getY() <= getHeight()
 				&& mousePoint.getY() >= getHeight() - scrollbarwidth)
-			Main.frame.setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom left
+			Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom left
 		else if (mousePoint.getX() >= 0 && mousePoint.getX() <= cornerwidht	&& mousePoint.getY() <= getHeight() 
 				&& mousePoint.getY() >= getHeight() - cornerwidht)
-			Main.frame.setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom bottom
+			Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom bottom
 		// Move
 		else if (mousePoint.getX() > scrollbarwidth && mousePoint.getX() < getWidth() - scrollbarwidth && mousePoint.getY() < 18
 				&& mousePoint.getY() > scrollbarwidth)
-			Main.frame.setCursor(new Cursor(Cursor.MOVE_CURSOR)); // move
+			Frame.getFrame().setCursor(new Cursor(Cursor.MOVE_CURSOR)); // move
 		else
-			Main.frame.setCursor(Cursor.getDefaultCursor());
+			Frame.getFrame().setCursor(Cursor.getDefaultCursor());
 	}
 
 	/**

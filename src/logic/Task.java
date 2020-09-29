@@ -10,18 +10,18 @@ public abstract class Task {
 		this.tickDifference = tickDifference;
 		this.Loop = loop;
 		updateTickDifference();
-		Main.gameTicker.addTask(this);
+		MainControll.gameTicker.addTask(this);
 	}
 	
 	protected Task(Integer tickDifference) {
 		this.tickDifference = tickDifference;
 		this.Loop = 0;
 		updateTickDifference();
-		Main.gameTicker.addTask(this);
+		MainControll.gameTicker.addTask(this);
 	}
 
 	private void updateTickDifference() {
-		runTick = Main.gameTicker.getTick() + tickDifference;
+		runTick = MainControll.gameTicker.getTick() + tickDifference;
 	}
 
 	/**

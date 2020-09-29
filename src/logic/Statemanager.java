@@ -1,5 +1,7 @@
 package logic;
 
+import frame.Frame;
+
 public class Statemanager {
 
 	public enum States {
@@ -19,7 +21,7 @@ public class Statemanager {
 
 	public void setState(States newState) {
 		actualState = newState;
-		Main.frame.setState(actualState);
+		Frame.setState(actualState);
 	}
 
 	public States getState() {

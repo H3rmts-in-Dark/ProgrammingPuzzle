@@ -91,5 +91,9 @@ public abstract class Tile implements Serializable {
 	public abstract void onInteract(Entity entity);
 
 	public abstract void onSteppedUpon(Entity entity);
+
+	public String getName() {
+		return this.getClass().getName().replace("tiles.","");
+	}
 	
 }

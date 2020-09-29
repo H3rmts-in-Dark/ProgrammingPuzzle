@@ -21,7 +21,7 @@ public class WorldWindow extends CustomWindow {
 	 * @param world this
 	 */
 	public WorldWindow(World world) {
-		super(world.getWidth()*tilewidth+18,world.getHeight()*tilewidth+30);
+		super(world.getWidth()*tilewidth+18,world.getHeight()*tilewidth+30,"World");
 		this.world = world;
 	}
 	

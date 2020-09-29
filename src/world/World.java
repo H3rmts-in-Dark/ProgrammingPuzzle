@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import frame.Frame;
 import frame.WorldWindow;
-import logic.Main;
 import tiles.Default;
 
 public class World {
@@ -27,7 +27,7 @@ public class World {
 		fillempty();
 		
 		worldLabel = new WorldWindow(this);
-		Main.frame.addWindow(worldLabel);
+		Frame.addWindow(worldLabel);
 	}
 
 	public void setTile(Integer x, Integer y, Tile tile) {

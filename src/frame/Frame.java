@@ -3,6 +3,7 @@ package frame;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.GraphicsDevice;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,44 +11,51 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import ListenersandHandlers.MainmenuListener;
-import logic.Main;
 import logic.Statemanager.States;
 
-public class JFrame extends javax.swing.JFrame {
-
-	public static int height = 800, width = 900;  // 600 700
-
-	private JLayeredPane mainMenuPane;
-	private MainMenuBackground mainMenuBackground;
-	public JButton mainMenuStartButton;
-
-	private JLayeredPane levelpane;
-	private ArrayList<CustomWindow> windows;
+public class Frame {
 	
-	public JFrame() {
-		super("ProgrammingPuzzle");
-		setSize(width, height);
-		setLayout(null);
-		setResizable(false);
+	private static JFrame frame;	
+	
+	private static int height = 800, width = 900;  // 600 700
+
+	private static JLayeredPane mainMenuPane;
+	private static MainMenuBackground mainMenuBackground;
+	private static JButton mainMenuStartButton;
+
+	private static JLayeredPane levelpane;
+	private static ArrayList<CustomWindow> windows;
+	
+	private Frame() {
 		
-		setUndecorated(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
+	}
+	
+	static {
+		frame = new JFrame("ProgrammingPuzzle");
+		frame.setVisible(false);
+		frame.setSize(width, height);
+		frame.setLayout(null);
+		frame.setResizable(false);
+		
+		frame.setUndecorated(true);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
 
 		loadlevelPane();
 		loadMainmenuPane();
 		
-		new CustomFrameMouseAdapter(this);
+		new CustomFrameMouseAdapter(frame);
 
-		repaint();
-		setVisible(true);
+		frame.repaint();
 	}
 
-	void loadMainmenuPane() {
+	private static void loadMainmenuPane() {
 		mainMenuPane = new JLayeredPane();
 		mainMenuPane.setBounds(0, 0, width, height);
 		mainMenuPane.setVisible(false);
@@ -66,40 +74,54 @@ public class JFrame extends javax.swing.JFrame {
 		mainMenuStartButton.setBounds((mainMenuPane.getWidth() / 2) - 50, (mainMenuPane.getHeight() / 2) - 25, 100, 50);
 		mainMenuPane.add(mainMenuStartButton, JLayeredPane.PALETTE_LAYER);
 
-		getContentPane().add(mainMenuPane);
+		frame.getContentPane().add(mainMenuPane);
 	}
 
-	void loadlevelPane() {
+	private static void loadlevelPane() {
 		levelpane = new JLayeredPane();
 		levelpane.setBounds(0,0,width,height);
 		levelpane.setVisible(false);
 		
 		windows = new ArrayList<>();
 
-		getContentPane().add(levelpane);
+		frame.getContentPane().add(levelpane);
 	}
 
-	public void setState(States newstate) {
+	public static void setState(States newstate) {
 		System.out.println("frame switched to " + newstate);
 		mainMenuPane.setVisible(false);
 		levelpane.setVisible(false);
+		GraphicsDevice gd = frame.getGraphicsConfiguration().getDevice();
 		switch (newstate) {
 		case mainmenu:
-			getGraphicsConfiguration().getDevice().setFullScreenWindow(null);
+			gd.setFullScreenWindow(null);
 			mainMenuPane.setVisible(true);
 			break;
 		case programming: case running: case pause:
 			//getGraphicsConfiguration().getDevice().setFullScreenWindow(this);
-			levelpane.setSize(getGraphicsConfiguration().getDevice().getDisplayMode().getWidth(),getGraphicsConfiguration().getDevice().getDisplayMode().getHeight());
+			levelpane.setSize(gd.getDisplayMode().getWidth(),gd.getDisplayMode().getHeight());
 			levelpane.setVisible(true);
 			break;
 		}
 	}
 	
-	public void addWindow(CustomWindow newWindow) {
+	public static void addWindow(CustomWindow newWindow) {
 		windows.add(newWindow);
 		levelpane.add(newWindow);
 	}
+	
+	public static JFrame getFrame() {
+		return frame;
+	}
+	
+	public static int getWidth() {
+		return frame.getWidth();
+	}
+	
+	public static int getHeight() {
+		return frame.getHeight();
+	}
+
 }
 
 
@@ -136,7 +158,7 @@ class CustomFrameMouseAdapter extends MouseAdapter {
 			Point componentPoint = SwingUtilities.convertPoint(frame,e.getPoint(),component);
 			component.changeCursor(componentPoint);
 		} catch (ClassCastException | Error e1) {
-			Main.frame.setCursor(Cursor.getDefaultCursor());
+			frame.setCursor(Cursor.getDefaultCursor());
 		}
 	}
 }

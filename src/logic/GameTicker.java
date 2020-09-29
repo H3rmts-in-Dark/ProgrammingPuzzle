@@ -3,6 +3,8 @@ package logic;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import frame.Frame;
+
 public class GameTicker extends Thread {
 
 	private Double currentTick = 0.0;
@@ -29,7 +31,7 @@ public class GameTicker extends Thread {
 			// Repaints frame if needed
 			try {
 				if (true)
-					Main.frame.repaint();
+					Frame.getFrame().repaint();
 			} catch (NullPointerException npe) {
 			}
 
