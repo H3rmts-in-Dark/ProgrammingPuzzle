@@ -9,8 +9,6 @@ import frame.WorldWindow;
 import tiles.Default;
 
 public class World {
-	
-	private WorldWindow worldLabel;
 
 	public enum Layers {Floor, Floordecoration, Objects, Entitys, Effects}
 
@@ -26,8 +24,7 @@ public class World {
 		entitylist = new ArrayList<>();
 		fillempty();
 		
-		worldLabel = new WorldWindow(this);
-		Frame.addWindow(worldLabel);
+		Frame.addWindow(new WorldWindow(this));
 	}
 
 	public void setTile(Integer x, Integer y, Tile tile) {
@@ -78,7 +75,7 @@ public class World {
 	}
 
 	public Integer getIndex(Entity e) {
-		return entitylist.lastIndexOf(e);
+		return entitylist.indexOf(e);
 	}
 
 	public Integer getWidth() {
@@ -93,7 +90,7 @@ public class World {
 		return entitylist.size();
 	}
 
-	public void fillempty() {
+	private void fillempty() {
 		for (int x = 0; x < getWidth(); x++) {
 			for (int y = 0; y < getHeight(); y++) {
 				setTile(x, y, new Default());

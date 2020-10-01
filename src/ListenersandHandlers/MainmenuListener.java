@@ -10,6 +10,6 @@ public class MainmenuListener implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		MainControll.statemanager.setState(States.programming);
+		MainControll.getStatemanager().setState(States.programming);
 	}
 }

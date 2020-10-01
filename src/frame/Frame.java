@@ -17,6 +17,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import ListenersandHandlers.MainmenuListener;
+import logic.MainControll;
 import logic.Statemanager.States;
 
 public class Frame {
@@ -32,11 +33,9 @@ public class Frame {
 	private static JLayeredPane levelpane;
 	private static ArrayList<CustomWindow> windows;
 	
-	private Frame() {
-		
-	}
+	private Frame() {}
 	
-	static {
+	public static void init() {
 		frame = new JFrame("ProgrammingPuzzle");
 		frame.setVisible(false);
 		frame.setSize(width, height);
@@ -51,6 +50,8 @@ public class Frame {
 		loadMainmenuPane();
 		
 		new CustomFrameMouseAdapter(frame);
+		
+		setState(MainControll.getStatemanager().getState());
 
 		frame.repaint();
 	}
@@ -97,7 +98,7 @@ public class Frame {
 			gd.setFullScreenWindow(null);
 			mainMenuPane.setVisible(true);
 			break;
-		case programming: case running: case pause:
+		case programming: case running: case pause: case Levelselecting:
 			//getGraphicsConfiguration().getDevice().setFullScreenWindow(this);
 			levelpane.setSize(gd.getDisplayMode().getWidth(),gd.getDisplayMode().getHeight());
 			levelpane.setVisible(true);
@@ -120,6 +121,10 @@ public class Frame {
 	
 	public static int getHeight() {
 		return frame.getHeight();
+	}
+
+	public static void setVisible() {
+		frame.setVisible(true);
 	}
 
 }

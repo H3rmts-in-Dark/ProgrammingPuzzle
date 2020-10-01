@@ -1,32 +1,41 @@
 package logic;
 
-import java.awt.Point;
-
-import entitys.Box;
-import frame.DescriptionWindow;
-import frame.Frame;
-import logic.Statemanager.States;
 import tiles.Computer;
 import world.World;
 
 public class MainControll {
 
-	public static Statemanager statemanager;
-	public static GameTicker gameTicker;
+	private static Statemanager statemanager;
+	private static GameTicker gameTicker;
 	
-	private World world;
-
-	public MainControll() {
+	private static World world;
+	
+	private MainControll() {}
+	
+	public static void init() {
 		statemanager = new Statemanager();
 		gameTicker = new GameTicker();
-		gameTicker.start();
-		
-		statemanager.setState(States.programming);
-
-		world = new World(8,8);
-		world.setTile(2, 3, new Computer());
-		world.setTile(1, 3, new Computer());
-		world.addEntity(new Box(new Point(5,6)));
-		Frame.addWindow(new DescriptionWindow(world.getTile(2,3)));
 	}
+	
+	public static void start() {
+		getGameTicker().start();
+	}
+
+	public static GameTicker getGameTicker() {
+		return gameTicker;
+	}
+	
+	public static Statemanager getStatemanager() {
+		return statemanager;
+	}
+	
+	public static void createWorld() {
+		world = new World(10,10);
+		world.setTile(3,5,new Computer());
+	}
+
+	public static World getWorld() {
+		return world;
+	}
+	
 }

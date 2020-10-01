@@ -2,7 +2,6 @@ package world;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
 import java.util.Map;
 
 import world.World.Layers;
@@ -11,7 +10,7 @@ import world.World.Layers;
  * Die Grundklasse aller Entities. Um als ein Entity klassifiziert zu werden,
  * muss das Objekt / Lebewesen sich bewegen können.
  */
-public abstract class Entity implements Serializable {
+public abstract class Entity {
 
 	public static enum Rotation {up, down, left, right}
 

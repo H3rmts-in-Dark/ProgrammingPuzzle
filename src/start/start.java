@@ -1,6 +1,7 @@
 package start;
 
 import frame.Frame;
+import logic.MainControll;
 
 public class start {
 	/**
@@ -8,7 +9,10 @@ public class start {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new logic.MainControll();
-		Frame.getFrame().setVisible(true);
+		MainControll.init();
+		Frame.init();
+		MainControll.start();
+		Frame.setVisible();
+		MainControll.createWorld();
 	}
 }

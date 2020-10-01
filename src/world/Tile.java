@@ -2,7 +2,6 @@ package world;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +11,7 @@ import world.World.Layers;
  * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das
  * Objekt sich nicht bewegen können.
  */
-public abstract class Tile implements Serializable {
+public abstract class Tile {
 
 	private Boolean interactable;
 	private Boolean passable;

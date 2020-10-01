@@ -5,7 +5,7 @@ import frame.Frame;
 public class Statemanager {
 
 	public enum States {
-		mainmenu, pause, programming, running
+		mainmenu, pause, programming, running, Levelselecting
 	}
 
 	/*
