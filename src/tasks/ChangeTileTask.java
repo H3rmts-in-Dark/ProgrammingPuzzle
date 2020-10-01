@@ -2,8 +2,8 @@ package tasks;
 
 import java.awt.Point;
 
-import logic.Task;
-import world.Tile;
+import abstractclasses.Task;
+import abstractclasses.Tile;
 import world.World;
 
 public class ChangeTileTask extends Task {

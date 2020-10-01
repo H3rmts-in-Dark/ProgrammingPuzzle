@@ -1,7 +1,7 @@
 package tasks;
 
-import logic.Task;
-import world.Tile;
+import abstractclasses.Task;
+import abstractclasses.Tile;
 import world.World.Layers;
 
 public class ChangeImageTask extends Task {

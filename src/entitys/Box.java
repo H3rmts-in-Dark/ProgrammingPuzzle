@@ -2,7 +2,7 @@ package entitys;
 
 import java.awt.Point;
 
-import world.Entity;
+import abstractclasses.Entity;
 import world.Images;
 import world.World.Layers;
 

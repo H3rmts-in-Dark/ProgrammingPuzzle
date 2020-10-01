@@ -1,8 +1,8 @@
 package tiles;
 
-import world.Entity;
+import abstractclasses.Entity;
+import abstractclasses.Tile;
 import world.Images;
-import world.Tile;
 import world.World.Layers;
 
 public class Default extends Tile {

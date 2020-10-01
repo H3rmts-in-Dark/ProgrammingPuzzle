@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import abstractclasses.Entity;
+import abstractclasses.Tile;
 import frame.Frame;
 import frame.WorldWindow;
 import tiles.Default;

@@ -17,6 +17,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import ListenersandHandlers.MainmenuListener;
+import abstractclasses.CustomWindow;
 import logic.MainControll;
 import logic.Statemanager.States;
 

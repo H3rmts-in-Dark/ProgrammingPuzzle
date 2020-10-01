@@ -6,7 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-import world.Tile;
+import abstractclasses.CustomWindow;
+import abstractclasses.Tile;
 
 public class DescriptionWindow extends CustomWindow {
 	
@@ -18,7 +19,7 @@ public class DescriptionWindow extends CustomWindow {
 	}
 
 	@Override
-	BufferedImage draw() {
+	public BufferedImage draw() {
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = image.createGraphics();
 		g2.setFont(new Font("Default", Font.BOLD, 20));

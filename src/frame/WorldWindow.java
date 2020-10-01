@@ -2,10 +2,15 @@ package frame;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.sql.Time;
 
-import world.Entity;
-import world.Tile;
+import abstractclasses.CustomWindow;
+import abstractclasses.Entity;
+import abstractclasses.Tile;
 import world.World;
 import world.World.Layers;
 
@@ -26,7 +31,7 @@ public class WorldWindow extends CustomWindow {
 	}
 	
 	@Override
-	BufferedImage draw() {
+	public BufferedImage draw() {
 		if (world.isEmty()) {
 			return null;
 		}
@@ -111,6 +116,26 @@ public class WorldWindow extends CustomWindow {
 		this.zoom = 1f;
 	}
 	
+	@Override
+	public void startmove(Point point) {
+		super.startmove(point);
+		System.out.println(point.toString());
+		System.out.println(getImageborders().getX() + "-" + getImageborders().getY() + "-" + getImageborders().getWidth() + "-" + getImageborders().getHeight());
+		if (point.getX() >= getImageborders().getX() && point.getX() <= getImageborders().getWidth() + getImageborders().getX() && 
+				point.getY() >= getImageborders().getY() && point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
+			// mouse in worldimages
+			Point p = new Point((int)(point.getX() - getImageborders().getX()),(int)(point.getY() - getImageborders().getY()));
+			Tile tile = getTile(p);
+			//System.out.println(tile);
+		}
+	}
+
+	public Tile getTile(Point point) {
+		System.out.println(point);
+		return null;
+	}
+	
+	
 	/**
 	 * Converts a given Image into a BufferedImage
 	 *
@@ -129,5 +154,5 @@ public class WorldWindow extends CustomWindow {
 	    // Return the buffered image
 	    return image;
 	}
+	
 }
-

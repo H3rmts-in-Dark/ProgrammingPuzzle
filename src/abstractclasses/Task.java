@@ -1,4 +1,6 @@
-package logic;
+package abstractclasses;
+
+import logic.MainControll;
 
 public abstract class Task {
 

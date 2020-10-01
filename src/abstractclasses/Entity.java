@@ -1,9 +1,11 @@
-package world;
+package abstractclasses;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
+import world.Imageholder;
+import world.World;
 import world.World.Layers;
 
 /**
