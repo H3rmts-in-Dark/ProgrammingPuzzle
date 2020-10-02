@@ -115,7 +115,8 @@ public abstract class CustomWindow extends JComponent {
 	}
 
 	protected BufferedImage getEmptyImage() {
-		BufferedImage image = new BufferedImage(getImageborders().width,getImageborders().height, BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(getImageborders().width, getImageborders().height,
+				BufferedImage.TYPE_INT_RGB);
 		return image;
 	}
 

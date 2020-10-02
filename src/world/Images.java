@@ -11,25 +11,28 @@ import javax.imageio.ImageIO;
 import world.World.Layers;
 
 public class Images {
-	
-	static HashMap<File,BufferedImage> allimages = new HashMap<>();
 
-	private Images() {}
-	
+	static HashMap<File, BufferedImage> allimages = new HashMap<>();
+
+	private Images() {
+	}
+
 	public static BufferedImage getImage(String path) {
 		if (allimages.get(new File(path)) != null)
 			return allimages.get(new File(path));
 		BufferedImage newimage = null;
-		try {newimage = ImageIO.read(new File(path));
-			allimages.put(new File(path),newimage);
-		} catch (IOException e) {}
+		try {
+			newimage = ImageIO.read(new File(path));
+			allimages.put(new File(path), newimage);
+		} catch (IOException e) {
+		}
 		return newimage;
 	}
-	
-	public static Map<Layers,Imageholder> loadImage(String name, Layers layer) {
-		if(name.equals(""))
+
+	public static Map<Layers, Imageholder> loadImage(String name, Layers layer) {
+		if (name.equals(""))
 			return null;
-		Map<Layers,Imageholder> temp = new HashMap<>();
+		Map<Layers, Imageholder> temp = new HashMap<>();
 		Imageholder imageholder = null;
 		switch (layer) {
 		case Floor:

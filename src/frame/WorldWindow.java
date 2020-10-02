@@ -3,10 +3,7 @@ package frame;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.sql.Time;
 
 import abstractclasses.CustomWindow;
 import abstractclasses.Entity;
@@ -32,7 +29,7 @@ public class WorldWindow extends CustomWindow {
 	
 	@Override
 	public BufferedImage draw() {
-		if (world.isEmty()) {
+		if (world.isEmpty()) {
 			return null;
 		}
 		// creates worldimage 

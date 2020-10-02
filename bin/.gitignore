@@ -1,9 +1,8 @@
-/frame/
-/logic/
 /start/
 /ListenersandHandlers/
+/frame/
+/logic/
 /world/
 /abstractclasses/
-/tasks/
-/tiles/
 /entitys/
+/tiles/

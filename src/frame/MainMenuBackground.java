@@ -21,9 +21,10 @@ public class MainMenuBackground extends JComponent {
 		g2.setColor(Color.DARK_GRAY);
 		g2.fillRect(0, 0, getWidth(), getHeight());
 		try {
-			g2.drawImage(ImageIO.read(new File("rsc/UI/BG.png")),0,0,getWidth(),getHeight(), null);
-			g2.drawImage(ImageIO.read(new File("rsc/UI/Title.png")),100,20,500,120, null);
-		} catch (IOException e) {}
+			g2.drawImage(ImageIO.read(new File("rsc/UI/BG.png")), 0, 0, getWidth(), getHeight(), null);
+			g2.drawImage(ImageIO.read(new File("rsc/UI/Title.png")), 100, 20, 500, 120, null);
+		} catch (IOException e) {
+		}
 	}
 
 }

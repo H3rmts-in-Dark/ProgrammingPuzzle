@@ -18,41 +18,41 @@ import javax.swing.WindowConstants;
 
 import ListenersandHandlers.MainmenuListener;
 import abstractclasses.CustomWindow;
-import logic.MainControll;
-import logic.Statemanager.States;
+import logic.MainControl;
+import logic.StateManager.States;
 
 public class Frame {
-	
-	private static JFrame frame;	
-	
-	private static int height = 800, width = 900;  // 600 700
+
+	private static JFrame frame;
+	private static int height = 800, width = 900; // 600 700
 
 	private static JLayeredPane mainMenuPane;
+	private static JLayeredPane levelpane;
+
 	private static MainMenuBackground mainMenuBackground;
 	private static JButton mainMenuStartButton;
 
-	private static JLayeredPane levelpane;
 	private static ArrayList<CustomWindow> windows;
-	
-	private Frame() {}
-	
+
+	private Frame() {
+	}
+
 	public static void init() {
 		frame = new JFrame("ProgrammingPuzzle");
 		frame.setVisible(false);
 		frame.setSize(width, height);
 		frame.setLayout(null);
 		frame.setResizable(false);
-		
 		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 
 		loadlevelPane();
 		loadMainmenuPane();
-		
+
 		new CustomFrameMouseAdapter(frame);
-		
-		setState(MainControll.getStatemanager().getState());
+
+		setState(MainControl.getStatemanager().getState());
 
 		frame.repaint();
 	}
@@ -81,9 +81,9 @@ public class Frame {
 
 	private static void loadlevelPane() {
 		levelpane = new JLayeredPane();
-		levelpane.setBounds(0,0,width,height);
+		levelpane.setBounds(0, 0, width, height);
 		levelpane.setVisible(false);
-		
+
 		windows = new ArrayList<>();
 
 		frame.getContentPane().add(levelpane);
@@ -99,27 +99,30 @@ public class Frame {
 			gd.setFullScreenWindow(null);
 			mainMenuPane.setVisible(true);
 			break;
-		case programming: case running: case pause: case Levelselecting:
-			//getGraphicsConfiguration().getDevice().setFullScreenWindow(this);
-			levelpane.setSize(gd.getDisplayMode().getWidth(),gd.getDisplayMode().getHeight());
+		case programming:
+		case running:
+		case pause:
+		case Levelselecting:
+			// getGraphicsConfiguration().getDevice().setFullScreenWindow(this);
+			levelpane.setSize(gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight());
 			levelpane.setVisible(true);
 			break;
 		}
 	}
-	
+
 	public static void addWindow(CustomWindow newWindow) {
 		windows.add(newWindow);
 		levelpane.add(newWindow);
 	}
-	
+
 	public static JFrame getFrame() {
 		return frame;
 	}
-	
+
 	public static int getWidth() {
 		return frame.getWidth();
 	}
-	
+
 	public static int getHeight() {
 		return frame.getHeight();
 	}
@@ -130,38 +133,42 @@ public class Frame {
 
 }
 
-
 class CustomFrameMouseAdapter extends MouseAdapter {
-	
+
 	JFrame frame;
-	
 	CustomWindow dragcomponent;
-	
+
 	public CustomFrameMouseAdapter(JFrame frame) {
 		this.frame = frame;
 		frame.addMouseListener(this);
 		frame.addMouseMotionListener(this);
 	}
-	
+
 	@Override
 	public void mousePressed(MouseEvent e) {
-		try {dragcomponent = (CustomWindow) SwingUtilities.getDeepestComponentAt(frame,e.getX(),e.getY());
-			Point componentPoint = SwingUtilities.convertPoint(frame,e.getPoint(),dragcomponent);
+		try {
+			dragcomponent = (CustomWindow) SwingUtilities.getDeepestComponentAt(frame, e.getX(), e.getY());
+			Point componentPoint = SwingUtilities.convertPoint(frame, e.getPoint(), dragcomponent);
 			dragcomponent.startmove(componentPoint);
 			dragcomponent.startdrag();
-		} catch (ClassCastException e1) {dragcomponent = null;}
+		} catch (ClassCastException e1) {
+			dragcomponent = null;
+		}
 	}
-	
+
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		try {dragcomponent.drag(e);
-		} catch (NullPointerException e2) {}
+		try {
+			dragcomponent.drag(e);
+		} catch (NullPointerException e2) {
+		}
 	}
-	
+
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		try {CustomWindow component = (CustomWindow) SwingUtilities.getDeepestComponentAt(frame,e.getX(),e.getY());
-			Point componentPoint = SwingUtilities.convertPoint(frame,e.getPoint(),component);
+		try {
+			CustomWindow component = (CustomWindow) SwingUtilities.getDeepestComponentAt(frame, e.getX(), e.getY());
+			Point componentPoint = SwingUtilities.convertPoint(frame, e.getPoint(), component);
 			component.changeCursor(componentPoint);
 		} catch (ClassCastException | Error e1) {
 			frame.setCursor(Cursor.getDefaultCursor());

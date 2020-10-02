@@ -19,19 +19,20 @@ public abstract class Tile {
 	private Boolean passable;
 	private String description;
 	private HashMap<World.Layers, Imageholder> images;
-	
+
 	private World world;
-	
-	protected Tile(Boolean passable,Boolean interactable) {
+
+	protected Tile(Boolean passable, Boolean interactable) {
 		this.interactable = interactable;
 		this.passable = passable;
 		this.description = "default description";
 		this.world = null;
-		images = new HashMap<>();
+		images = new HashMap<World.Layers, Imageholder>();
 	}
-	
+
 	/**
 	 * is calles when added to a world
+	 * 
 	 * @param world
 	 */
 	public void setWorld(World world) {
@@ -69,22 +70,23 @@ public abstract class Tile {
 	public Point getPosition() {
 		return world.getTilePoint(this);
 	}
-	
+
 	public Integer getX() {
 		return (int) getPosition().getX();
 	}
+
 	public Integer getY() {
 		return (int) getPosition().getY();
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public World getWorld() {
 		return world;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -94,7 +96,7 @@ public abstract class Tile {
 	public abstract void onSteppedUpon(Entity entity);
 
 	public String getName() {
-		return this.getClass().getName().replace("tiles.","");
+		return this.getClass().getName().replace("tiles.", "");
 	}
-	
+
 }

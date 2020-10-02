@@ -1,18 +1,19 @@
 package start;
 
 import frame.Frame;
-import logic.MainControll;
+import logic.MainControl;
 
 public class start {
 	/**
 	 * Die Tatsächliche main Methode
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		MainControll.init();
+		MainControl.init();
 		Frame.init();
-		MainControll.start();
+		MainControl.start();
 		Frame.setVisible();
-		MainControll.createWorld();
+		MainControl.createWorld();
 	}
 }

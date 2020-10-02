@@ -2,7 +2,7 @@ package logic;
 
 import frame.Frame;
 
-public class Statemanager {
+public class StateManager {
 
 	public enum States {
 		mainmenu, pause, programming, running, Levelselecting
@@ -15,7 +15,7 @@ public class Statemanager {
 
 	private States actualState;
 
-	public Statemanager() {
+	public StateManager() {
 		actualState = States.mainmenu;
 	}
 

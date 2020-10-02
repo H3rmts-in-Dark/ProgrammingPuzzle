@@ -3,20 +3,21 @@ package logic;
 import tiles.Computer;
 import world.World;
 
-public class MainControll {
+public class MainControl {
 
-	private static Statemanager statemanager;
+	private static StateManager statemanager;
 	private static GameTicker gameTicker;
-	
+
 	private static World world;
-	
-	private MainControll() {}
-	
+
+	private MainControl() {
+	}
+
 	public static void init() {
-		statemanager = new Statemanager();
+		statemanager = new StateManager();
 		gameTicker = new GameTicker();
 	}
-	
+
 	public static void start() {
 		getGameTicker().start();
 	}
@@ -24,18 +25,18 @@ public class MainControll {
 	public static GameTicker getGameTicker() {
 		return gameTicker;
 	}
-	
-	public static Statemanager getStatemanager() {
+
+	public static StateManager getStatemanager() {
 		return statemanager;
 	}
-	
+
 	public static void createWorld() {
-		world = new World(10,10);
-		world.setTile(3,5,new Computer());
+		world = new World(10, 10);
+		world.setTile(3, 5, new Computer());
 	}
 
 	public static World getWorld() {
 		return world;
 	}
-	
+
 }

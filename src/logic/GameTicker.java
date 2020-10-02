@@ -10,10 +10,9 @@ public class GameTicker extends Thread {
 
 	private Double currentTick = 0.0;
 	private Integer tps = 10; // ticks per second
-	private ArrayList<Task> taskList;
+	private ArrayList<Task> taskList = new ArrayList<Task>();
 
 	public GameTicker() {
-		taskList = new ArrayList<>();
 	}
 
 	@Override
@@ -29,12 +28,8 @@ public class GameTicker extends Thread {
 			}
 			currentTick++;
 
-			// Repaints frame if needed
-			try {
-				if (true)
-					Frame.getFrame().repaint();
-			} catch (NullPointerException npe) {
-			}
+			// TODO Frame repaint methode?
+			Frame.getFrame().repaint();
 
 			// delay for next tick
 			while ((System.currentTimeMillis() - lastTicktime) <= (1000 / tps)) {
@@ -52,13 +47,12 @@ public class GameTicker extends Thread {
 		return currentTick;
 	}
 
-	@SuppressWarnings("unused")
-	private Double getTickIn(Double time) {
+	public Double getTickIn(Integer time) {
 		return currentTick + time;
 	}
 
 	@SuppressWarnings("unused")
-	private void resetTick() {
+	public void resetTick() {
 		currentTick = 0.0;
 	}
 

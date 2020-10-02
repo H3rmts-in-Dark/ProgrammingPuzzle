@@ -1,6 +1,6 @@
 package abstractclasses;
 
-import logic.MainControll;
+import logic.MainControl;
 
 public abstract class Task {
 
@@ -8,22 +8,22 @@ public abstract class Task {
 	private Integer Loop;
 	private final Integer tickDifference;
 
-	protected Task(Integer tickDifference,Integer loop) {
+	protected Task(Integer tickDifference, Integer loop) {
 		this.tickDifference = tickDifference;
 		this.Loop = loop;
 		updateTickDifference();
-		MainControll.getGameTicker().addTask(this);
+		MainControl.getGameTicker().addTask(this);
 	}
-	
+
 	protected Task(Integer tickDifference) {
 		this.tickDifference = tickDifference;
 		this.Loop = 0;
 		updateTickDifference();
-		MainControll.getGameTicker().addTask(this);
+		MainControl.getGameTicker().addTask(this);
 	}
 
 	private void updateTickDifference() {
-		runTick = MainControll.getGameTicker().getTick() + tickDifference;
+		runTick = MainControl.getGameTicker().getTickIn(tickDifference);
 	}
 
 	/**
