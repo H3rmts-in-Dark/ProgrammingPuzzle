@@ -1,6 +1,7 @@
 package start;
 
 import frame.Frame;
+import logic.Debuger;
 import logic.MainControll;
 
 public class start {
@@ -11,6 +12,7 @@ public class start {
 	public static void main(String[] args) {
 		MainControll.init();
 		Frame.init();
+		Debuger.init();
 		
 		MainControll.start();
 		Frame.setVisible();

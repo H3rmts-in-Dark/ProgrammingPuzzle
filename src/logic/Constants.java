@@ -36,11 +36,7 @@ public interface Constants {
 
 	public static final Integer FrameHeight = 800;
 
-	public static Integer FpstoDelay(Integer fps) {
-		return 1000 / fps;
-	}
-
-	public static final Integer repaintdelay = FpstoDelay(80);
+	public static final Integer fps = 50;
 
 // 
 // -----------------------------------------------------------
@@ -110,7 +106,7 @@ public interface Constants {
 	 * starke verzögerung wenn man das fenster bewegt
 	 * un in die welt gezoomt hat
 	 */
-	public static final Integer Scaler = Image.SCALE_FAST;  // Fast ore smoth
+	public static final Integer Scaler = Image.SCALE_SMOOTH;  // Fast ore smoth
 
 // 
 // -----------------------------------------------------------
@@ -122,7 +118,7 @@ public interface Constants {
 // -----------------------------------------------------------
 // --------------------Gameticker-----------------------------
 
-	public static final Integer tps = 30; // ticks per second
+	public static final Integer tps = 60; // ticks per second
 
 //
 // -----------------------------------------------------------

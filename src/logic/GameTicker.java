@@ -23,14 +23,18 @@ public class GameTicker extends Thread implements Constants {
 
 			taskList.addAll(addqueue);
 			addqueue.clear();
-
+			
+			Debuger.starttask();
+			
 			Iterator<Task> iterator = taskList.iterator();
 			while (iterator.hasNext()) {
 				Task task = iterator.next();
 				if (task.tryRun())
 					iterator.remove();
 			}
-
+			
+			Debuger.tick();
+			
 			currentTick++;
 
 			// delay for next tick

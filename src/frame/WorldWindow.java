@@ -42,8 +42,13 @@ public class WorldWindow extends CustomWindow {
 		BufferedImage image = getWorldimage();
 
 		// rezise Image
-		BufferedImage scaledimage = getBufferedImage(image.getScaledInstance((int) (image.getWidth() * zoom),
-				(int) (image.getHeight() * zoom),Scaler));
+		BufferedImage scaledimage;
+		if (getZoom() > 2.8)
+			scaledimage = getBufferedImage(image.getScaledInstance((int) (image.getWidth() * zoom),
+					(int) (image.getHeight() * zoom),Image.SCALE_FAST));
+		else 
+			scaledimage = getBufferedImage(image.getScaledInstance((int) (image.getWidth() * zoom),
+					(int) (image.getHeight() * zoom),Image.SCALE_SMOOTH));
 
 		Graphics g = scaledimage.getGraphics();
 		g.setColor(Color.GREEN);
@@ -151,6 +156,7 @@ public class WorldWindow extends CustomWindow {
 	@Override
 	public void mouseWheelMoved(Integer direction) {
 		setZoom(getZoom() + direction * 0.2f);
+		System.out.println(getZoom());
 	}
 
 	public Tile getTile(Point point) {

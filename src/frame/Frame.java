@@ -3,6 +3,7 @@ package frame;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.Point;
 import java.awt.event.*;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import abstractclasses.CustomWindow;
 import logic.Constants;
 import logic.Customwindowmanger;
+import logic.Debuger;
 import logic.MainControll;
 import logic.Statemanager.States;
 
@@ -31,7 +33,13 @@ public class Frame implements Constants {
 	}
 
 	public static void init() {
-		frame = new JFrame("ProgrammingPuzzle" + UUID.randomUUID());
+		frame = new JFrame("ProgrammingPuzzle" + UUID.randomUUID()) {
+			@Override
+			public void paint(Graphics g) {
+				super.paint(g);
+				Debuger.repaint();
+			}
+		};
 		frame.setVisible(false);
 		frame.setSize(FrameWidht,FrameHeight);
 		frame.setLayout(null);
@@ -138,12 +146,18 @@ public class Frame implements Constants {
 	}
 	
 	public static void repaint() {
-		if(lastrepaint + repaintdelay < System.currentTimeMillis()) {
+		if(lastrepaint + (1000 / fps) < System.currentTimeMillis()) {
 			frame.repaint();
 			//System.out.println("rep" + System.currentTimeMillis());
 			lastrepaint = System.currentTimeMillis();
 		} else {
 			//System.out.println("no repaint");
+			new Thread() {
+				@Override
+				public void run() {
+					repaint();
+				}
+			}.start();
 		}
 	}
 }

@@ -21,10 +21,10 @@ public class ChangeButtonBrightnessTask extends Task {
 	@Override
 	public void runCode() {
 		if (button.getModel().isRollover()) {
-			brightness = brightness < 150 ? brightness + 10 : 150;
+			brightness = brightness < 150 ? brightness + 30 : 150;
 			Frame.getFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		} else {
-			brightness = brightness > 0 ? brightness - 10 : 0;
+			brightness = brightness > 0 ? brightness - 30 : 0;
 		}
 		button.setForeground(new Color(brightness, brightness, brightness));
 		Frame.repaint();

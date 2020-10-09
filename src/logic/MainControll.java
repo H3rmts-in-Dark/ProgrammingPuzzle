@@ -1,10 +1,6 @@
 package logic;
 
-import java.awt.Point;
-
-import entitys.Box;
 import tiles.Computer;
-import tiles.Tonne;
 import world.World;
 
 public class MainControll {
@@ -37,8 +33,12 @@ public class MainControll {
 		world = new World(10,10);
 		world.setTile(0,1,new Computer());
 		world.setTile(1,1,new Computer());
-		world.setTile(2,1,new Tonne());
-		world.addEntity(new Box(new Point(2,2)));
+		world.setTile(2,1,new Computer());
+		world.setTile(3,1,new Computer());
+		world.setTile(4,1,new Computer());
+		world.setTile(1,5,new Computer());
+		world.setTile(5,1,new Computer());
+		world.setTile(7,5,new Computer());
 	}
 
 	public static World getWorld() {
