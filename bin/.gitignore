@@ -1,7 +1,6 @@
-/frame/
 /logic/
-/ListenersandHandlers/
-bin/ListenersandHandlers/MainmenuListener.class
+/abstractclasses/
+/tiles/
+/frame/
 /tasks/
 /world/
-/tiles/

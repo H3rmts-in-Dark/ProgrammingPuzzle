@@ -1,10 +1,19 @@
 package start;
 
+import frame.Frame;
+import logic.MainControll;
+
 public class start {
-
-	static logic.Main main;
-
+	/**
+	 * Die Tatsächliche main Methode
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		main = new logic.Main();
+		MainControll.init();
+		Frame.init();
+		
+		MainControll.start();
+		Frame.setVisible();
+		MainControll.createWorld();
 	}
 }
