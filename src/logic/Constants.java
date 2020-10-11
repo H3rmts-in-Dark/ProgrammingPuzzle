@@ -36,7 +36,7 @@ public interface Constants {
 
 	public static final Integer FrameHeight = 800;
 
-	public static final Integer fps = 50;
+	public static final Integer fps = 45;
 
 // 
 // -----------------------------------------------------------
@@ -125,4 +125,8 @@ public interface Constants {
 // --------------------Tile-----------------------------------
 
 	public static final Integer defaultanimation = 0;
+	
+	public static final Boolean animated = true;
+	
+	public static final Boolean notanimated = false;
 }

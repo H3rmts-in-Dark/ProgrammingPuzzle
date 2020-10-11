@@ -5,8 +5,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import logic.Rotation;
+import tasks.ChangeImageTask;
 import world.Animation;
 import world.World;
+import world.World.Layers;
 
 /**
  * Die Grundklasse aller Entities. Um als ein Entity klassifiziert zu werden,
@@ -22,6 +24,7 @@ public abstract class Entity {
 	
 	private Animation actualanimation;
 	private ArrayList<Animation> animations;
+	private ChangeImageTask animationtask;
 
 	private World world;
 
@@ -34,6 +37,7 @@ public abstract class Entity {
 		this.world = null;
 		
 		animations = new ArrayList<>();
+		animationtask = new ChangeImageTask(10,this,Layers.Objects,-1);
 	}
 
 	/**
@@ -133,7 +137,15 @@ public abstract class Entity {
 			if (e.getPosition().equals(pos))
 				e.onInteract(this);
 	}
-
+	
 	public abstract void onInteract(Entity entity);
+	
+	public String getName() {
+		return this.getClass().getName().replace("tiles.", "");
+	}
+	
+	public void remove() {
+		animationtask.end();
+	}
 
 }

@@ -8,11 +8,11 @@ import world.World.Layers;
 public class Computer extends Tile {
 
 	public Computer() {
-		super(Unpassable);
-		setLayeranimation(Layers.Floor,Images.loadLayeranimation("Default", Layers.Floor,false));
+		super(Unpassable,animated);
+		setLayeranimation(Layers.Floor,Images.loadLayeranimation("Default", Layers.Floor));
 		addObjektAnimation(Images.loaddefaultObjektAnimation("Computer"));
 		addObjektAnimation(Images.loadObjektAnimation("Computer","interact animation"));
-		setDescription("Computer tile that gives you \n some information when interacted with");
+		setDescription("Computer tile that gives you" + "\n" + "some information when interacted with");
 
 		triggerdefaultanimation();
 	}

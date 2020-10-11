@@ -1,7 +1,7 @@
 package frame;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -18,7 +18,6 @@ public class WorldWindow extends CustomWindow {
 
 	private Float zoom;
 	private World world;
-	private Point click;
 
 	/**
 	 * calles by World
@@ -30,33 +29,27 @@ public class WorldWindow extends CustomWindow {
 				world.getHeight() * defaulttilewidth + topbarwhidht, "World");
 		this.world = world;
 		zoom = 1f;
-		click = new Point(0, 0);
 	}
 
 	@Override
 	public BufferedImage draw() {
-		if (world.isEmty()) {
-			return null;
-		}
+		
 		// creates worldimage
 		BufferedImage image = getWorldimage();
-
+		
 		// rezise Image
 		BufferedImage scaledimage;
-		if (getZoom() > 2.8)
+		if (getZoom() > 3.0)
 			scaledimage = getBufferedImage(image.getScaledInstance((int) (image.getWidth() * zoom),
 					(int) (image.getHeight() * zoom),Image.SCALE_FAST));
 		else 
 			scaledimage = getBufferedImage(image.getScaledInstance((int) (image.getWidth() * zoom),
 					(int) (image.getHeight() * zoom),Image.SCALE_SMOOTH));
 
-		Graphics g = scaledimage.getGraphics();
-		g.setColor(Color.GREEN);
-		g.drawOval(click.x - 4, click.y - 4, 8, 8);
-		g.dispose();
-
 		return scaledimage;
 	}
+	
+	
 
 	/**
 	 * Draws the entire world on one BufferedImage
@@ -69,13 +62,14 @@ public class WorldWindow extends CustomWindow {
 		BufferedImage image = new BufferedImage(world.getWidth() * defaulttilewidth,
 				world.getHeight() * defaulttilewidth, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D) image.getGraphics();
-
+		
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
 				Tile temptile = world.getTile(x, y);
-				if (temptile.hasLayer(Layers.Floor))
+				if (temptile.hasLayer(Layers.Floor)) 
 					g2.drawImage(temptile.getImage(Layers.Floor), temptile.getX() * defaulttilewidth,
 							temptile.getY() * defaulttilewidth, null);
+				
 			}
 		}
 
@@ -91,9 +85,10 @@ public class WorldWindow extends CustomWindow {
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
 				Tile temptile = world.getTile(x, y);
-				if (temptile.hasLayer(Layers.Objects))
+				if (temptile.hasLayer(Layers.Objects)) 
 					g2.drawImage(temptile.getImage(Layers.Objects), temptile.getX() * defaulttilewidth,
 							temptile.getY() * defaulttilewidth, null);
+				
 			}
 		}
 
@@ -137,14 +132,8 @@ public class WorldWindow extends CustomWindow {
 	}
 
 	@Override
-	public void Mousemoved(Point point) {
-		click = point;
-	}
-
-	@Override
-	public void clicked(Point point) {
+	public void Mouseclicked(Point point) {
 		Tile tile = getTile(point);
-
 		if (tile instanceof Computer)
 			tile.triggerObjektAnimation(tile.getObjektanimation(1));
 		else {
@@ -154,9 +143,9 @@ public class WorldWindow extends CustomWindow {
 	}
 
 	@Override
-	public void mouseWheelMoved(Integer direction) {
+	public void MouseWheelMoved(Integer direction) {
 		setZoom(getZoom() + direction * 0.2f);
-		System.out.println(getZoom());
+		setrepaintfull();
 	}
 
 	public Tile getTile(Point point) {
@@ -181,6 +170,13 @@ public class WorldWindow extends CustomWindow {
 
 		// Return the buffered image
 		return image;
+	}
+	
+	@Override
+	public void drawCursor(Graphics2D g2, Point point) {
+		g2.setColor(Color.GREEN);
+		g2.setStroke(new BasicStroke(2));
+		g2.drawOval(point.x - 4, point.y - 4, 8, 8);
 	}
 
 }

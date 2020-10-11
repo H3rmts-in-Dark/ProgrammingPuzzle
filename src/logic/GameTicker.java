@@ -26,6 +26,8 @@ public class GameTicker extends Thread implements Constants {
 			
 			Debuger.starttask();
 			
+			//sysoutTasks();
+			
 			Iterator<Task> iterator = taskList.iterator();
 			while (iterator.hasNext()) {
 				Task task = iterator.next();
@@ -56,6 +58,10 @@ public class GameTicker extends Thread implements Constants {
 	public Double getTickIn(Integer time) {
 		return currentTick + time;
 	}
+	
+	public ArrayList<Task> getTaskList() {
+		return taskList;
+	}
 
 	@SuppressWarnings("unused")
 	private void resetTick() {
@@ -64,5 +70,13 @@ public class GameTicker extends Thread implements Constants {
 
 	public void addTask(Task task) {
 		addqueue.add(task);
+	}
+	
+	@SuppressWarnings("unused")
+	private void sysoutTasks() {
+		System.out.println(getTick());
+		for (Task task : taskList) {
+			System.out.println(task.toString());
+		}
 	}
 }

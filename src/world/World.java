@@ -10,7 +10,9 @@ import tiles.Default;
 
 public class World {
 
-	public static enum Layers {Floor, Cable, Objects, Entitys, Effects}
+	public static enum Layers {
+		Floor, Cable, Objects, Entitys, Effects
+	}
 
 	/**
 	 * Weltarray aus Tiles [x][y] layer0 1. horizontal (x) 2. vertikal (y)
@@ -19,15 +21,21 @@ public class World {
 
 	private ArrayList<Entity> entitylist;
 
+	private WorldWindow window;
+	
 	public World(Integer width, Integer height) {
 		world = new Tile[width][height];
 		entitylist = new ArrayList<>();
 		fillempty();
-		
-		new WorldWindow(this);
+
+		window = new WorldWindow(this);
 	}
 
 	public void setTile(Integer x, Integer y, Tile tile) {
+		try {
+			world[x][y].remove();
+		} catch (NullPointerException e) {
+		}
 		world[x][y] = tile;
 		tile.setWorld(this);
 	}
@@ -35,8 +43,11 @@ public class World {
 	public Tile getTile(int x, int y) {
 		return world[x][y];
 	}
-
 	
+	public WorldWindow getWindow() {
+		return window;
+	}
+
 	public Point getTilePoint(Tile tile) {
 		for (Integer x = 0; x < getWidth(); x++) {
 			for (Integer y = 0; y < getHeight(); y++) {
@@ -47,7 +58,6 @@ public class World {
 		}
 		return new Point(-1, -1);
 	}
-	
 
 	public void addEntity(Entity entity) {
 		entitylist.add(entity);
@@ -87,7 +97,7 @@ public class World {
 	}
 
 	public Boolean isEmty() {
-		if(getWidth() > 0 && getHeight() > 0) {
+		if (getWidth() > 0 && getHeight() > 0) {
 			return false;
 		}
 		return true;

@@ -6,10 +6,20 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.Point;
-import java.awt.event.*;
-import java.util.UUID;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import abstractclasses.CustomWindow;
 import logic.Constants;
@@ -26,14 +36,14 @@ public class Frame implements Constants {
 	private static MainMenuBackground mainMenuBackground;
 	private static JButton mainMenuStartButton;
 	private static Customwindowmanger manager;
-	
+
 	private static Long lastrepaint = System.currentTimeMillis();
 
 	private Frame() {
 	}
 
 	public static void init() {
-		frame = new JFrame("ProgrammingPuzzle" + UUID.randomUUID()) {
+		frame = new JFrame("ProgrammingPuzzle") {
 			@Override
 			public void paint(Graphics g) {
 				super.paint(g);
@@ -41,13 +51,13 @@ public class Frame implements Constants {
 			}
 		};
 		frame.setVisible(false);
-		frame.setSize(FrameWidht,FrameHeight);
+		frame.setSize(FrameWidht, FrameHeight);
 		frame.setLayout(null);
 		frame.setResizable(false);
 
 		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		//frame.setLocationRelativeTo(null);
+		// frame.setLocationRelativeTo(null);
 
 		loadlevelPane();
 		loadMainmenuPane();
@@ -61,7 +71,7 @@ public class Frame implements Constants {
 
 	private static void loadMainmenuPane() {
 		mainMenuPane = new JLayeredPane();
-		mainMenuPane.setBounds(0, 0,FrameWidht,FrameHeight);
+		mainMenuPane.setBounds(0, 0, FrameWidht, FrameHeight);
 		mainMenuPane.setVisible(false);
 
 		mainMenuBackground = new MainMenuBackground();
@@ -118,12 +128,12 @@ public class Frame implements Constants {
 		manager.addWindow(newWindow);
 		repaint();
 	}
-	
+
 	public static void removeWindow(CustomWindow window) {
 		manager.removeWindow(window);
 		repaint();
 	}
-	
+
 	public static void WindowtoFront(CustomWindow window) {
 		manager.Windowtofront(window);
 		repaint();
@@ -144,25 +154,19 @@ public class Frame implements Constants {
 	public static void setVisible() {
 		frame.setVisible(true);
 	}
-	
+
 	public static void repaint() {
-		if(lastrepaint + (1000 / fps) < System.currentTimeMillis()) {
+		if (lastrepaint + (1000 / fps) < System.currentTimeMillis()) {
 			frame.repaint();
-			//System.out.println("rep" + System.currentTimeMillis());
+			// System.out.println("rep" + System.currentTimeMillis());
 			lastrepaint = System.currentTimeMillis();
 		} else {
-			//System.out.println("no repaint");
-			new Thread() {
-				@Override
-				public void run() {
-					repaint();
-				}
-			}.start();
+			// System.out.println("no repaint");
 		}
 	}
 }
 
-class CustomFrameMouseAdapter implements MouseListener,MouseMotionListener,MouseWheelListener {
+class CustomFrameMouseAdapter implements MouseListener, MouseMotionListener, MouseWheelListener {
 
 	JFrame frame;
 
@@ -179,24 +183,10 @@ class CustomFrameMouseAdapter implements MouseListener,MouseMotionListener,Mouse
 			CustomWindow component = getWindow(e.getPoint());
 			Point componentPoint = SwingUtilities.convertPoint(frame, e.getPoint(), component);
 			component.mouseClicked(componentPoint);
-			
+
 			dragwindow = component;
-			
-			if (componentPoint.getX() >= component.getImageborders().getX()
-					&& componentPoint.getX() <= component.getImageborders().getWidth()
-							+ component.getImageborders().getX()
-					&& componentPoint.getY() >= component.getImageborders().getY() && componentPoint
-							.getY() <= component.getImageborders().getHeight() + component.getImageborders().getY()) {
-				if(component.isFocused())
-					component.clicked(new Point((int) (componentPoint.getX() - component.getImageborders().getX()),
-							(int) (componentPoint.getY() - component.getImageborders().getY())));
-				else
-					Frame.WindowtoFront(component);
-			}
-			else 
-				Frame.WindowtoFront(component);
-			component.Mousemoved(new Point((int) (componentPoint.getX() - component.getImageborders().getX()),
-					(int) (componentPoint.getY() - component.getImageborders().getY())));
+
+			component.processMouseclicked(componentPoint);
 		} catch (ClassCastException e1) {
 		}
 	}
@@ -205,16 +195,11 @@ class CustomFrameMouseAdapter implements MouseListener,MouseMotionListener,Mouse
 	public void mouseDragged(MouseEvent e) {
 		try {
 			CustomWindow component = dragwindow;
-			component.drag(e);
 			Point componentPoint = SwingUtilities.convertPoint(frame, e.getPoint(), component);
-			if (componentPoint.getX() >= component.getImageborders().getX()
-					&& componentPoint.getX() <= component.getImageborders().getWidth()
-							+ component.getImageborders().getX()
-					&& componentPoint.getY() >= component.getImageborders().getY() && componentPoint
-							.getY() <= component.getImageborders().getHeight() + component.getImageborders().getY()) {
-				component.Mousemoved(new Point((int) (componentPoint.getX() - component.getImageborders().getX()),
-						(int) (componentPoint.getY() - component.getImageborders().getY())));
-			}
+			
+			component.drag(e);
+			component.processMousemoved(componentPoint,e);
+			
 		} catch (ClassCastException | NullPointerException e2) {
 		}
 	}
@@ -225,19 +210,11 @@ class CustomFrameMouseAdapter implements MouseListener,MouseMotionListener,Mouse
 	public void mouseMoved(MouseEvent e) {
 		try {
 			CustomWindow component = getWindow(e.getPoint());
-
 			Point componentPoint = SwingUtilities.convertPoint(frame, e.getPoint(), component);
+			
 			component.changeCursor(componentPoint);
-
-			if (componentPoint.getX() >= component.getImageborders().getX()
-					&& componentPoint.getX() <= component.getImageborders().getWidth()
-							+ component.getImageborders().getX()
-					&& componentPoint.getY() >= component.getImageborders().getY() && componentPoint
-							.getY() <= component.getImageborders().getHeight() + component.getImageborders().getY()) {
-				if (component.isFocused())
-					component.Mousemoved(new Point((int) (componentPoint.getX() - component.getImageborders().getX()),
-							(int) (componentPoint.getY() - component.getImageborders().getY())));
-			}
+			component.processMousemoved(componentPoint,e);
+			
 		} catch (ClassCastException e1) {
 			frame.setCursor(Cursor.getDefaultCursor());
 		}
@@ -247,8 +224,9 @@ class CustomFrameMouseAdapter implements MouseListener,MouseMotionListener,Mouse
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		try {
 			CustomWindow component = getWindow(e.getPoint());
-			if (component.isFocused())
-				component.mouseWheelMoved(e.getWheelRotation());
+			Point componentPoint = SwingUtilities.convertPoint(frame, e.getPoint(), component);
+			
+			component.processMouseWheelMoved(componentPoint,e);
 		} catch (ClassCastException e2) {
 		}
 

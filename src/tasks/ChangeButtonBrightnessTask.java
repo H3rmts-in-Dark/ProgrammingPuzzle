@@ -29,4 +29,9 @@ public class ChangeButtonBrightnessTask extends Task {
 		button.setForeground(new Color(brightness, brightness, brightness));
 		Frame.repaint();
 	}
+
+	@Override
+	public String extratoString() {
+		return " /" + button.getName() + " /" + brightness;
+	}
 }

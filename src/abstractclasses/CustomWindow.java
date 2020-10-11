@@ -11,6 +11,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
@@ -27,6 +28,11 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 
 	private Integer layer = 0;
 	private Boolean focused = false;
+
+	private Point mouse;
+
+	private Boolean fullyrepaint;
+	private BufferedImage image;
 
 	public CustomWindow(String title) {
 		this(defaultWidht, defaultHeight, title);
@@ -45,6 +51,8 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		resizetodefaults();
 		setTitle(title);
 		close = new CloseButton(this);
+		fullyrepaint = true;
+		mouse = new Point(0, 0);
 
 		Frame.addWindow(this);
 	}
@@ -65,21 +73,29 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 
+		g2.fill(getImageborders());
+
+		if (fullyrepaint) {
+			image = draw();
+			if (image == null)
+				image = getnullimage();
+			fullyrepaint = false;
+			System.out.println("full: " + getClass().toString() + System.currentTimeMillis());
+		}
+
+		BufferedImage subimage = image.getSubimage(0, 0,
+				image.getWidth() > getImageborders().width ? (getImageborders().width) : image.getWidth(),
+				image.getHeight() > getImageborders().height ? (getImageborders().height) : image.getHeight());
+		g2.drawImage(subimage, (int) getImageborders().getX(), (int) getImageborders().getY(), null);
+
+		// draw cursor
+		drawCursor(g2, mouse);
+
+		// top + middle surrounding
 		g2.setStroke(new BasicStroke(6));
 		g2.setColor(Color.DARK_GRAY);
-		g2.drawRoundRect(5, 5, getWidth() - 10, getHeight() - 10, roundcurves, roundcurves);
-		g2.fillRect(5, 5, getWidth() - 10, topbarwhidht - 5 + cornerwidht);
-
-		BufferedImage draw = draw();
-		if (draw == null)
-			draw = getnullimage();
-
-		// get visible part of the image
-		BufferedImage subimage = draw.getSubimage(0, 0,
-				draw.getWidth() > getImageborders().width ? (getImageborders().width) : draw.getWidth(),
-				draw.getHeight() > getImageborders().height ? (getImageborders().height) : draw.getHeight());
-
-		g2.drawImage(subimage, sidebarwhidht, topbarwhidht, null);
+		g2.drawRoundRect(scrollbarwidth, scrollbarwidth, getWidth() - 10, getHeight() - 10, roundcurves, roundcurves);
+		g2.fillRect(scrollbarwidth, scrollbarwidth, getWidth() - 10, topbarwhidht - scrollbarwidth);
 
 		// title
 		g2.setColor(Color.BLACK);
@@ -94,19 +110,25 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		}
 		g2.drawString(newtitle, cornerwidht + cornerwidht / 2, 25);
 
+		// closebutton
 		close.paintButton(g2);
 
+		// surrounding
 		g2.setStroke(new BasicStroke(3));
 		g2.setColor(Color.BLACK);
 		g2.drawRoundRect(2, 2, getWidth() - 4, getHeight() - 4, roundcurves, roundcurves);
 		g2.drawRoundRect(sidebarwhidht, topbarwhidht, getWidth() - sidebarwhidht * 2,
 				getHeight() - topbarwhidht - sidebarwhidht, roundcurves, roundcurves);
 
+		// gray out unfocused
 		if (!isFocused()) {
 			g2.setColor(new Color(200, 200, 200, 30));
 			g2.fillRoundRect(2, 2, getWidth() - 4, getHeight() - 4, roundcurves, roundcurves);
 		}
+	}
 
+	public void setrepaintfull() {
+		fullyrepaint = true;
 	}
 
 	protected BufferedImage getEmptyImage() {
@@ -213,11 +235,12 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 * 
 	 * @param point
 	 */
-	public void clicked(Point point) {
+	public void Mouseclicked(Point point) {
 	}
 
 	/**
-	 * override to process mousemove events in windowimage
+	 * override to process mousemove events in windowimage leave
+	 * super.Mousemoved(point);
 	 * 
 	 * @param point
 	 */
@@ -229,7 +252,47 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 * 
 	 * @param direction
 	 */
-	public void mouseWheelMoved(Integer direction) {
+	public void MouseWheelMoved(Integer direction) {
+	}
+
+	public void processMouseclicked(Point point) {
+		if (point.getX() >= getImageborders().getX()
+				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
+				&& point.getY() >= getImageborders().getY()
+				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
+			mouse = point;
+			if (isFocused())
+				Mouseclicked(new Point((int) (point.getX() - getImageborders().getX()),
+						(int) (point.getY() - getImageborders().getY())));
+			else
+				Frame.WindowtoFront(this);
+		} else
+			Frame.WindowtoFront(this);
+	}
+
+	/**
+	 * @param e
+	 */
+	public void processMousemoved(Point point, MouseEvent e) {
+		if (point.getX() >= getImageborders().getX()
+				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
+				&& point.getY() >= getImageborders().getY()
+				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
+			mouse = point;
+			if (isFocused())
+				Mousemoved(new Point((int) (point.getX() - getImageborders().getX()),
+						(int) (point.getY() - getImageborders().getY())));
+		}
+	}
+
+	public void processMouseWheelMoved(Point point, MouseWheelEvent e) {
+		if (point.getX() >= getImageborders().getX()
+				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
+				&& point.getY() >= getImageborders().getY()
+				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
+			if (isFocused())
+				MouseWheelMoved(e.getWheelRotation());
+		}
 	}
 
 	public void changeCursor(Point mousePoint) {
@@ -290,6 +353,13 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 * @return must return a buffered image
 	 */
 	public abstract BufferedImage draw();
+
+	/**
+	 * 
+	 * @param g2    graphics objekt
+	 * @param point top left point of cursor
+	 */
+	public abstract void drawCursor(Graphics2D g2, Point point);
 
 	@Override
 	public int compareTo(CustomWindow o) {

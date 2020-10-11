@@ -20,17 +20,17 @@ public class Images implements Constants{
 	}
 	
 	
-	public static Animation loadLayeranimation(String ObjektName,Layers layer,Boolean loop) {
+	public static Animation loadLayeranimation(String ObjektName,Layers layer) {
 		Animation animation = null;
 		switch (layer) {
 		case Floor:
-			animation = new Animation(new File("rsc/floor pictures/" + ObjektName),loop);
+			animation = new Animation(new File("rsc/floor pictures/" + ObjektName));
 			break;
 		case Cable:
-			animation = new Animation(new File("rsc/floordecoration pictures/" + ObjektName),loop);
+			animation = new Animation(new File("rsc/floordecoration pictures/" + ObjektName));
 			break;
 		case Effects:
-			animation = new Animation(new File("rsc/effects pictures/" + ObjektName),loop);
+			animation = new Animation(new File("rsc/effects pictures/" + ObjektName));
 			break;
 		default:
 			break;
@@ -40,25 +40,25 @@ public class Images implements Constants{
 
 	public static Animation loadObjektAnimation(String ObjektName,String animationName) {
 		Animation animation = null;
-		animation = new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName),false);
+		animation = new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName));
 		return animation;
 	}
 	
 	public static Animation loaddefaultObjektAnimation(String ObjektName) {
 		Animation animation = null;
-		animation = new Animation(new File("rsc/objekt pictures/" + ObjektName + "/default animation"),true);
+		animation = new Animation(new File("rsc/objekt pictures/" + ObjektName + "/default animation"));
 		return animation;
 	}
 	
 	public static Animation loadEntityAnimation(String entityName,String animationName) {
 		Animation animation = null;
-		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/" + animationName),false);
+		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/" + animationName));
 		return animation;
 	}
 	
 	public static Animation loaddefaultEntityAnimation(String entityName) {
 		Animation animation = null;
-		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/default animation"),true);
+		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/default animation"));
 		return animation;
 	}
 	

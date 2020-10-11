@@ -7,8 +7,8 @@ import world.World.Layers;
 public class Default extends Tile {
 
 	public Default() {
-		super(Floor);
-		setLayeranimation(Layers.Floor,Images.loadLayeranimation("default",Layers.Floor,false));
+		super(Floor,notanimated);
+		setLayeranimation(Layers.Floor,Images.loadLayeranimation("default",Layers.Floor));
 		setDescription("Default Tile (for testing purposes)");
 	}
 }

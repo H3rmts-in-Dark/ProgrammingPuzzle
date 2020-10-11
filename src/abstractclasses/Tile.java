@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import logic.Constants;
+import tasks.ChangeImageTask;
 import world.Animation;
 import world.World;
 import world.World.Layers;
@@ -14,25 +15,25 @@ import world.World.Layers;
  * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das
  * Objekt sich nicht bewegen können.
  */
-public abstract class Tile implements Constants{
+public abstract class Tile implements Constants {
 
 	private Integer height;
 	private String description;
+
 	private HashMap<World.Layers, Animation> images;
-	
-	/**
-	 * 0 = is default animation
-	 */
 	private ArrayList<Animation> objektanimations;
+	private ChangeImageTask objekttask;
 
 	protected World world;
 
-	protected Tile(Integer height) {
+	protected Tile(Integer height, Boolean animated) {
 		this.height = height;
 		this.description = "default description";
 		this.world = null;
 		images = new HashMap<>();
 		objektanimations = new ArrayList<>();
+		if (animated)
+			objekttask = new ChangeImageTask(10, this, Layers.Objects, -1);
 	}
 
 	/**
@@ -45,11 +46,11 @@ public abstract class Tile implements Constants{
 	}
 
 	public boolean hasLayer(World.Layers layer) {
-		return !(images.get(layer) == null);
+		return images.get(layer) != null;
 	}
 
-	public Integer getPassable() {
-		return height;
+	public Boolean isPassable(Integer height) {
+		return height >= this.height ? true : false;
 	}
 
 	public BufferedImage getImage(Layers layer) {
@@ -61,11 +62,10 @@ public abstract class Tile implements Constants{
 	}
 
 	public void setLayeranimation(Layers layer, Animation animation) {
-		if (images.containsKey(layer)) {
-			animation.pause();
-			images.remove(layer);
-		}
-		images.put(layer,animation.resume(this));
+		if (images.containsKey(layer))
+			images.replace(layer, animation.start(this));
+		else
+			images.put(layer, animation.start(this));
 	}
 
 	public void nextImage(Layers layer) {
@@ -75,13 +75,13 @@ public abstract class Tile implements Constants{
 			return;
 		}
 	}
-	
+
 	public void triggerdefaultanimation() {
 		triggerObjektAnimation(getObjektanimation(defaultanimation));
 	}
 
 	public void triggerObjektAnimation(Animation animation) {
-		setLayeranimation(Layers.Objects,animation);
+		setLayeranimation(Layers.Objects, animation);
 	}
 
 	public Animation getObjektanimation(Integer index) {
@@ -111,7 +111,7 @@ public abstract class Tile implements Constants{
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public Integer getHeight() {
 		return height;
 	}
@@ -123,7 +123,7 @@ public abstract class Tile implements Constants{
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public void setHeight(Integer height) {
 		this.height = height;
 	}
@@ -146,6 +146,10 @@ public abstract class Tile implements Constants{
 
 	public String getName() {
 		return this.getClass().getName().replace("tiles.", "");
+	}
+
+	public void remove() {
+		objekttask.end();
 	}
 
 }

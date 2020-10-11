@@ -8,6 +8,8 @@ public abstract class Task {
 	private Integer Loop;
 	private Integer tickDifference;
 	
+	private Boolean ended;
+	
 	/**
 	 * 
 	 * @param tickDifference
@@ -16,6 +18,7 @@ public abstract class Task {
 	protected Task(Integer tickDifference,Integer loop) {
 		this.tickDifference = tickDifference;
 		this.Loop = loop;
+		this.ended = false;
 		MainControll.getGameTicker().addTask(this);
 		updateTickDifference();
 	}
@@ -38,6 +41,8 @@ public abstract class Task {
 	 * @return true -) remove
 	 */
 	public Boolean tryRun() {
+		if (ended)
+			return true;
 		//System.out.print(getRunTick() + "|" + MainControll.getGameTicker().getTick() + getClass());
 		if (MainControll.getGameTicker().getTick() >= runTick) {
 			runCode();
@@ -54,6 +59,22 @@ public abstract class Task {
 		//System.out.println("  ");
 		return false;
 	}
+	
+
+	public void end() {
+		ended = true;
+	}
+	
+	@Override
+	public String toString() {
+		return new String(getClass().getSimpleName() + " /Runtick" + getRunTick() + " /Loop" + Loop + extratoString());
+	}
+	
+	/**
+	 * " /" + info1 + " /" + info2 
+	 * @return
+	 */
+	abstract public String extratoString();
 
 	public abstract void runCode();
 }
