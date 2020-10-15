@@ -31,7 +31,6 @@ public class ChangeButtonBrightnessTask extends Task {
 	}
 
 	@Override
-	public String extratoString() {
-		return " /" + button.getName() + " /" + brightness;
+	public void onend() {
 	}
 }

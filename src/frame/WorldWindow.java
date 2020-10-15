@@ -1,6 +1,5 @@
 package frame;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -86,7 +85,7 @@ public class WorldWindow extends CustomWindow {
 			for (int y = 0; y < world.getHeight(); y++) {
 				Tile temptile = world.getTile(x, y);
 				if (temptile.hasLayer(Layers.Objects)) 
-					g2.drawImage(temptile.getImage(Layers.Objects), temptile.getX() * defaulttilewidth,
+					g2.drawImage(temptile.getObjektImage(), temptile.getX() * defaulttilewidth,
 							temptile.getY() * defaulttilewidth, null);
 				
 			}
@@ -132,10 +131,10 @@ public class WorldWindow extends CustomWindow {
 	}
 
 	@Override
-	public void Mouseclicked(Point point) {
+	public void Mousepressed(Point point) {
 		Tile tile = getTile(point);
 		if (tile instanceof Computer)
-			tile.triggerObjektAnimation(tile.getObjektanimation(1));
+			tile.triggerObjektAnimation(tile.getObjektanimation(interactanimation));
 		else {
 			new DescriptionWindow(tile,
 					new Point((int) point.getX() + getX() + cornerwidht, (int) point.getY() + getY() + topbarwhidht));
@@ -173,10 +172,9 @@ public class WorldWindow extends CustomWindow {
 	}
 	
 	@Override
-	public void drawCursor(Graphics2D g2, Point point) {
-		g2.setColor(Color.GREEN);
-		g2.setStroke(new BasicStroke(2));
-		g2.drawOval(point.x - 4, point.y - 4, 8, 8);
+	public void drawCursor(Graphics2D g, Point point) {
+		g.setColor(Color.GREEN);
+		g.drawOval(point.x - 4, point.y - 4, 8, 8);
 	}
 
 }

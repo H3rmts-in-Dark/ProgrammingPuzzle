@@ -2,6 +2,7 @@ package frame;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -61,12 +62,12 @@ public class DebugingWindow extends CustomWindow {
 
 		g2.drawString("Fps:" + fpsav + " / " + fps, 10, height += 25);
 		g2.drawString("Tps:" + tpsav + " / " + tps, 10, height += 25);
-		g2.drawString("Tpsdelay:" + Integer.toString(1000 / tps), 10, height += 25);
-		g2.drawString("Fpsdelay:" + Integer.toString(1000 / fps), 10, height += 25);
+		g2.drawString("Tpsdelay:" + Integer.toString(1000 / tps) + "ms", 10, height += 25);
+		g2.drawString("Fpsdelay:" + Integer.toString(1000 / fps) + "ms", 10, height += 25);
 	
-		g2.drawString("Cpu:" + cpu, 10, height += 25);
+		g2.drawString("Cpu:" + cpu + "%", 10, height += 25);
 		
-		g2.drawString("Executiontilme:" + executiontimeav, 10, height += 25);
+		g2.drawString("Executiontilme:" + executiontimeav + "ms", 10, height += 25);
 		g2.drawString("Tasks:" + tasks, 10, height += 25);
 
 		synchronized (tasktypes) {

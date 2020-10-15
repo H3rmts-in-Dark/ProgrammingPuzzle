@@ -64,17 +64,8 @@ public abstract class Task {
 	public void end() {
 		ended = true;
 	}
-	
-	@Override
-	public String toString() {
-		return new String(getClass().getSimpleName() + " /Runtick" + getRunTick() + " /Loop" + Loop + extratoString());
-	}
-	
-	/**
-	 * " /" + info1 + " /" + info2 
-	 * @return
-	 */
-	abstract public String extratoString();
 
 	public abstract void runCode();
+	
+	public abstract void onend();
 }

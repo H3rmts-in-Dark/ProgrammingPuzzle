@@ -1,52 +1,26 @@
 package tasks;
 
-import abstractclasses.Entity;
 import abstractclasses.Task;
-import abstractclasses.Tile;
 import frame.Frame;
-import world.World.Layers;
+import world.Animation;
 
 public class ChangeImageTask extends Task {
 
-	final private Tile tile;
-	final private Entity entity;
-	final private Layers layer;
+	final private Animation animation;
 
-	public ChangeImageTask(Integer tickDifference, Tile tile, Layers layer, Integer loop) {
+	public ChangeImageTask(Integer tickDifference, Animation animation, Integer loop) {
 		super(tickDifference, loop);
-		this.tile = tile;
-		this.layer = layer;
-		entity = null;
-	}
-
-	public ChangeImageTask(Integer tickDifference, Entity entity, Layers layer, Integer loop) {
-		super(tickDifference, loop);
-		this.entity = entity;
-		this.layer = layer;
-		tile = null;
-	}
-
-	public Tile getTile() {
-		return tile;
-	}
-
-	public Entity getEntity() {
-		return entity;
+		this.animation = animation;
 	}
 
 	@Override
 	public void runCode() {
-		try {
-			tile.nextImage(layer);
-			entity.nextImage();
-		} catch (NullPointerException e) {
-		}
+		animation.nextImage();
 		Frame.repaint();
 	}
 
 	@Override
-	public String extratoString() {
-		return (tile != null ? (" /" + tile.getName()) : "") + (tile != null ? (" /" + tile.getName()) : "") + " /"
-				+ layer;
+	public void onend() {
+		animation.triggerdefault();
 	}
 }

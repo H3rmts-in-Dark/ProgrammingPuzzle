@@ -31,8 +31,10 @@ public class GameTicker extends Thread implements Constants {
 			Iterator<Task> iterator = taskList.iterator();
 			while (iterator.hasNext()) {
 				Task task = iterator.next();
-				if (task.tryRun())
+				if (task.tryRun()) {
+					task.onend();
 					iterator.remove();
+				}
 			}
 			
 			Debuger.tick();

@@ -1,5 +1,6 @@
 package abstractclasses;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import logic.Constants;
 import tasks.ChangeImageTask;
 import world.Animation;
+import world.Images;
 import world.World;
 import world.World.Layers;
 
@@ -20,9 +22,13 @@ public abstract class Tile implements Constants {
 	private Integer height;
 	private String description;
 
-	private HashMap<World.Layers, Animation> images;
-	private ArrayList<Animation> objektanimations;
-	private ChangeImageTask objekttask;
+	/**
+	 * exluding objektlayer
+	 */
+	private HashMap<World.Layers, String> images;
+
+	private Animation actualanimation;
+	private HashMap<String, Animation> objektanimations;
 
 	protected World world;
 
@@ -30,11 +36,15 @@ public abstract class Tile implements Constants {
 		this.height = height;
 		this.description = "default description";
 		this.world = null;
+
 		images = new HashMap<>();
-		objektanimations = new ArrayList<>();
+		objektanimations = new HashMap<>();
+		loadanimation();
 		if (animated)
-			objekttask = new ChangeImageTask(10, this, Layers.Objects, -1);
+			triggerdefaultanimation();
 	}
+
+	public abstract void loadanimation();
 
 	/**
 	 * is calles when added to a world
@@ -46,7 +56,9 @@ public abstract class Tile implements Constants {
 	}
 
 	public boolean hasLayer(World.Layers layer) {
-		return images.get(layer) != null;
+		if (layer != Layers.Objects)
+			return images.get(layer) != null;
+		return actualanimation != null;
 	}
 
 	public Boolean isPassable(Integer height) {
@@ -54,26 +66,15 @@ public abstract class Tile implements Constants {
 	}
 
 	public BufferedImage getImage(Layers layer) {
-		return images.get(layer).getActualImg();
+		return Images.getImage(images.get(layer));
 	}
 
-	public void addObjektAnimation(Animation animation) {
-		objektanimations.add(animation);
+	public BufferedImage getObjektImage() {
+		return actualanimation.getActualImg();
 	}
 
-	public void setLayeranimation(Layers layer, Animation animation) {
-		if (images.containsKey(layer))
-			images.replace(layer, animation.start(this));
-		else
-			images.put(layer, animation.start(this));
-	}
-
-	public void nextImage(Layers layer) {
-		try {
-			images.get(layer).nextImage();
-		} catch (NullPointerException e) {
-			return;
-		}
+	public void addObjektAnimation(Animation animation, String identifier) {
+		objektanimations.put(identifier, animation);
 	}
 
 	public void triggerdefaultanimation() {
@@ -81,15 +82,22 @@ public abstract class Tile implements Constants {
 	}
 
 	public void triggerObjektAnimation(Animation animation) {
-		setLayeranimation(Layers.Objects, animation);
+		actualanimation = animation;
+		System.out.println("trigger act:" + actualanimation);
+		actualanimation.start();
 	}
 
-	public Animation getObjektanimation(Integer index) {
-		try {
-			return objektanimations.get(index);
-		} catch (IndexOutOfBoundsException e) {
-			return null;
-		}
+	/**
+	 * 
+	 * @param layers exclusive objektlayer
+	 * @param path
+	 */
+	public void setImage(Layers layers, String path) {
+		images.put(layers, path);
+	}
+
+	public Animation getObjektanimation(String identifier) {
+		return objektanimations.get(identifier);
 	}
 
 	public void setPassable(Integer height) {
@@ -146,10 +154,6 @@ public abstract class Tile implements Constants {
 
 	public String getName() {
 		return this.getClass().getName().replace("tiles.", "");
-	}
-
-	public void remove() {
-		objekttask.end();
 	}
 
 }

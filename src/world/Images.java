@@ -12,57 +12,50 @@ import javax.imageio.ImageIO;
 import logic.Constants;
 import world.World.Layers;
 
-public class Images implements Constants{
+public class Images implements Constants {
 
 	static HashMap<File, BufferedImage> allimages = new HashMap<>();
 
 	private Images() {
 	}
-	
-	
-	public static Animation loadLayeranimation(String ObjektName,Layers layer) {
-		Animation animation = null;
+
+	public static String loadLayeranimation(String ObjektName, Layers layer) {
 		switch (layer) {
 		case Floor:
-			animation = new Animation(new File("rsc/floor pictures/" + ObjektName));
-			break;
+			return "rsc/floor pictures/" + ObjektName + ".png";
 		case Cable:
-			animation = new Animation(new File("rsc/floordecoration pictures/" + ObjektName));
-			break;
+			return "rsc/floordecoration pictures/" + ObjektName + ".png";
 		case Effects:
-			animation = new Animation(new File("rsc/effects pictures/" + ObjektName));
-			break;
+			return "rsc/effects pictures/" + ObjektName + ".png";
 		default:
-			break;
+			return "";
 		}
+	}
+
+	public static Animation loadObjektAnimation(String ObjektName, String animationName, Object animatedObject) {
+		Animation animation = null;
+		animation = new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName), animatedObject);
 		return animation;
 	}
 
-	public static Animation loadObjektAnimation(String ObjektName,String animationName) {
+	public static Animation loaddefaultObjektAnimation(String ObjektName, Object animatedObject) {
 		Animation animation = null;
-		animation = new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName));
+		animation = new Animation(new File("rsc/objekt pictures/" + ObjektName + "/default animation"), animatedObject);
 		return animation;
 	}
-	
-	public static Animation loaddefaultObjektAnimation(String ObjektName) {
+
+	public static Animation loadEntityAnimation(String entityName, String animationName, Object animatedObject) {
 		Animation animation = null;
-		animation = new Animation(new File("rsc/objekt pictures/" + ObjektName + "/default animation"));
+		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/" + animationName), animatedObject);
 		return animation;
 	}
-	
-	public static Animation loadEntityAnimation(String entityName,String animationName) {
+
+	public static Animation loaddefaultEntityAnimation(String entityName, Object animatedObject) {
 		Animation animation = null;
-		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/" + animationName));
+		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/default animation"), animatedObject);
 		return animation;
 	}
-	
-	public static Animation loaddefaultEntityAnimation(String entityName) {
-		Animation animation = null;
-		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/default animation"));
-		return animation;
-	}
-	
-	
+
 	public static BufferedImage getImage(String path) {
 		if (allimages.get(new File(path)) != null)
 			return allimages.get(new File(path));
@@ -75,18 +68,21 @@ public class Images implements Constants{
 		}
 		return newimage;
 	}
-
+	
+	
 	private static BufferedImage getmissingImage() {
-		BufferedImage im = new BufferedImage(defaulttilewidth,defaulttilewidth,
-				BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage im = new BufferedImage(defaulttilewidth, defaulttilewidth, BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D g2 = (Graphics2D) im.getGraphics();
 		g2.setColor(Color.PINK);
-		g2.fillRect(0,0,im.getWidth()/2,im.getHeight()/2);
-		g2.fillRect(im.getWidth()/2,im.getHeight()/2,im.getWidth()/2,im.getHeight()/2);
+		g2.fillRect(0, 0, im.getWidth() / 2, im.getHeight() / 2);
+		g2.fillRect(im.getWidth() / 2, im.getHeight() / 2, im.getWidth() / 2, im.getHeight() / 2);
 		g2.setColor(Color.GREEN);
-		g2.fillRect(im.getWidth()/2,0,im.getWidth()/2,im.getHeight()/2);
-		g2.fillRect(0,im.getHeight()/2,im.getWidth()/2,im.getHeight()/2);
+		g2.fillRect(im.getWidth() / 2, 0, im.getWidth() / 2, im.getHeight() / 2);
+		g2.fillRect(0, im.getHeight() / 2, im.getWidth() / 2, im.getHeight() / 2);
+		g2.setColor(Color.BLUE);
+		g2.drawRect(0,0, im.getWidth(), im.getHeight());
 		g2.dispose();
 		return im;
 	}
+	
 }

@@ -23,8 +23,8 @@ public class Debuger implements Constants {
 
 	private static HashMap<String, Integer> tasktypes;
 
-	private static Double startTasks = 0.0;
-	private static Double endTasks = 0.0;
+	private static Long startTasks = (long) 0;
+	private static Long endTasks = (long) 0;
 
 	private static Integer TaskSize = 0;
 
@@ -111,12 +111,12 @@ public class Debuger implements Constants {
 	}
 
 	public static void starttask() {
-		startTasks = (double) System.currentTimeMillis();
+		startTasks = System.nanoTime();
 	}
 
 	public static void tick() {
 		addticks.add(System.currentTimeMillis());
-		endTasks = (double) System.currentTimeMillis();
+		endTasks = System.nanoTime();
 	}
 
 	public static void repaint() {
@@ -132,7 +132,7 @@ public class Debuger implements Constants {
 	}
 
 	public static Double getExecutiontime() {
-		return endTasks - startTasks;// Math.max((endTasks - startTasks),0);
+		return ((double) (endTasks - startTasks) / 1000000);// Math.max((endTasks - startTasks),0);
 	}
 
 	public static Integer getTaskSize() {

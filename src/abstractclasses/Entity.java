@@ -2,43 +2,43 @@ package abstractclasses;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.HashMap;
 
+import logic.Constants;
 import logic.Rotation;
-import tasks.ChangeImageTask;
 import world.Animation;
 import world.World;
-import world.World.Layers;
 
 /**
  * Die Grundklasse aller Entities. Um als ein Entity klassifiziert zu werden,
  * muss das Objekt / Lebewesen sich bewegen können.
  */
-public abstract class Entity {
+public abstract class Entity implements Constants {
 
 	private Rotation rotation;
 	private Boolean interactable;
-	private Boolean passable;
+	private Integer height;
 	private String description;
 	private Point position;
-	
+
 	private Animation actualanimation;
-	private ArrayList<Animation> animations;
-	private ChangeImageTask animationtask;
+	private HashMap<String, Animation> animations;
 
 	private World world;
 
-	protected Entity(Boolean passable, Boolean interactable, Point position) {
+	protected Entity(Boolean interactable, Point position) {
 		this.interactable = interactable;
-		this.passable = passable;
 		this.rotation = Rotation.right;
 		this.position = position;
 		this.description = "default description";
 		this.world = null;
-		
-		animations = new ArrayList<>();
-		animationtask = new ChangeImageTask(10,this,Layers.Objects,-1);
+
+		animations = new HashMap<>();
+		loadanimation();
+		triggerdefaultanimation();
 	}
+
+	public abstract void loadanimation();
 
 	/**
 	 * is calles when added to a world
@@ -53,32 +53,29 @@ public abstract class Entity {
 		return interactable;
 	}
 
-	public Boolean getPassable() {
-		return passable;
-	}
-
 	public BufferedImage getImage() {
 		return actualanimation.getActualImg();
 	}
 
-	public void addAnimation(Animation animation) {
-		animations.add(animation);
+	public void addAnimation(Animation animation, String identifier) {
+		animations.put(identifier, animation);
 	}
 
-	public void nextImage() {
-		actualanimation.nextImage();
+	public Animation getObjektanimation(String identifier) {
+		try {
+			return animations.get(identifier);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
-	
-	public void triggerObjektAnimation(Animation animation) {
+
+	public void triggerdefaultanimation() {
+		triggerAnimation(getObjektanimation(defaultanimation));
+	}
+
+	public void triggerAnimation(Animation animation) {
 		actualanimation = animation;
-	}
-	
-	public ArrayList<Animation> getObjektanimations() {
-		return animations;
-	}
-
-	public void setPassable(Boolean passable) {
-		this.passable = passable;
+		animation.start();
 	}
 
 	public Point getPosition() {
@@ -137,15 +134,11 @@ public abstract class Entity {
 			if (e.getPosition().equals(pos))
 				e.onInteract(this);
 	}
-	
+
 	public abstract void onInteract(Entity entity);
-	
+
 	public String getName() {
 		return this.getClass().getName().replace("tiles.", "");
-	}
-	
-	public void remove() {
-		animationtask.end();
 	}
 
 }

@@ -50,7 +50,7 @@ public interface Constants {
 
 	public static final Integer sidebarwhidht = 8;
 
-	public static final Integer roundcurves = 2;
+	public static final Integer roundcurves = 8;
 
 	public static final Integer defaultX = 40;
 
@@ -123,10 +123,12 @@ public interface Constants {
 //
 // -----------------------------------------------------------
 // --------------------Tile-----------------------------------
-
-	public static final Integer defaultanimation = 0;
 	
 	public static final Boolean animated = true;
 	
 	public static final Boolean notanimated = false;
+	
+	public static final String defaultanimation = "defaultanimation";
+	
+	public static final String interactanimation = "interactanimation";
 }

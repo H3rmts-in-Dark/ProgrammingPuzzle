@@ -8,7 +8,11 @@ public class Default extends Tile {
 
 	public Default() {
 		super(Floor,notanimated);
-		setLayeranimation(Layers.Floor,Images.loadLayeranimation("default",Layers.Floor));
 		setDescription("Default Tile (for testing purposes)");
+	}
+
+	@Override
+	public void loadanimation() {
+		setImage(Layers.Floor,Images.loadLayeranimation("Default",Layers.Floor));
 	}
 }

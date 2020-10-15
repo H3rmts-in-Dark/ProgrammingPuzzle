@@ -32,10 +32,6 @@ public class World {
 	}
 
 	public void setTile(Integer x, Integer y, Tile tile) {
-		try {
-			world[x][y].remove();
-		} catch (NullPointerException e) {
-		}
 		world[x][y] = tile;
 		tile.setWorld(this);
 	}
