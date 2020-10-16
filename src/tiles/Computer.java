@@ -15,8 +15,8 @@ public class Computer extends Tile {
 	@Override
 	public void loadanimation() {
 		setImage(Layers.Floor,Images.loadLayeranimation("Default", Layers.Floor));
-		addObjektAnimation(Images.loaddefaultObjektAnimation("Computer",this),defaultanimation);
-		addObjektAnimation(Images.loadObjektAnimation("Computer","interact animation",this),interactanimation);
+		addObjektAnimation(Images.loadObjektAnimation("Computer",defaultanimation,this));
+		addObjektAnimation(Images.loadObjektAnimation("Computer",interactanimation,this));
 	}
 
 	@Override

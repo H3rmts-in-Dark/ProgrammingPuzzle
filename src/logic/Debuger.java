@@ -87,13 +87,10 @@ public class Debuger implements Constants {
 
 					if (tasksize != TaskSize) {
 						tasktypes.clear();
+						
+						Task[] tasks = MainControll.getGameTicker().getTaskList().toArray(new Task[0]);
 
-						System.out.println("change:" + tasksize + "-" + TaskSize);
-
-						Object[] it = MainControll.getGameTicker().getTaskList().toArray();
-
-						for (Object objekt : it) {
-							Task task = (Task) objekt;
+						for (Task task : tasks) {
 							if (tasktypes.containsKey(task.getClass().getSimpleName())) {
 								tasktypes.replace(task.getClass().getSimpleName(),
 										tasktypes.get(task.getClass().getSimpleName()) + 1);

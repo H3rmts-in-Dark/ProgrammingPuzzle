@@ -32,23 +32,21 @@ public class WorldWindow extends CustomWindow {
 
 	@Override
 	public BufferedImage draw() {
-		
+
 		// creates worldimage
 		BufferedImage image = getWorldimage();
-		
+
 		// rezise Image
 		BufferedImage scaledimage;
 		if (getZoom() > 3.0)
 			scaledimage = getBufferedImage(image.getScaledInstance((int) (image.getWidth() * zoom),
-					(int) (image.getHeight() * zoom),Image.SCALE_FAST));
-		else 
+					(int) (image.getHeight() * zoom), Image.SCALE_FAST));
+		else
 			scaledimage = getBufferedImage(image.getScaledInstance((int) (image.getWidth() * zoom),
-					(int) (image.getHeight() * zoom),Image.SCALE_SMOOTH));
+					(int) (image.getHeight() * zoom), Image.SCALE_SMOOTH));
 
 		return scaledimage;
 	}
-	
-	
 
 	/**
 	 * Draws the entire world on one BufferedImage
@@ -61,14 +59,14 @@ public class WorldWindow extends CustomWindow {
 		BufferedImage image = new BufferedImage(world.getWidth() * defaulttilewidth,
 				world.getHeight() * defaulttilewidth, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D) image.getGraphics();
-		
+
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
 				Tile temptile = world.getTile(x, y);
-				if (temptile.hasLayer(Layers.Floor)) 
+				if (temptile.hasLayer(Layers.Floor))
 					g2.drawImage(temptile.getImage(Layers.Floor), temptile.getX() * defaulttilewidth,
 							temptile.getY() * defaulttilewidth, null);
-				
+
 			}
 		}
 
@@ -84,10 +82,10 @@ public class WorldWindow extends CustomWindow {
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
 				Tile temptile = world.getTile(x, y);
-				if (temptile.hasLayer(Layers.Objects)) 
+				if (temptile.hasLayer(Layers.Objects))
 					g2.drawImage(temptile.getObjektImage(), temptile.getX() * defaulttilewidth,
 							temptile.getY() * defaulttilewidth, null);
-				
+
 			}
 		}
 
@@ -133,12 +131,14 @@ public class WorldWindow extends CustomWindow {
 	@Override
 	public void Mousepressed(Point point) {
 		Tile tile = getTile(point);
-		if (tile instanceof Computer)
+		if (tile instanceof Computer) {
 			tile.triggerObjektAnimation(tile.getObjektanimation(interactanimation));
-		else {
-			new DescriptionWindow(tile,
-					new Point((int) point.getX() + getX() + cornerwidht, (int) point.getY() + getY() + topbarwhidht));
+			System.out.println(tile.getObjektanimation(interactanimation).getPaths());
 		}
+		/*
+		 * else { new DescriptionWindow(tile, new Point((int) point.getX() + getX() +
+		 * cornerwidht, (int) point.getY() + getY() + topbarwhidht)); }
+		 */
 	}
 
 	@Override
@@ -151,8 +151,6 @@ public class WorldWindow extends CustomWindow {
 		return world.getTile((int) (point.x / (defaulttilewidth * zoom)), (int) (point.y / (defaulttilewidth * zoom)));
 	}
 
-	
-	
 	/**
 	 * Converts a given Image into a BufferedImage
 	 *
@@ -170,7 +168,7 @@ public class WorldWindow extends CustomWindow {
 		// Return the buffered image
 		return image;
 	}
-	
+
 	@Override
 	public void drawCursor(Graphics2D g, Point point) {
 		g.setColor(Color.GREEN);

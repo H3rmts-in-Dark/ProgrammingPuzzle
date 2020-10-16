@@ -27,7 +27,7 @@ public class Animation {
 	public BufferedImage getActualImg() {
 		return Images.getImage(paths.get(actualfile));
 	}
-	
+
 	public void start() {
 		new ChangeImageTask(5, this, paths.size());
 	}
@@ -46,24 +46,24 @@ public class Animation {
 			}
 		}
 	}
-	
+
+	public ArrayList<String> getPaths() {
+		return paths;
+	}
+
 	public void triggerdefault() {
 		if (animatedObject instanceof Tile) {
 			((Tile) animatedObject).triggerdefaultanimation();
-			System.out.println("schould triggert default" + toString());
+			// System.out.println("schould triggert default" + toString());
 		} else if (animatedObject instanceof Entity) {
 			((Entity) animatedObject).triggerdefaultanimation();
-			System.out.println("schould triggert default" + toString());
+			// System.out.println("schould triggert default" + toString());
 		}
 	}
 
 	private void loadimages() {
-		if (source.exists()) {
-			for (Integer i = 0; i < source.listFiles().length; i++) {
-				paths.add(source.getPath() + "/" + i + ".png");
-			}
-		} else {
-			paths.add(source.getPath() + ".png");
+		for (Integer i = 0; i < source.listFiles().length; i++) {
+			paths.add(source.getPath() + "/" + i + ".png");
 		}
 	}
 }

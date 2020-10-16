@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import logic.Constants;
 import tasks.ChangeImageTask;
@@ -72,9 +73,9 @@ public abstract class Tile implements Constants {
 	public BufferedImage getObjektImage() {
 		return actualanimation.getActualImg();
 	}
-
-	public void addObjektAnimation(Animation animation, String identifier) {
-		objektanimations.put(identifier, animation);
+	
+	public void addObjektAnimation(Entry<String, Animation> data) {
+		objektanimations.put(data.getKey(),data.getValue());
 	}
 
 	public void triggerdefaultanimation() {
@@ -82,9 +83,8 @@ public abstract class Tile implements Constants {
 	}
 
 	public void triggerObjektAnimation(Animation animation) {
+		animation.start();
 		actualanimation = animation;
-		System.out.println("trigger act:" + actualanimation);
-		actualanimation.start();
 	}
 
 	/**

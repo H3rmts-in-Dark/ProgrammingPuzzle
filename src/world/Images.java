@@ -5,7 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
@@ -24,7 +28,7 @@ public class Images implements Constants {
 		case Floor:
 			return "rsc/floor pictures/" + ObjektName + ".png";
 		case Cable:
-			return "rsc/floordecoration pictures/" + ObjektName + ".png";
+			return "rsc/cable pictures/" + ObjektName + ".png";
 		case Effects:
 			return "rsc/effects pictures/" + ObjektName + ".png";
 		default:
@@ -32,27 +36,13 @@ public class Images implements Constants {
 		}
 	}
 
-	public static Animation loadObjektAnimation(String ObjektName, String animationName, Object animatedObject) {
-		Animation animation = null;
-		animation = new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName), animatedObject);
-		return animation;
-	}
-
-	public static Animation loaddefaultObjektAnimation(String ObjektName, Object animatedObject) {
-		Animation animation = null;
-		animation = new Animation(new File("rsc/objekt pictures/" + ObjektName + "/default animation"), animatedObject);
-		return animation;
+	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName, Object animatedObject) {
+		return new AbstractMap.SimpleEntry<>(animationName,new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName), animatedObject));
 	}
 
 	public static Animation loadEntityAnimation(String entityName, String animationName, Object animatedObject) {
 		Animation animation = null;
 		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/" + animationName), animatedObject);
-		return animation;
-	}
-
-	public static Animation loaddefaultEntityAnimation(String entityName, Object animatedObject) {
-		Animation animation = null;
-		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/default animation"), animatedObject);
 		return animation;
 	}
 
