@@ -20,7 +20,7 @@ public class ChangeImageTask extends Task {
 	}
 
 	@Override
-	public void onend() {
+	public void onEnd() {
 		animation.triggerdefault();
 	}
 }

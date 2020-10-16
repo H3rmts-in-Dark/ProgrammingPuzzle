@@ -9,40 +9,36 @@ public class GameTicker extends Thread implements Constants {
 
 	private Double currentTick = 0.0;
 	private ArrayList<Task> taskList;
-	private ArrayList<Task> addqueue;
+	private ArrayList<Task> addQueue;
 
 	public GameTicker() {
 		taskList = new ArrayList<>();
-		addqueue = new ArrayList<>();
+		addQueue = new ArrayList<>();
 	}
 
 	@Override
 	public void run() {
 		while (true) {
 			Long lastTicktime = System.currentTimeMillis();
+			taskList.addAll(addQueue);
+			addQueue.clear();
 
-			taskList.addAll(addqueue);
-			addqueue.clear();
-			
-			Debuger.starttask();
-			
-			//sysoutTasks();
-			
+			Debugger.startTask();
+
 			Iterator<Task> iterator = taskList.iterator();
 			while (iterator.hasNext()) {
 				Task task = iterator.next();
 				if (task.tryRun()) {
-					task.onend();
+					task.onEnd();
 					iterator.remove();
 				}
 			}
-			
-			Debuger.tick();
-			
+
+			Debugger.tick();
 			currentTick++;
 
-			// delay for next tick
-			while ((System.currentTimeMillis() - lastTicktime) <= (1000 / tps)) {
+			// Wartet, bis der nächste Tick beginnt.
+			while ((System.currentTimeMillis() - lastTicktime) <= (1000 / TPS)) {
 				try {
 					Thread.sleep(0, 1);
 				} catch (InterruptedException e) {
@@ -60,21 +56,19 @@ public class GameTicker extends Thread implements Constants {
 	public Double getTickIn(Integer time) {
 		return currentTick + time;
 	}
-	
+
 	public ArrayList<Task> getTaskList() {
 		return taskList;
 	}
 
-	@SuppressWarnings("unused")
 	private void resetTick() {
 		currentTick = 0.0;
 	}
 
 	public void addTask(Task task) {
-		addqueue.add(task);
+		addQueue.add(task);
 	}
-	
-	@SuppressWarnings("unused")
+
 	private void sysoutTasks() {
 		System.out.println(getTick());
 		for (Task task : taskList) {

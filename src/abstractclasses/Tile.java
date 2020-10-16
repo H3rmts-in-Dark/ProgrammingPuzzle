@@ -1,14 +1,11 @@
 package abstractclasses;
 
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import logic.Constants;
-import tasks.ChangeImageTask;
 import world.Animation;
 import world.Images;
 import world.World;
@@ -16,7 +13,7 @@ import world.World.Layers;
 
 /**
  * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das
- * Objekt sich nicht bewegen können.
+ * Objekt sich nicht bewegen können und muss auf einer World platziert werden.
  */
 public abstract class Tile implements Constants {
 
@@ -28,8 +25,8 @@ public abstract class Tile implements Constants {
 	 */
 	private HashMap<World.Layers, String> images;
 
-	private Animation actualanimation;
-	private HashMap<String, Animation> objektanimations;
+	private Animation actualAnimation;
+	private HashMap<String, Animation> objektAnimations;
 
 	protected World world;
 
@@ -39,16 +36,16 @@ public abstract class Tile implements Constants {
 		this.world = null;
 
 		images = new HashMap<>();
-		objektanimations = new HashMap<>();
-		loadanimation();
+		objektAnimations = new HashMap<>();
+		loadAnimation();
 		if (animated)
-			triggerdefaultanimation();
+			triggerDefaultAnimation();
 	}
 
-	public abstract void loadanimation();
+	public abstract void loadAnimation();
 
 	/**
-	 * is calles when added to a world
+	 * This method is to be called when the tile is added to a world.
 	 * 
 	 * @param world
 	 */
@@ -59,7 +56,7 @@ public abstract class Tile implements Constants {
 	public boolean hasLayer(World.Layers layer) {
 		if (layer != Layers.Objects)
 			return images.get(layer) != null;
-		return actualanimation != null;
+		return actualAnimation != null;
 	}
 
 	public Boolean isPassable(Integer height) {
@@ -71,24 +68,23 @@ public abstract class Tile implements Constants {
 	}
 
 	public BufferedImage getObjektImage() {
-		return actualanimation.getActualImg();
-	}
-	
-	public void addObjektAnimation(Entry<String, Animation> data) {
-		objektanimations.put(data.getKey(),data.getValue());
+		return actualAnimation.getActualImage();
 	}
 
-	public void triggerdefaultanimation() {
-		triggerObjektAnimation(getObjektanimation(defaultanimation));
+	public void addObjektAnimation(Entry<String, Animation> data) {
+		objektAnimations.put(data.getKey(), data.getValue());
+	}
+
+	public void triggerDefaultAnimation() {
+		triggerObjektAnimation(getObjektanimation(DEFAULTANIMATION));
 	}
 
 	public void triggerObjektAnimation(Animation animation) {
 		animation.start();
-		actualanimation = animation;
+		actualAnimation = animation;
 	}
 
 	/**
-	 * 
 	 * @param layers exclusive objektlayer
 	 * @param path
 	 */
@@ -97,11 +93,7 @@ public abstract class Tile implements Constants {
 	}
 
 	public Animation getObjektanimation(String identifier) {
-		return objektanimations.get(identifier);
-	}
-
-	public void setPassable(Integer height) {
-		this.height = height;
+		return objektAnimations.get(identifier);
 	}
 
 	public Point getPosition() {

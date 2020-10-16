@@ -11,7 +11,7 @@ import frame.Frame;
 public class ChangeButtonBrightnessTask extends Task {
 
 	private JButton button;
-	private Integer brightness = 0;
+	private Integer brightness = 0; // Wie intilligent bist du?
 
 	public ChangeButtonBrightnessTask(Integer tickDifference, JButton button) {
 		super(tickDifference, -1);
@@ -31,6 +31,6 @@ public class ChangeButtonBrightnessTask extends Task {
 	}
 
 	@Override
-	public void onend() {
+	public void onEnd() {
 	}
 }

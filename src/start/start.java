@@ -1,21 +1,18 @@
 package start;
 
-import frame.Frame;
-import logic.Debuger;
-import logic.MainControll;
-
 public class start {
 	/**
 	 * Die Tatsächliche main Methode
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		MainControll.init();
-		Frame.init();
-		Debuger.init();
-		
-		MainControll.start();
-		Frame.setVisible();
-		MainControll.createWorld();
+		logic.MainControl.initialize();
+		frame.Frame.init();
+		logic.Debugger.initialize();
+
+		logic.MainControl.start();
+		frame.Frame.setVisible();
+		logic.MainControl.createWorld();
 	}
 }

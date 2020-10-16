@@ -7,10 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
-
 import javax.imageio.ImageIO;
 
 import logic.Constants;
@@ -36,8 +33,10 @@ public class Images implements Constants {
 		}
 	}
 
-	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName, Object animatedObject) {
-		return new AbstractMap.SimpleEntry<>(animationName,new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName), animatedObject));
+	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName,
+			Object animatedObject) {
+		return new AbstractMap.SimpleEntry<>(animationName,
+				new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName), animatedObject));
 	}
 
 	public static Animation loadEntityAnimation(String entityName, String animationName, Object animatedObject) {
@@ -58,10 +57,9 @@ public class Images implements Constants {
 		}
 		return newimage;
 	}
-	
-	
+
 	private static BufferedImage getmissingImage() {
-		BufferedImage im = new BufferedImage(defaulttilewidth, defaulttilewidth, BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage im = new BufferedImage(DEFAULTTILEWIDTH, DEFAULTTILEWIDTH, BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D g2 = (Graphics2D) im.getGraphics();
 		g2.setColor(Color.PINK);
 		g2.fillRect(0, 0, im.getWidth() / 2, im.getHeight() / 2);
@@ -70,9 +68,9 @@ public class Images implements Constants {
 		g2.fillRect(im.getWidth() / 2, 0, im.getWidth() / 2, im.getHeight() / 2);
 		g2.fillRect(0, im.getHeight() / 2, im.getWidth() / 2, im.getHeight() / 2);
 		g2.setColor(Color.BLUE);
-		g2.drawRect(0,0, im.getWidth(), im.getHeight());
+		g2.drawRect(0, 0, im.getWidth(), im.getHeight());
 		g2.dispose();
 		return im;
 	}
-	
+
 }

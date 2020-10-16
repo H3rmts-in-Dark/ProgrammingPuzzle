@@ -22,7 +22,7 @@ public class World {
 	private ArrayList<Entity> entitylist;
 
 	private WorldWindow window;
-	
+
 	public World(Integer width, Integer height) {
 		world = new Tile[width][height];
 		entitylist = new ArrayList<>();
@@ -36,10 +36,10 @@ public class World {
 		tile.setWorld(this);
 	}
 
-	public Tile getTile(int x, int y) {
+	public Tile getTile(int x, int y) throws IndexOutOfBoundsException {
 		return world[x][y];
 	}
-	
+
 	public WorldWindow getWindow() {
 		return window;
 	}

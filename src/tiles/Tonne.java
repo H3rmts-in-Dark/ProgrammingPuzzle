@@ -7,14 +7,14 @@ import world.World.Layers;
 public class Tonne extends Tile {
 
 	public Tonne() {
-		super(Unpassable, animated);
+		super(UNPASSABLE, ANIMATED);
 		setDescription("Barriere");
 	}
 
 	@Override
-	public void loadanimation() {
+	public void loadAnimation() {
 		setImage(Layers.Floor, Images.loadLayeranimation("Default", Layers.Floor));
-		addObjektAnimation(Images.loadObjektAnimation("Tonne", defaultanimation, this));
+		addObjektAnimation(Images.loadObjektAnimation("Tonne", DEFAULTANIMATION, this));
 	}
 
 }
