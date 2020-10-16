@@ -89,6 +89,10 @@ public abstract class Entity implements Constants {
 	public Integer getY() {
 		return (int) getPosition().getY();
 	}
+	
+	public Integer getHeight() {
+		return height;
+	}
 
 	public String getDescription() {
 		return description;
