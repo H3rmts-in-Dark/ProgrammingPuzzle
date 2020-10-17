@@ -73,7 +73,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		}
 
 		// inner image
-		g.drawImage(innerImage, (int) getImageborders().getX(), (int) getImageborders().getY(), null);
+		g.drawImage(innerImage, getImageborders().x, getImageborders().y, null);
 
 		// draw cursor
 		drawCursor((Graphics2D) g, mouse);
@@ -115,9 +115,10 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		Graphics2D g2 = surroundingImage.createGraphics();
 
 		// top + middle surrounding
-		g2.setStroke(new BasicStroke(CORNERWIDTH + CORNERWIDTH / 2));
+		g2.setStroke(new BasicStroke(CORNERWIDTH + CORNERWIDTH / 4));
 		g2.setColor(Color.DARK_GRAY);
-		g2.drawRoundRect(SCROLLBARWIDTH, SCROLLBARWIDTH, getWidth() - 10, getHeight() - 10, ROUNDCURVES, ROUNDCURVES);
+		g2.drawRoundRect(SCROLLBARWIDTH, SCROLLBARWIDTH, getWidth() - CORNERWIDTH - SCROLLBARWIDTH,
+				getHeight() - CORNERWIDTH - SCROLLBARWIDTH, ROUNDCURVES, ROUNDCURVES);
 		g2.fillRect(SCROLLBARWIDTH, SCROLLBARWIDTH, getWidth() - 10, TOPBARWIDTH - SCROLLBARWIDTH);
 
 		// Zeichnet den Titel des Fensters
