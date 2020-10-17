@@ -14,32 +14,39 @@ public class WorldSaver {
 
 	private static ObjectOutputStream oos;
 	private static ObjectInputStream ois;
-	private static World world;
 
 	private WorldSaver() {
 	}
 
-	public static void outputStream(World world, String path) {
+	public static void outputStream(Object object, String path) {
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(new File(path)));
-			oos.writeObject(world);
+			oos.writeObject(object);
 			oos.close();
 		} catch (IOException e) {
 		}
 	}
 
-	public static World inputStream(String path) {
-
+	public static Object inputStream(String path) {
+		Object object = null;
 		try {
 			ois = new ObjectInputStream(new FileInputStream(new File(path)));
 			try {
-				world = (World) ois.readObject();
+				object = ois.readObject();
 			} catch (ClassCastException | ClassNotFoundException e) {
-				world = null;
 			}
 			ois.close();
 		} catch (IOException e) {
 		}
-		return world;
+		return object;
+	}
+
+	public static World loadWorld(String path) {
+		Object object = inputStream(path);
+		return (object.getClass() == World.class) ? (World) object : null;
+	}
+
+	public static void saveWorld(World world, String path) {
+		outputStream(world, path);
 	}
 }
