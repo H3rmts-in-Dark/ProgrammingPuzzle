@@ -117,7 +117,7 @@ public class WorldWindow extends CustomWindow {
 	@Override
 	public void mouseWheelMoved(Integer direction) {
 		setZoom(getZoom() + direction * 0.2f);
-		setrepaintfull();
+		triggerFullRepaint();
 	}
 
 	public Tile getTile(Point point) {

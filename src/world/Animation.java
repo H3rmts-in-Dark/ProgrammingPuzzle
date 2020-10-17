@@ -52,9 +52,9 @@ public class Animation implements Constants{
 		if (actualFile < paths.size() - 1) {
 			actualFile++;
 			if (animatedObject instanceof Tile) {
-				((Tile) animatedObject).getWorld().getWindow().setrepaintfull();
+				((Tile) animatedObject).getWorld().getWindow().triggerFullRepaint();
 			} else if (animatedObject instanceof Entity) {
-				((Entity) animatedObject).getWorld().getWindow().setrepaintfull();
+				((Entity) animatedObject).getWorld().getWindow().triggerFullRepaint();
 			}
 			Frame.repaint();
 		} else if (defaultanimtion) {

@@ -92,7 +92,8 @@ public class Debugger implements Constants {
 								} else {
 									taskTypes.put(task.getClass().getSimpleName(), 1);
 								}
-							} catch (NullPointerException e) {}
+							} catch (NullPointerException e) {
+							}
 						}
 					}
 				}
@@ -100,7 +101,7 @@ public class Debugger implements Constants {
 		};
 		controlThread.start();
 
-		//new DebuggingWindow();
+		new DebuggingWindow();
 	}
 
 	public static void startTask() {

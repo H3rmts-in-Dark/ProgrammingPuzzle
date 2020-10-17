@@ -1,8 +1,5 @@
-/tiles/
-/world/
-/abstractclasses/
-/entitys/
 /frame/
-/logic/
 /start/
-/tasks/
+/logic/
+/abstractclasses/
+/world/

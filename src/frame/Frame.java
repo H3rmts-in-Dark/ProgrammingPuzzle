@@ -210,7 +210,7 @@ class CustomFrameMouseAdapter extends MouseAdapter {
 
 			component.drag(e);
 			component.processMouseMovedEvent(componentPoint);
-			component.setrepaintfull();
+			component.triggerFullRepaint();
 		} catch (PointConvertExeption | NullPointerException e2) {
 		}
 	}

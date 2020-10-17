@@ -18,7 +18,7 @@ public class DebuggingWindow extends CustomWindow {
 
 	String fpsav, tpsav, executiontimeav, tasks, cpu;
 	Set<Entry<String, Integer>> tasktypes;
-	
+
 	OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
 	public DebuggingWindow() {
@@ -42,7 +42,7 @@ public class DebuggingWindow extends CustomWindow {
 					tasks = Integer.toString(Debugger.getTaskSize());
 					tasktypes = Debugger.getTasktypes();
 					cpu = Double.toString(Math.round((os.getProcessCpuLoad() * 100) * 100.0) / 100.0);
-					setrepaintfull();
+					triggerFullRepaint();
 				}
 			}
 		}.start();
