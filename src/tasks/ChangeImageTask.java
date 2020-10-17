@@ -16,7 +16,6 @@ public class ChangeImageTask extends Task {
 	@Override
 	public void runCode() {
 		animation.nextImage();
-		Frame.repaint();
 	}
 
 	@Override

@@ -115,6 +115,7 @@ public abstract class Entity implements Constants {
 		}
 	}
 
+	@SuppressWarnings("null")
 	public void interact() {
 		Tile tile = getTileInFront();
 		if (tile != null)

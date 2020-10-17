@@ -1,5 +1,9 @@
 package start;
 
+import frame.Frame;
+import logic.Debugger;
+import logic.MainControl;
+
 public class start {
 	/**
 	 * Die Tatsächliche main Methode
@@ -7,12 +11,13 @@ public class start {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		logic.MainControl.initialize();
-		frame.Frame.init();
-		logic.Debugger.initialize();
+		MainControl.initialize();
+		Frame.init();
+		Debugger.initialize();
 
-		logic.MainControl.start();
-		frame.Frame.setVisible();
-		logic.MainControl.createWorld();
+		MainControl.start();
+		Frame.setVisible();
+		
+		MainControl.createWorld();
 	}
 }

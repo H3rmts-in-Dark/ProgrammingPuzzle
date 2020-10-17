@@ -121,11 +121,11 @@ public class WorldWindow extends CustomWindow {
 		this.zoom = 1f;
 	}
 
+	@Override
 	public void mousePressed(Point point) {
 		Tile tile = getTile(point);
 		if (tile instanceof Computer) {
-			tile.triggerObjektAnimation(tile.getObjektanimation(INTERACTANIMATION));
-			System.out.println(tile.getObjektanimation(INTERACTANIMATION).getPaths());
+			tile.triggerAnimation(INTERACTANIMATION);
 		}
 		/*
 		 * else { new DescriptionWindow(tile, new Point((int) point.getX() + getX() +

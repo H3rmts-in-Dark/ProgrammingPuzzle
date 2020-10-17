@@ -36,11 +36,9 @@ public abstract class Task {
 	/**
 	 * 
 	 * @param tick
-	 * @return true -) remove
+	 * @return true -) remove and onEnd();
 	 */
 	public Boolean tryRun() {
-		if (ended)
-			return true;
 		if (MainControl.getGameTicker().getTick() >= runTick) {
 			runCode();
 			if (Loop > 0)
@@ -52,6 +50,10 @@ public abstract class Task {
 			return true;
 		}
 		return false;
+	}
+	
+	public Boolean getEnded() {
+		return ended;
 	}
 
 	public void end() {

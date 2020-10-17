@@ -39,7 +39,7 @@ public abstract class Tile implements Constants {
 		objektAnimations = new HashMap<>();
 		loadAnimation();
 		if (animated)
-			triggerDefaultAnimation();
+			triggerAnimation(DEFAULTANIMATION);
 	}
 
 	public abstract void loadAnimation();
@@ -75,11 +75,14 @@ public abstract class Tile implements Constants {
 		objektAnimations.put(data.getKey(), data.getValue());
 	}
 
-	public void triggerDefaultAnimation() {
-		triggerObjektAnimation(getObjektanimation(DEFAULTANIMATION));
+	public void triggerAnimation(String animation) {
+		triggerObjektAnimation(getObjektanimation(animation));
 	}
 
-	public void triggerObjektAnimation(Animation animation) {
+	private void triggerObjektAnimation(Animation animation) {
+		if (actualAnimation != null) {
+			actualAnimation.stop();
+		}
 		animation.start();
 		actualAnimation = animation;
 	}

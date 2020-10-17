@@ -99,6 +99,7 @@ public class Frame implements Constants {
 		System.out.println("frame switched to " + newstate);
 		mainMenuPane.setVisible(false);
 		manager.setVisible(false);
+		@SuppressWarnings("unused")
 		GraphicsDevice gd = frame.getGraphicsConfiguration().getDevice();
 		switch (newstate) {
 		case mainmenu:

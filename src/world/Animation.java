@@ -6,21 +6,24 @@ import java.util.ArrayList;
 
 import abstractclasses.Entity;
 import abstractclasses.Tile;
+import frame.Frame;
+import logic.Constants;
 import tasks.ChangeImageTask;
 
-public class Animation {
+public class Animation implements Constants{
 
 	private ArrayList<String> paths;
 	private Integer actualFile;
-	private File source;
 	private Object animatedObject;
+	private ChangeImageTask task;
 
 	public Animation(File source, Object animatedObject) {
 		this.paths = new ArrayList<>();
 		this.actualFile = 0;
-		this.source = source;
 		this.animatedObject = animatedObject;
-		loadimages();
+		for (Integer i = 0; i < source.listFiles().length; i++) {
+			paths.add(source.getPath() + "/" + i + ".png");
+		}
 	}
 
 	public BufferedImage getActualImage() {
@@ -28,7 +31,12 @@ public class Animation {
 	}
 
 	public void start() {
-		new ChangeImageTask(5, this, paths.size());
+		actualFile = 0;
+		task = new ChangeImageTask(5, this, paths.size());
+	}
+
+	public void stop() {
+		task.end();
 	}
 
 	/**
@@ -43,26 +51,15 @@ public class Animation {
 			} else if (animatedObject instanceof Entity) {
 				((Entity) animatedObject).getWorld().getWindow().setrepaintfull();
 			}
+			Frame.repaint();
 		}
-	}
-
-	public ArrayList<String> getPaths() {
-		return paths;
 	}
 
 	public void triggerdefault() {
 		if (animatedObject instanceof Tile) {
-			((Tile) animatedObject).triggerDefaultAnimation();
-			// System.out.println("schould triggert default" + toString());
+			((Tile) animatedObject).triggerAnimation(DEFAULTANIMATION);
 		} else if (animatedObject instanceof Entity) {
 			((Entity) animatedObject).triggerDefaultAnimation();
-			// System.out.println("schould triggert default" + toString());
-		}
-	}
-
-	private void loadimages() {
-		for (Integer i = 0; i < source.listFiles().length; i++) {
-			paths.add(source.getPath() + "/" + i + ".png");
 		}
 	}
 }
