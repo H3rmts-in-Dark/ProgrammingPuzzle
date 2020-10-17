@@ -100,7 +100,7 @@ public class Debugger implements Constants {
 		};
 		controlThread.start();
 
-		new DebuggingWindow();
+		//new DebuggingWindow();
 	}
 
 	public static void startTask() {

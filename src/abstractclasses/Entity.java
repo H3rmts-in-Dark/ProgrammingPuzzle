@@ -23,17 +23,24 @@ public abstract class Entity implements Constants {
 	private String description;
 	private Point pixelposition;
 
+	private Integer relativedrawX;
+	private Integer relativedrawY;
+
 	private Animation actualAnimation;
 	private HashMap<String, Animation> animations;
 
 	private World world;
 
-	protected Entity(Boolean interactable, Point position) {
+	protected Entity(Boolean interactable, Point position, Integer relativedrawX, Integer relativedrawY) {
 		this.interactable = interactable;
 		this.rotation = Rotation.right;
 		this.pixelposition = new Point(position.x * DEFAULTTILEWIDTH, position.y * DEFAULTTILEWIDTH);
 		this.description = "default description";
 		this.world = null;
+		this.height = FLOORHEIGHT;
+
+		this.relativedrawX = relativedrawX;
+		this.relativedrawY = relativedrawY;
 
 		animations = new HashMap<>();
 		loadAnimation();
@@ -49,6 +56,7 @@ public abstract class Entity implements Constants {
 	 */
 	public void setWorld(World world) {
 		this.world = world;
+		height = getTilePosition(0, 0).getHeight();
 	}
 
 	public Boolean getInteractable() {
@@ -80,23 +88,28 @@ public abstract class Entity implements Constants {
 	}
 
 	public Tile getTilePosition(Integer xoffset, Integer yoffset) {
-		return world.getTile(getPixelX() / DEFAULTTILEWIDTH - xoffset, getPixelY() / DEFAULTTILEWIDTH - yoffset);
+		return world.getTile(getPosition().x - xoffset, getPosition().y - yoffset);
 	}
 
 	public Point getPixelposition() {
 		return pixelposition;
 	}
 
-	public Integer getPixelX() {
-		return (int) getPixelposition().getX();
+	public Integer getDrawX(Integer relativedrawX) {
+		return (int) getPosition().getX() * DEFAULTTILEWIDTH + relativedrawX;
+	}
+	public Integer getDrawY(Integer relativedrawY) {
+		return (int) getPosition().getY() * DEFAULTTILEWIDTH + relativedrawY;
+	}
+	public Integer getRelativedrawX() {
+		return relativedrawX;
+	}
+	public Integer getRelativedrawY() {
+		return relativedrawY;
 	}
 
-	public Integer getPixelY() {
-		return (int) getPixelposition().getY();
-	}
-	
 	public Point getPosition() {
-		return new Point((getPixelX()/DEFAULTTILEWIDTH),(getPixelY()/DEFAULTTILEWIDTH));
+		return new Point(pixelposition.x / DEFAULTTILEWIDTH, pixelposition.x / DEFAULTTILEWIDTH);
 	}
 
 	public Integer getHeight() {
@@ -115,21 +128,11 @@ public abstract class Entity implements Constants {
 		this.description = description;
 	}
 
-	/**
-	 * @param newPosition positon on world
-	 * @param world
-	 */
-	public void setPosition(Point newPosition) {
-		new MoveEntityTask(2, this, null);
-		/*
-		try {
-			world.getTile(getTilePosition().getX(), getTilePosition().getY()).onSteppedUpon(this);
-		} catch (IndexOutOfBoundsException ioobe) {
-			System.out.println("Stepped out of Bounds.");
-		}
-		*/
+	public void move() {
+		if (getTileInFront().getHeight() <= getHeight())
+			new MoveEntityTask(2, this, null);
 	}
-	
+
 	public void setPixelPosition(Point point) {
 		pixelposition = point;
 	}

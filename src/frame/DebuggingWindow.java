@@ -18,6 +18,7 @@ public class DebuggingWindow extends CustomWindow {
 
 	String fpsav, tpsav, executiontimeav, tasks, cpu;
 	Set<Entry<String, Integer>> tasktypes;
+	
 	OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
 	public DebuggingWindow() {

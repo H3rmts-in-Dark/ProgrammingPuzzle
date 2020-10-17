@@ -21,16 +21,16 @@ public class MoveEntityTask extends Task {
 	public void runCode() {
 		switch (rotation) {
 		case down:
-			entity.setPixelPosition(new Point(entity.getPixelX(),entity.getPixelY()+1));
+			entity.setPixelPosition(new Point(entity.getDrawX(0),entity.getDrawX(1)));
 			break;
 		case left:
-			entity.setPixelPosition(new Point(entity.getPixelX()-1,entity.getPixelY()));
+			entity.setPixelPosition(new Point(entity.getDrawX(-1),entity.getDrawX(0)));
 			break;
 		case right:
-			entity.setPixelPosition(new Point(entity.getPixelX()+1,entity.getPixelY()));
+			entity.setPixelPosition(new Point(entity.getDrawX(+1),entity.getDrawX(0)));
 			break;
 		case up:
-			entity.setPixelPosition(new Point(entity.getPixelX(),entity.getPixelY()-1));
+			entity.setPixelPosition(new Point(entity.getDrawX(0),entity.getDrawX(-1)));
 			break;
 		}
 	}

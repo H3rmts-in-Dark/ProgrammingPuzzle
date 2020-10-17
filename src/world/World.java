@@ -64,13 +64,13 @@ public class World implements Constants{
 	public void removeEntity(Entity entity) {
 		entitylist.remove(entity);
 	}
-
-	public Entity getEntity(Integer index) {
-		return entitylist.get(index);
-	}
-
-	public Integer getIndex(Entity e) {
-		return entitylist.indexOf(e);
+	
+	public Entity getEntityat(Tile tile) {
+		for (Entity entity : entitylist) {
+			if (entity.getPosition().equals(tile.getPosition()))
+				return entity;
+		}
+		return null;
 	}
 
 	public Integer getWidth() {

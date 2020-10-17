@@ -7,7 +7,7 @@ import world.World.Layers;
 public class Tonne extends Tile {
 
 	public Tonne() {
-		super(UNPASSABLE, ANIMATED);
+		super(UNPASSABLE, ANIMATED,10,20);
 		setDescription("Barriere");
 	}
 

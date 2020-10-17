@@ -8,7 +8,7 @@ import world.World.Layers;
 public class Computer extends Tile {
 
 	public Computer() {
-		super(UNPASSABLE, ANIMATED);
+		super(UNPASSABLE, ANIMATED,-5,-20);
 		setDescription("Computer tile that gives you" + "\n" + "some information when interacted with");
 	}
 

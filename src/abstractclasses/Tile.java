@@ -20,6 +20,9 @@ public abstract class Tile implements Constants {
 	private Integer height;
 	private String description;
 
+	private Integer relativedrawX;
+	private Integer relativedrawY;
+
 	/**
 	 * exluding objektlayer
 	 */
@@ -30,10 +33,12 @@ public abstract class Tile implements Constants {
 
 	protected World world;
 
-	protected Tile(Integer height, Boolean animated) {
+	protected Tile(Integer height, Boolean animated, Integer relativedrawX, Integer relativedrawY) {
 		this.height = height;
 		this.description = "default description";
 		this.world = null;
+		this.relativedrawX = relativedrawX;
+		this.relativedrawY = relativedrawY;
 
 		images = new HashMap<>();
 		objektAnimations = new HashMap<>();
@@ -103,12 +108,17 @@ public abstract class Tile implements Constants {
 		return world.getTilePoint(this);
 	}
 
-	public Integer getX() {
-		return (int) getPosition().getX();
+	public Integer getDrawX(Integer relativedrawX) {
+		return (int) getPosition().getX() * DEFAULTTILEWIDTH + relativedrawX;
 	}
-
-	public Integer getY() {
-		return (int) getPosition().getY();
+	public Integer getDrawY(Integer relativedrawY) {
+		return (int) getPosition().getY() * DEFAULTTILEWIDTH + relativedrawY;
+	}
+	public Integer getRelativedrawX() {
+		return relativedrawX;
+	}
+	public Integer getRelativedrawY() {
+		return relativedrawY;
 	}
 
 	public String getDescription() {

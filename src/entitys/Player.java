@@ -8,7 +8,7 @@ import abstractclasses.Tile;
 public class Player extends Entity {
 
 	protected Player(Boolean interactable, Point position) {
-		super(interactable, position);
+		super(interactable, position, 0, 0);
 	}
 
 	@Override
@@ -21,8 +21,6 @@ public class Player extends Entity {
 	}
 
 }
-
-
 
 class PlayerCommand {
 
@@ -40,11 +38,7 @@ class PlayerCommand {
 	}
 
 	public void walk() {
-		// TODO Walk einfügen, es fehlt noch die Animation deswegen wird das auf später
-		// verschoben
-		if(player.getHeight() >= player.getTileInFront().getHeight()) {
-			// TODO Muss die größer && gleich sein oder größer?
-		}
+		player.move();
 	}
 
 	public Point getPosition() {

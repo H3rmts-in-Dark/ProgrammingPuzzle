@@ -6,30 +6,6 @@ public interface Constants {
 
 // 
 // -----------------------------------------------------------
-// -------------------------Layer-----------------------------
-
-	/**
-	 * Höhe des tiefsten Layers.
-	 */
-	public static final Integer FLOORHEIGHT = 0;
-
-	/**
-	 * Der höchstmögliche Wert eines Layers.
-	 */
-	public static final Integer UNPASSABLE = Integer.MAX_VALUE;
-
-	/**
-	 * kann auf ein förederband fallen
-	 */
-	public static final Integer ABLAGE = 20;
-
-	/**
-	 * Förderband
-	 */
-	public static final Integer FÖRDERBANDHÖHE = 10;
-
-// 
-// -----------------------------------------------------------
 // ---------------------Frame---------------------------------
 
 	public static final Integer FRAMEWIDTH = 1000;
@@ -82,6 +58,30 @@ public interface Constants {
 
 //
 // -----------------------------------------------------------
+// -------------------------Layer-----------------------------
+
+	/**
+	 * Höhe des tiefsten Layers.
+	 */
+	public static final Integer FLOORHEIGHT = 0;
+
+	/**
+	 * Der höchstmögliche Wert eines Layers.
+	 */
+	public static final Integer UNPASSABLE = DEFAULTTILEWIDTH;
+
+	/**
+	 * kann auf ein förederband fallen
+	 */
+	public static final Integer ABLAGE = DEFAULTTILEWIDTH / 2;
+
+	/**
+	 * Förderband
+	 */
+	public static final Integer FÖRDERBANDHÖHE = DEFAULTTILEWIDTH / 3;
+
+//
+// -----------------------------------------------------------
 // --------------------Gameticker-----------------------------
 
 	/**
@@ -95,6 +95,6 @@ public interface Constants {
 
 	public static final Boolean ANIMATED = true;
 	public static final Boolean NOTANIMATED = false;
-	public static final String DEFAULTANIMATION = "defaultanimation"; //do not change is used to load from rcs/...
+	public static final String DEFAULTANIMATION = "defaultanimation"; // do not change is used to load from rcs/...
 	public static final String INTERACTANIMATION = "interactanimation";
 }

@@ -7,8 +7,8 @@ import world.Images;
 
 public class Box extends Entity {
 
-	public Box(Point position) {
-		super(true, position);
+	public Box(Integer X, Integer Y) {
+		super(true, new Point(X, Y), 8, 15);
 		setDescription("Computer tile that gives you some information when interacted");
 	}
 
@@ -19,7 +19,7 @@ public class Box extends Entity {
 
 	@Override
 	public void loadAnimation() {
-		addAnimation(Images.loadEntityAnimation("Box",DEFAULTANIMATION, this));
+		addAnimation(Images.loadEntityAnimation("Box", DEFAULTANIMATION, this));
 	}
 
 }
