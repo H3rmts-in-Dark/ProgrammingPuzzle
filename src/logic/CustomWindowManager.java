@@ -6,32 +6,32 @@ import javax.swing.JLayeredPane;
 
 import abstractclasses.CustomWindow;
 
-public class Customwindowmanger extends JLayeredPane {
-	
+public class CustomWindowManager extends JLayeredPane {
+
+	// Haha Windows
 	ArrayList<CustomWindow> windows;
-	
-	public Customwindowmanger() {
+
+	public CustomWindowManager() {
 		windows = new ArrayList<>();
 	}
-	
+
 	public void addWindow(CustomWindow window) {
 		windows.add(window);
-		window.setLayer(nexthighestLayer());
+		window.setLayer(nextHighestLayer());
 		window.setFocused(true);
 		clean();
 	}
-	
+
 	public void removeWindow(CustomWindow newWindow) {
 		windows.remove(newWindow);
 		clean();
 	}
-	
-	public void Windowtofront(CustomWindow window) {
-		window.setLayer(nexthighestLayer());
+
+	public void windowToFront(CustomWindow window) {
+		window.setLayer(nextHighestLayer());
 		clean();
 	}
-	
-	
+
 	private void clean() {
 		windows.sort(null);
 		Integer actlayer = 0;
@@ -41,23 +41,23 @@ public class Customwindowmanger extends JLayeredPane {
 			actlayer++;
 		}
 		if (windows.size() > 0)
-			windows.get(windows.size()-1).setFocused(true);
+			windows.get(windows.size() - 1).setFocused(true);
 		addComponents();
 	}
-	
+
 	private void addComponents() {
 		removeAll();
 		for (CustomWindow window : windows) {
-			add(window,window.getLayer());
+			add(window, window.getLayer());
 		}
 	}
 
-	private int nexthighestLayer() {
+	private int nextHighestLayer() {
 		Integer layer = 0;
 		for (CustomWindow window : windows) {
-			if (window.getLayer()>layer)
+			if (window.getLayer() > layer)
 				layer = window.getLayer();
 		}
-		return layer+1;
+		return ++layer;
 	}
 }

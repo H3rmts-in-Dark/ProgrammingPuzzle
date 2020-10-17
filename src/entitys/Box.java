@@ -18,8 +18,8 @@ public class Box extends Entity {
 	}
 
 	@Override
-	public void loadanimation() {
-		addAnimation(Images.loaddefaultEntityAnimation("Box", this),defaultanimation);
+	public void loadAnimation() {
+		addAnimation(Images.loadEntityAnimation("Box", "default animation", this), DEFAULTANIMATION);
 	}
 
 }

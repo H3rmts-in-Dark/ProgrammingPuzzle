@@ -9,31 +9,37 @@ import java.io.ObjectOutputStream;
 
 import world.World;
 
+// Haha wir retten die Welt xD
 public class WorldSaver {
-	
-	private static ObjectOutputStream os;
-	private static ObjectInputStream is;
-	private static World o;
 
-	private WorldSaver() {}
+	private static ObjectOutputStream oos;
+	private static ObjectInputStream ois;
+	private static World world;
 
-	public static void outputStream(World o, String path) {
+	private WorldSaver() {
+	}
+
+	public static void outputStream(World world, String path) {
 		try {
-			os = new ObjectOutputStream(new FileOutputStream(new File(path)));
-			os.writeObject(o);
-			os.close();
-		} catch (IOException e) {}
+			oos = new ObjectOutputStream(new FileOutputStream(new File(path)));
+			oos.writeObject(world);
+			oos.close();
+		} catch (IOException e) {
+		}
 	}
 
 	public static World inputStream(String path) {
-		
-		try {
-			is = new ObjectInputStream(new FileInputStream(new File(path)));
-			try {o = (World) is.readObject();
-			} catch (ClassCastException | ClassNotFoundException e) {o = null;}
-			is.close();
-		} catch (IOException e) {}
-		return o;
-	}
 
+		try {
+			ois = new ObjectInputStream(new FileInputStream(new File(path)));
+			try {
+				world = (World) ois.readObject();
+			} catch (ClassCastException | ClassNotFoundException e) {
+				world = null;
+			}
+			ois.close();
+		} catch (IOException e) {
+		}
+		return world;
+	}
 }

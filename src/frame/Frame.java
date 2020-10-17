@@ -10,11 +10,9 @@ import java.awt.GraphicsDevice;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.BorderFactory;
@@ -26,20 +24,18 @@ import javax.swing.WindowConstants;
 
 import abstractclasses.CustomWindow;
 import logic.Constants;
-import logic.Customwindowmanger;
-import logic.Debuger;
-import logic.MainControll;
-import logic.Statemanager.States;
+import logic.CustomWindowManager;
+import logic.Debugger;
+import logic.MainControl;
+import logic.StateManager.States;
 
 public class Frame implements Constants {
 
 	private static JFrame frame;
-
 	private static JLayeredPane mainMenuPane;
 	private static JButton mainMenuStartButton;
-	private static Customwindowmanger manager;
-
-	private static Long lastrepaint = System.currentTimeMillis();
+	private static CustomWindowManager manager;
+	private static Long lastRepaint = System.currentTimeMillis();
 
 	private Frame() {
 	}
@@ -49,11 +45,11 @@ public class Frame implements Constants {
 			@Override
 			public void paint(Graphics g) {
 				super.paint(g);
-				Debuger.repaint();
+				Debugger.repaint();
 			}
 		};
 		frame.setVisible(false);
-		frame.setSize(FrameWidht, FrameHeight);
+		frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
 		frame.setLayout(null);
 		frame.setResizable(false);
 
@@ -61,19 +57,17 @@ public class Frame implements Constants {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		// frame.setLocationRelativeTo(null);
 
-		loadlevelPane();
-		loadMainmenuPane();
-
+		loadLevelPane();
+		loadMainMenuPane();
 		new CustomFrameMouseAdapter(frame);
-
-		setState(MainControll.getStatemanager().getState());
+		setState(MainControl.getStatemanager().getState());
 
 		frame.repaint();
 	}
 
-	private static void loadMainmenuPane() {
+	private static void loadMainMenuPane() {
 		mainMenuPane = new JLayeredPane();
-		mainMenuPane.setBounds(0, 0, FrameWidht, FrameHeight);
+		mainMenuPane.setBounds(0, 0, FRAMEWIDTH, FRAMEHEIGHT);
 		mainMenuPane.setVisible(false);
 
 		mainMenuStartButton = new JButton("start");
@@ -82,7 +76,7 @@ public class Frame implements Constants {
 		mainMenuStartButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				MainControll.getStatemanager().setState(States.programming);
+				MainControl.getStatemanager().setState(States.programming);
 			}
 		});
 		mainMenuStartButton.setFocusPainted(false);
@@ -93,9 +87,9 @@ public class Frame implements Constants {
 		frame.getContentPane().add(mainMenuPane);
 	}
 
-	private static void loadlevelPane() {
-		manager = new Customwindowmanger();
-		manager.setBounds(0, 0, FrameWidht, FrameHeight);
+	private static void loadLevelPane() {
+		manager = new CustomWindowManager();
+		manager.setBounds(0, 0, FRAMEWIDTH, FRAMEHEIGHT);
 		manager.setVisible(false);
 
 		frame.getContentPane().add(manager);
@@ -108,17 +102,19 @@ public class Frame implements Constants {
 		GraphicsDevice gd = frame.getGraphicsConfiguration().getDevice();
 		switch (newstate) {
 		case mainmenu:
-			frame.setSize(FrameWidht,FrameHeight);
+			frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
 			mainMenuPane.setVisible(true);
 			break;
 		case programming:
 		case running:
 		case pause:
 		case Levelselecting:
-			//frame.setSize(gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight());
-			//manager.setSize(gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight());
+			// frame.setSize(gd.getDisplayMode().getWidth(),
+			// gd.getDisplayMode().getHeight());
+			// manager.setSize(gd.getDisplayMode().getWidth(),
+			// gd.getDisplayMode().getHeight());
 			manager.setVisible(true);
-			//test();
+			// test();
 			break;
 		}
 	}
@@ -133,8 +129,8 @@ public class Frame implements Constants {
 		repaint();
 	}
 
-	public static void WindowtoFront(CustomWindow window) {
-		manager.Windowtofront(window);
+	public static void windowToFront(CustomWindow window) {
+		manager.windowToFront(window);
 		repaint();
 	}
 
@@ -155,33 +151,34 @@ public class Frame implements Constants {
 	}
 
 	public static void repaint() {
-		if (lastrepaint + (1000 / fps) < System.currentTimeMillis()) {
+		if (lastRepaint + (1000 / FPS) < System.currentTimeMillis()) {
 			frame.repaint();
-			// System.out.println("rep" + System.currentTimeMillis());
-			lastrepaint = System.currentTimeMillis();
+			// System.out.println("Repainted at: " + System.currentTimeMillis());
+			lastRepaint = System.currentTimeMillis();
 		} else {
-			// System.out.println("no repaint");
+			// System.out.println("Didn't repaint");
 		}
 	}
-	
+
+	// TODO Funktion? Wenn nicht mehr benötigt, entfernen
 	public static void test() {
 		BufferStrategy strategy = frame.getBufferStrategy();
-		BufferCapabilities bufCap  = strategy.getCapabilities();
+		BufferCapabilities bufCap = strategy.getCapabilities();
 		FlipContents flipContents = bufCap.getFlipContents();
-		
-		if (flipContents.equals(BufferCapabilities.FlipContents.UNDEFINED)) 
+
+		if (flipContents.equals(BufferCapabilities.FlipContents.UNDEFINED))
 			System.out.println("The contents is unknown after a flip");
-		if (flipContents.equals(BufferCapabilities.FlipContents.BACKGROUND)) 
+		if (flipContents.equals(BufferCapabilities.FlipContents.BACKGROUND))
 			System.out.println("The contents cleared to the components background color after a flop");
-		if (flipContents.equals(BufferCapabilities.FlipContents.PRIOR)) 
+		if (flipContents.equals(BufferCapabilities.FlipContents.PRIOR))
 			System.out.println("The contents is the contents of the front buffer just before the flip");
-		if (flipContents.equals(BufferCapabilities.FlipContents.COPIED)) 
-			System.out.println("The contents is identical to the contents just pushed to the front buffer after a flip");
+		if (flipContents.equals(BufferCapabilities.FlipContents.COPIED))
+			System.out
+					.println("The contents is identical to the contents just pushed to the front buffer after a flip");
 	}
 }
 
-class CustomFrameMouseAdapter implements MouseListener, MouseMotionListener, MouseWheelListener {
-
+class CustomFrameMouseAdapter extends MouseAdapter {
 	JFrame frame;
 
 	public CustomFrameMouseAdapter(JFrame frame) {
@@ -196,12 +193,11 @@ class CustomFrameMouseAdapter implements MouseListener, MouseMotionListener, Mou
 		try {
 			CustomWindow component = getWindow(e.getPoint());
 			Point componentPoint = convertPoint(e.getPoint(), component);
-			
+
 			dragwindow = component;
-			
-			component.processMousepressed(componentPoint);
-			component.processMousemoved(componentPoint);
-		} catch (getWindowExeption | PointconvertExeption e1) {
+			component.processMousePressedEvent(componentPoint);
+			component.processMouseMovedEvent(componentPoint);
+		} catch (GetWindowException | PointConvertExeption e1) {
 		}
 	}
 
@@ -210,11 +206,11 @@ class CustomFrameMouseAdapter implements MouseListener, MouseMotionListener, Mou
 		try {
 			CustomWindow component = dragwindow;
 			Point componentPoint = convertPoint(e.getPoint(), component);
-			
+
 			component.drag(e);
-			component.processMousemoved(componentPoint);
+			component.processMouseMovedEvent(componentPoint);
 			component.setrepaintfull();
-		} catch (PointconvertExeption | NullPointerException e2) {
+		} catch (PointConvertExeption | NullPointerException e2) {
 		}
 	}
 
@@ -225,10 +221,9 @@ class CustomFrameMouseAdapter implements MouseListener, MouseMotionListener, Mou
 		try {
 			CustomWindow component = getWindow(e.getPoint());
 			Point componentPoint = convertPoint(e.getPoint(), component);
-			
 			component.changeCursor(componentPoint);
-			component.processMousemoved(componentPoint);
-		} catch (getWindowExeption | PointconvertExeption e1) {
+			component.processMouseMovedEvent(componentPoint);
+		} catch (GetWindowException | PointConvertExeption e1) {
 			frame.setCursor(Cursor.getDefaultCursor());
 		}
 	}
@@ -238,49 +233,30 @@ class CustomFrameMouseAdapter implements MouseListener, MouseMotionListener, Mou
 		try {
 			CustomWindow component = getWindow(e.getPoint());
 			Point componentPoint = convertPoint(e.getPoint(), component);
-
-			component.processMouseWheelmoved(componentPoint, e);
-		} catch (getWindowExeption | PointconvertExeption e2) {
+			component.processMouseWheelMovedEvent(componentPoint, e);
+		} catch (GetWindowException | PointConvertExeption e2) {
 		}
 	}
 
-	private CustomWindow getWindow(Point p) throws getWindowExeption {
+	private CustomWindow getWindow(Point p) throws GetWindowException {
 		try {
 			return (CustomWindow) SwingUtilities.getDeepestComponentAt(frame, (int) p.getX(), (int) p.getY());
 		} catch (ClassCastException e) {
-			throw new getWindowExeption();
+			throw new GetWindowException();
 		}
 	}
 
-	private Point convertPoint(Point point, CustomWindow window) throws PointconvertExeption {
+	private Point convertPoint(Point point, CustomWindow window) throws PointConvertExeption {
 		try {
 			return SwingUtilities.convertPoint(frame, point, window);
 		} catch (Error e) {
-			throw new PointconvertExeption();
+			throw new PointConvertExeption();
 		}
 	}
-	
-	class PointconvertExeption extends Exception {
-	}
-	
-	class getWindowExeption extends Exception {
-	}
-	
-	
-	
-	@Override
-	public void mouseReleased(MouseEvent e) {
+
+	class PointConvertExeption extends Exception {
 	}
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
+	class GetWindowException extends Exception {
 	}
 }

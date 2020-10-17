@@ -9,126 +9,92 @@ public interface Constants {
 // -------------------------Layer-----------------------------
 
 	/**
-	 * tiefster layer
+	 * Höhe des tiefsten Layers.
 	 */
-	public static final Integer Floor = 0;
+	public static final Integer FLOORHEIGHT = 0;
 
 	/**
-	 * unendlich(fast) hoch
+	 * Der höchstmögliche Wert eines Layers.
 	 */
-	public static final Integer Unpassable = Integer.MAX_VALUE;
+	public static final Integer UNPASSABLE = Integer.MAX_VALUE;
 
 	/**
 	 * kann auf ein förederband fallen
 	 */
-	public static final Integer Ablage = 20;
+	public static final Integer ABLAGE = 20;
 
 	/**
 	 * Förderband
 	 */
-	public static final Integer Förderband = 10;
+	public static final Integer FÖRDERBANDHÖHE = 10;
 
 // 
 // -----------------------------------------------------------
 // ---------------------Frame---------------------------------
 
-	public static final Integer FrameWidht = 1000;
-
-	public static final Integer FrameHeight = 800;
-
-	public static final Integer fps = 45;
+	public static final Integer FRAMEWIDTH = 1000;
+	public static final Integer FRAMEHEIGHT = 800;
+	public static final Integer FPS = 45;
 
 // 
 // -----------------------------------------------------------
 // --------------------Customwindow---------------------------
 
-	public static final Integer scrollbarwidth = 4;
-
-	public static final Integer cornerwidht = 6;
-
-	public static final Integer topbarwhidht = 40;
-
-	public static final Integer sidebarwhidht = 8;
-
-	public static final Integer roundcurves = 8;
-
-	public static final Integer defaultX = 40;
-
-	public static final Integer defaultY = 40;
-
-	public static final Integer defaultWidht = 200;
-
-	public static final Integer defaultHeight = 100;
-
-	public static final Integer defaultMinWidht = (cornerwidht + 2) * 2 + 20;
-
-	public static final Integer defaultMinHeight = topbarwhidht + (cornerwidht + 2) + 20;
-
-	public static final Integer defaultMaxWidht = FrameWidht;
-
-	public static final Integer defaultMaxHeight = FrameHeight;
+	public static final Integer SCROLLBARWIDTH = 4;
+	public static final Integer CORNERWIDTH = 6;
+	public static final Integer TOPBARWIDTH = 40;
+	public static final Integer SIDEBARWIDTH = 8;
+	public static final Integer ROUNDCURVES = 8;
+	public static final Integer DEFAULTX = 40;
+	public static final Integer DEFAULTY = 40;
+	public static final Integer DEFAULTWITH = 200;
+	public static final Integer DEFAULTHEIGHT = 100;
+	public static final Integer DEFAULTMINWIDTH = (CORNERWIDTH + 2) * 2 + 20;
+	public static final Integer DEFAULTMINHEIGHT = TOPBARWIDTH + (CORNERWIDTH + 2) + 20;
+	public static final Integer DEFAULTMAXWIDTH = FRAMEWIDTH;
+	public static final Integer DEFAULTMAXHEIGHT = FRAMEHEIGHT;
 
 // 
 // -----------------------------------------------------------
 // --------------------Worldwindow----------------------------
 
-	public static final Float MaxZoom = 4f;
+	public static final Float MAXZOOM = 4f;
+	public static final Float MINZOOM = 0.2f;
 
-	public static final Float MinZoom = 0.2f;
-	
 	/**
-	 * SCALE_FAST 
-	 * hässlich 
+	 * SCALE_FAST: Ist nicht so schön, benötigt aber weniger RAM und dauert länger
+	 * um nach dem Verschieben des Fensters wieder auf das normale GPU und CPU level
+	 * zu kommen. Aber sonst ist der GPU Verbrauch geringer. Bei dieser Option
+	 * bleiben die TPS meist gleich.
 	 * 
-	 * weniger ram 
+	 * SCALE_SMOOTH: Benötigt mehr RAM und GPU und hat die gleichen Probleme beim
+	 * Verändern der Größe wie SCALE_FAST. Bei dieser Option treten mehr TPS
+	 * Einstürze auf. Beim Verschieben des Fensters gibt es starke Verzögerungen.
 	 * 
-	 * nachdem man das fenster bewegt oder vergrößert wenn 
-	 * man in die welt gezoom hat dauert es
-	 * lange bis sich gpu und cpu verbrauch normalisieren
-	 *  
-	 * geringerer gpu verbrauch(auser kurze spitzen beim 
-	 * fenseter vergrößern verkleinern, treten abunzu 
-	 * aber auch bei cpu auf)
-	 * 
-	 * ticks per second immer gleich
-	 * 
-	 * 
-	 * SCALE_SMOOTH bischen mehr ram verbrauch 
-	 * 
-	 * mehr ram
-	 * 
-	 * höherer gpu verbrauch(und kurze spitzen beim 
-	 * fenseter vergrößern verkleinern, treten abunzu 
-	 * aber auch bei cpu auf)
-	 * 
-	 * ticks per second verändern
-	 * 
-	 * starke verzögerung wenn man das fenster bewegt
-	 * un in die welt gezoomt hat
 	 */
-	public static final Integer Scaler = Image.SCALE_SMOOTH;  // Fast ore smoth
+	public static final Integer Scaler = Image.SCALE_SMOOTH; // Scale Einstellung, Erklärung darüber.
 
 // 
 // -----------------------------------------------------------
 // --------------------World----------------------------------
 
-	public static final Integer defaulttilewidth = 64;
+	public static final Integer DEFAULTTILEWIDTH = 64;
 
 //
 // -----------------------------------------------------------
 // --------------------Gameticker-----------------------------
 
-	public static final Integer tps = 60; // ticks per second
+	/**
+	 * Ticks Per Second
+	 */
+	public static final Integer TPS = 60;
 
 //
 // -----------------------------------------------------------
 // --------------------Tile-----------------------------------
-	
-	public static final Boolean animated = true;
-	
-	public static final Boolean notanimated = false;
-	
-	public static final String defaultanimation = "defaultanimation";
-	
-	public static final String interactanimation = "interactanimation";
+
+	public static final Boolean ANIMATED = true;
+	public static final Boolean NOTANIMATED = false;
+	public static final String DEFAULTANIMATION = "defaultanimation";
+	public static final String INTERACTANIMATION = "interactanimation";
 }

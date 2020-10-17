@@ -1,36 +1,34 @@
 package abstractclasses;
 
-import logic.MainControll;
+import logic.MainControl;
 
 public abstract class Task {
 
 	private Double runTick;
-	private Integer Loop;
-	private Integer tickDifference;
-	
+	private Integer Loop, tickDifference;
 	private Boolean ended;
-	
+
 	/**
 	 * 
 	 * @param tickDifference
-	 * @param loop -1 to loop infinite
+	 * @param loop           -1 to loop infinite
 	 */
-	protected Task(Integer tickDifference,Integer loop) {
+	protected Task(Integer tickDifference, Integer loop) {
 		this.tickDifference = tickDifference;
 		this.Loop = loop;
 		this.ended = false;
-		MainControll.getGameTicker().addTask(this);
+		MainControl.getGameTicker().addTask(this);
 		updateTickDifference();
 	}
-	
+
 	protected Task(Integer tickDifference) {
-		this(tickDifference,0);
+		this(tickDifference, 0);
 	}
 
 	private void updateTickDifference() {
-		runTick = MainControll.getGameTicker().getTickIn(tickDifference);
+		runTick = MainControl.getGameTicker().getTickIn(tickDifference);
 	}
-	
+
 	public Double getRunTick() {
 		return runTick;
 	}
@@ -43,29 +41,24 @@ public abstract class Task {
 	public Boolean tryRun() {
 		if (ended)
 			return true;
-		//System.out.print(getRunTick() + "|" + MainControll.getGameTicker().getTick() + getClass());
-		if (MainControll.getGameTicker().getTick() >= runTick) {
+		if (MainControl.getGameTicker().getTick() >= runTick) {
 			runCode();
-			//System.out.println("   exectuded");
-			if (Loop > 0) {
+			if (Loop > 0)
 				Loop--;
-			}
 			if (Loop == -1 || Loop > 0) {
 				updateTickDifference();
 				return false;
 			}
 			return true;
 		}
-		//System.out.println("  ");
 		return false;
 	}
-	
 
 	public void end() {
 		ended = true;
 	}
 
 	public abstract void runCode();
-	
-	public abstract void onend();
+
+	public abstract void onEnd();
 }

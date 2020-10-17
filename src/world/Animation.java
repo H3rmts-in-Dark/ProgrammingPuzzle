@@ -7,25 +7,24 @@ import java.util.ArrayList;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
 import tasks.ChangeImageTask;
-import world.World.Layers;
 
 public class Animation {
 
 	private ArrayList<String> paths;
-	private Integer actualfile;
+	private Integer actualFile;
 	private File source;
 	private Object animatedObject;
 
 	public Animation(File source, Object animatedObject) {
 		this.paths = new ArrayList<>();
-		this.actualfile = 0;
+		this.actualFile = 0;
 		this.source = source;
 		this.animatedObject = animatedObject;
 		loadimages();
 	}
 
-	public BufferedImage getActualImg() {
-		return Images.getImage(paths.get(actualfile));
+	public BufferedImage getActualImage() {
+		return Images.getImage(paths.get(actualFile));
 	}
 
 	public void start() {
@@ -37,8 +36,8 @@ public class Animation {
 	 * @return true if animation finished
 	 */
 	public void nextImage() {
-		if (actualfile < paths.size() - 1) {
-			actualfile++;
+		if (actualFile < paths.size() - 1) {
+			actualFile++;
 			if (animatedObject instanceof Tile) {
 				((Tile) animatedObject).getWorld().getWindow().setrepaintfull();
 			} else if (animatedObject instanceof Entity) {
@@ -53,10 +52,10 @@ public class Animation {
 
 	public void triggerdefault() {
 		if (animatedObject instanceof Tile) {
-			((Tile) animatedObject).triggerdefaultanimation();
+			((Tile) animatedObject).triggerDefaultAnimation();
 			// System.out.println("schould triggert default" + toString());
 		} else if (animatedObject instanceof Entity) {
-			((Entity) animatedObject).triggerdefaultanimation();
+			((Entity) animatedObject).triggerDefaultAnimation();
 			// System.out.println("schould triggert default" + toString());
 		}
 	}

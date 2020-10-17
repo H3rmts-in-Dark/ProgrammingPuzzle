@@ -2,7 +2,6 @@ package frame;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -13,16 +12,16 @@ import java.util.Set;
 import com.sun.management.OperatingSystemMXBean;
 
 import abstractclasses.CustomWindow;
-import logic.Debuger;
+import logic.Debugger;
 
-public class DebugingWindow extends CustomWindow {
+public class DebuggingWindow extends CustomWindow {
 
 	String fpsav, tpsav, executiontimeav, tasks, cpu;
 	Set<Entry<String, Integer>> tasktypes;
-    OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+	OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
-	public DebugingWindow() {
-		super(300, 400, new Point(20, 20), "Debunging");
+	public DebuggingWindow() {
+		super(300, 400, new Point(20, 20), "Debugging");
 		fpsav = "";
 		tpsav = "";
 		executiontimeav = "";
@@ -36,12 +35,12 @@ public class DebugingWindow extends CustomWindow {
 						Thread.sleep(300);
 					} catch (InterruptedException e) {
 					}
-					fpsav = Double.toString(Debuger.getFps());
-					tpsav = Double.toString(Debuger.getTps());
-					executiontimeav = Double.toString(Debuger.getExecutiontime());
-					tasks = Integer.toString(Debuger.getTaskSize());
-					tasktypes = Debuger.getTasktypes();
-					cpu = Double.toString(Math. round((os.getProcessCpuLoad()*100) * 100.0) / 100.0);
+					fpsav = Double.toString(Debugger.getFPS());
+					tpsav = Double.toString(Debugger.getTPS());
+					executiontimeav = Double.toString(Debugger.getExecutionTime());
+					tasks = Integer.toString(Debugger.getTaskSize());
+					tasktypes = Debugger.getTasktypes();
+					cpu = Double.toString(Math.round((os.getProcessCpuLoad() * 100) * 100.0) / 100.0);
 					setrepaintfull();
 				}
 			}
@@ -60,13 +59,13 @@ public class DebugingWindow extends CustomWindow {
 
 		Integer height = 0;
 
-		g2.drawString("Fps:" + fpsav + " / " + fps, 10, height += 25);
-		g2.drawString("Tps:" + tpsav + " / " + tps, 10, height += 25);
-		g2.drawString("Tpsdelay:" + Integer.toString(1000 / tps) + "ms", 10, height += 25);
-		g2.drawString("Fpsdelay:" + Integer.toString(1000 / fps) + "ms", 10, height += 25);
-	
-		g2.drawString("Cpu:" + cpu + "%", 10, height += 25);
-		
+		g2.drawString("FPS:" + fpsav + " / " + FPS, 10, height += 25);
+		g2.drawString("TPS:" + tpsav + " / " + TPS, 10, height += 25);
+		g2.drawString("TPSDelay:" + Integer.toString(1000 / TPS) + "ms", 10, height += 25);
+		g2.drawString("FPSDelay:" + Integer.toString(1000 / FPS) + "ms", 10, height += 25);
+
+		g2.drawString("CPU:" + cpu + "%", 10, height += 25);
+
 		g2.drawString("Executiontilme:" + executiontimeav + "ms", 10, height += 25);
 		g2.drawString("Tasks:" + tasks, 10, height += 25);
 
@@ -82,6 +81,5 @@ public class DebugingWindow extends CustomWindow {
 
 	@Override
 	public void drawCursor(Graphics2D g2, Point point) {
-		
 	}
 }
