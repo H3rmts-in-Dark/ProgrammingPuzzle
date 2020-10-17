@@ -85,12 +85,14 @@ public class Debugger implements Constants {
 						Task[] tasks = MainControl.getGameTicker().getTaskList().toArray(new Task[0]);
 
 						for (Task task : tasks) {
-							if (taskTypes.containsKey(task.getClass().getSimpleName())) {
-								taskTypes.replace(task.getClass().getSimpleName(),
-										taskTypes.get(task.getClass().getSimpleName()) + 1);
-							} else {
-								taskTypes.put(task.getClass().getSimpleName(), 1);
-							}
+							try {
+								if (taskTypes.containsKey(task.getClass().getSimpleName())) {
+									taskTypes.replace(task.getClass().getSimpleName(),
+											taskTypes.get(task.getClass().getSimpleName()) + 1);
+								} else {
+									taskTypes.put(task.getClass().getSimpleName(), 1);
+								}
+							} catch (NullPointerException e) {}
 						}
 					}
 				}

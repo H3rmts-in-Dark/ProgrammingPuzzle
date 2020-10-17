@@ -1,8 +1,9 @@
 package abstractclasses;
 
+import logic.Constants;
 import logic.MainControl;
 
-public abstract class Task {
+public abstract class Task implements Constants{
 
 	private Double runTick;
 	private Integer Loop, tickDifference;
@@ -13,14 +14,19 @@ public abstract class Task {
 	 * @param tickDifference
 	 * @param loop           -1 to loop infinite
 	 */
-	protected Task(Integer tickDifference, Integer loop) {
+	public Task(Integer tickDifference, Integer loop) {
 		this.tickDifference = tickDifference;
 		this.Loop = loop;
 		this.ended = false;
 		MainControl.getGameTicker().addTask(this);
 		updateTickDifference();
 	}
-
+	
+	/**
+	 * repated 1 time
+	 * 
+	 * @param tickDifference
+	 */
 	protected Task(Integer tickDifference) {
 		this(tickDifference, 0);
 	}

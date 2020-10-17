@@ -3,9 +3,11 @@ package abstractclasses;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import logic.Constants;
 import logic.Rotation;
+import tasks.MoveEntityTask;
 import world.Animation;
 import world.World;
 
@@ -19,7 +21,7 @@ public abstract class Entity implements Constants {
 	private Boolean interactable;
 	private Integer height;
 	private String description;
-	private Point position;
+	private Point pixelposition;
 
 	private Animation actualAnimation;
 	private HashMap<String, Animation> animations;
@@ -29,13 +31,13 @@ public abstract class Entity implements Constants {
 	protected Entity(Boolean interactable, Point position) {
 		this.interactable = interactable;
 		this.rotation = Rotation.right;
-		this.position = position;
+		this.pixelposition = new Point(position.x * DEFAULTTILEWIDTH, position.y * DEFAULTTILEWIDTH);
 		this.description = "default description";
 		this.world = null;
 
 		animations = new HashMap<>();
 		loadAnimation();
-		triggerDefaultAnimation();
+		triggerAnimation(DEFAULTANIMATION);
 	}
 
 	public abstract void loadAnimation();
@@ -57,39 +59,46 @@ public abstract class Entity implements Constants {
 		return actualAnimation.getActualImage();
 	}
 
-	public void addAnimation(Animation animation, String identifier) {
-		animations.put(identifier, animation);
+	public void addAnimation(Entry<String, Animation> data) {
+		animations.put(data.getKey(), data.getValue());
 	}
 
-	public Animation getObjektAnimation(String identifier) {
-		try {
-			return animations.get(identifier);
-		} catch (IndexOutOfBoundsException e) {
-			return null;
+	public void triggerAnimation(String animation) {
+		triggerAnimation(getanimation(animation));
+	}
+
+	private void triggerAnimation(Animation animation) {
+		if (actualAnimation != null) {
+			actualAnimation.stop();
 		}
-	}
-
-	public void triggerDefaultAnimation() {
-		triggerAnimation(getObjektAnimation(DEFAULTANIMATION));
-	}
-
-	public void triggerAnimation(Animation animation) {
-		actualAnimation = animation;
 		animation.start();
+		actualAnimation = animation;
 	}
 
-	public Point getPosition() {
-		return position;
+	public Animation getanimation(String identifier) {
+		return animations.get(identifier);
 	}
 
-	public Integer getX() {
-		return (int) getPosition().getX();
+	public Tile getTilePosition(Integer xoffset, Integer yoffset) {
+		return world.getTile(getPixelX() / DEFAULTTILEWIDTH - xoffset, getPixelY() / DEFAULTTILEWIDTH - yoffset);
 	}
 
-	public Integer getY() {
-		return (int) getPosition().getY();
+	public Point getPixelposition() {
+		return pixelposition;
+	}
+
+	public Integer getPixelX() {
+		return (int) getPixelposition().getX();
+	}
+
+	public Integer getPixelY() {
+		return (int) getPixelposition().getY();
 	}
 	
+	public Point getPosition() {
+		return new Point((getPixelX()/DEFAULTTILEWIDTH),(getPixelY()/DEFAULTTILEWIDTH));
+	}
+
 	public Integer getHeight() {
 		return height;
 	}
@@ -106,54 +115,43 @@ public abstract class Entity implements Constants {
 		this.description = description;
 	}
 
-	public void setPosition(Point newPosition, World world) {
-		position = newPosition;
+	/**
+	 * @param newPosition positon on world
+	 * @param world
+	 */
+	public void setPosition(Point newPosition) {
+		new MoveEntityTask(2, this, null);
+		/*
 		try {
-			world.getTile(getX(), getY()).onSteppedUpon(this);
+			world.getTile(getTilePosition().getX(), getTilePosition().getY()).onSteppedUpon(this);
 		} catch (IndexOutOfBoundsException ioobe) {
 			System.out.println("Stepped out of Bounds.");
 		}
+		*/
 	}
-
-	@SuppressWarnings("null")
-	public void interact() {
-		Tile tile = getTileInFront();
-		if (tile != null)
-			tile.onInteract(this);
-		for (Entity e : world.getEntitys())
-			if (e.getPosition().equals(tile.getPosition()))
-				e.onInteract(this);
+	
+	public void setPixelPosition(Point point) {
+		pixelposition = point;
 	}
 
 	/**
-	 * Gibt das Tile vor dem Entity zurück (in die Richtung, in die es schaut). Wenn
-	 * es keine Blickrichtung hat, wird automatsch oben genommen.
+	 * Gibt das Tile vor dem Entity zurück (in die Richtung, in die es schaut).
 	 * 
 	 * @return
-	 * @throws IndexOutOfBoundsException
 	 */
-	public Tile getTileInFront() throws IndexOutOfBoundsException {
-		Tile tile = null;
+	public Tile getTileInFront() {
 		switch (rotation) {
-		case down:
-			if (position.y < world.getHeight() - 1)
-				tile = world.getTile(position.x, position.y - 1);
-			break;
-		case left:
-			if (position.x > 0)
-				tile = world.getTile(position.x - 1, position.y);
-			break;
-		case right:
-			if (position.x < world.getWidth() - 1)
-				tile = world.getTile(position.x + 1, position.y);
-			break;
 		case up:
+			return getTilePosition(0, -1);
+		case right:
+			return getTilePosition(1, 0);
+		case down:
+			return getTilePosition(0, 1);
+		case left:
+			return getTilePosition(-1, 0);
 		default:
-			if (position.y > 0)
-				tile = world.getTile(position.x, position.y - 1);
-			break;
+			return null;
 		}
-		return tile;
 	}
 
 	public abstract void onInteract(Entity entity);

@@ -10,6 +10,8 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
 
+import abstractclasses.Entity;
+import abstractclasses.Tile;
 import logic.Constants;
 import world.World.Layers;
 
@@ -34,15 +36,15 @@ public class Images implements Constants {
 	}
 
 	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName,
-			Object animatedObject) {
+			Tile animatedObject) {
 		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName), animatedObject));
+				new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName), animatedObject,animationName == DEFAULTANIMATION));
 	}
-
-	public static Animation loadEntityAnimation(String entityName, String animationName, Object animatedObject) {
-		Animation animation = null;
-		animation = new Animation(new File("rsc/entity pictures/" + entityName + "/" + animationName), animatedObject);
-		return animation;
+	
+	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
+			Entity animatedObject) {
+		return new AbstractMap.SimpleEntry<>(animationName,
+				new Animation(new File("rsc/entity pictures/" + ObjektName + "/" + animationName), animatedObject,animationName == DEFAULTANIMATION));
 	}
 
 	public static BufferedImage getImage(String path) {

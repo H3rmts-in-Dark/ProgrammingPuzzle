@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
 import frame.WorldWindow;
+import logic.Constants;
 import tiles.Default;
 
-public class World {
+public class World implements Constants{
 
 	public static enum Layers {
 		Floor, Cable, Objects, Entitys, Effects
@@ -36,7 +37,7 @@ public class World {
 		tile.setWorld(this);
 	}
 
-	public Tile getTile(int x, int y) throws IndexOutOfBoundsException {
+	public Tile getTile(int x, int y) {
 		return world[x][y];
 	}
 

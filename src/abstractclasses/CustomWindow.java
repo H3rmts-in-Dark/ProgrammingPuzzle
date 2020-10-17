@@ -403,7 +403,7 @@ class CloseButton extends JButton implements ActionListener {
 		setBounds(window.getWidth() - 27, 6, 20, 20);
 		addActionListener(this);
 		setOpaque(false);
-		new ChangeButtonBrightnessTask(4, this);
+		new ChangeButtonBrightnessTask(this);
 		window.add(this);
 	}
 

@@ -85,8 +85,8 @@ public class WorldWindow extends CustomWindow {
 
 		for (int i = 0; i < world.getEntitylistLength(); i++) {
 			Entity tempentity = world.getEntity(i);
-			g2.drawImage(tempentity.getImage(), tempentity.getX() * DEFAULTTILEWIDTH,
-					tempentity.getY() * DEFAULTTILEWIDTH, null);
+			g2.drawImage(tempentity.getImage(), tempentity.getPixelX() * DEFAULTTILEWIDTH,
+					tempentity.getPixelY(), null);
 		}
 
 		for (int x = 0; x < world.getWidth(); x++)

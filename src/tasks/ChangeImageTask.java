@@ -1,7 +1,6 @@
 package tasks;
 
 import abstractclasses.Task;
-import frame.Frame;
 import world.Animation;
 
 public class ChangeImageTask extends Task {

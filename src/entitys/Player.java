@@ -3,6 +3,7 @@ package entitys;
 import java.awt.Point;
 
 import abstractclasses.Entity;
+import abstractclasses.Tile;
 
 public class Player extends Entity {
 
@@ -19,47 +20,50 @@ public class Player extends Entity {
 	public void onInteract(Entity entity) {
 	}
 
-	public class PlayerCommand {
+}
 
-		/**
-		 * Der Spieler, der mit diesem playerCommand gesteuert wird.
-		 */
-		private Player player;
 
-		public PlayerCommand(Player player) {
-			this.player = player;
+
+class PlayerCommand {
+
+	/**
+	 * Der Spieler, der mit diesem playerCommand gesteuert wird.
+	 */
+	private Player player;
+
+	public PlayerCommand(Player player) {
+		this.player = player;
+	}
+
+	public void interact(Entity entity) {
+		player.onInteract(entity);
+	}
+
+	public void walk() {
+		// TODO Walk einfügen, es fehlt noch die Animation deswegen wird das auf später
+		// verschoben
+		if(player.getHeight() >= player.getTileInFront().getHeight()) {
+			// TODO Muss die größer && gleich sein oder größer?
 		}
+	}
 
-		public void interact() {
-			player.interact();
-		}
+	public Point getPosition() {
+		return player.getPosition();
+	}
 
-		public void walk() {
-			// TODO Walk einfügen, es fehlt noch die Animation deswegen wird das auf später
-			// verschoben
-			if(player.getHeight() >= player.getTileInFront().getHeight()) {
-				// TODO Muss die größer && gleich sein oder größer?
-			}
-		}
+	public Integer getX() {
+		return player.getPosition().x;
+	}
 
-		public java.awt.Point getPosition() {
-			return player.getPosition();
-		}
+	public Integer getY() {
+		return player.getPosition().x;
+	}
 
-		public int getX() {
-			return player.getX();
-		}
+	public Tile getTile() {
+		return player.getTileInFront();
+	}
 
-		public int getY() {
-			return player.getY();
-		}
-
-		public abstractclasses.Tile getTile() {
-			return player.getTileInFront();
-		}
-
-		public Integer getHeight() {
-			return player.getHeight();
-		}
+	public Integer getHeight() {
+		return player.getHeight();
 	}
 }
