@@ -19,5 +19,7 @@ public class start {
 		Frame.setVisible();
 
 		MainControl.createWorld();
+
+		new logic.SoundManager();
 	}
 }

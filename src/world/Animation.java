@@ -10,7 +10,7 @@ import frame.Frame;
 import logic.Constants;
 import tasks.ChangeImageTask;
 
-public class Animation implements Constants{
+public class Animation implements Constants {
 
 	private ArrayList<String> paths;
 	private Integer actualFile;
