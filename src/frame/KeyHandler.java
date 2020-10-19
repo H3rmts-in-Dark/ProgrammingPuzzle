@@ -26,12 +26,16 @@ public class KeyHandler extends KeyAdapter {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		char c = e.getKeyChar();
-		commandString += c;
+		if (!(e.getKeyCode() == KeyEvent.VK_UNDEFINED)) {
+			char c = e.getKeyChar();
+			commandString += c;
+		}
 		super.keyTyped(e);
 	}
 
 	private void commandProcessor(String command) {
+		command = command.replace("\n", "");
+		System.out.println(command);
 		command = command.toLowerCase();
 		if (command.equals("debug")) {
 			new DebuggingWindow();

@@ -6,7 +6,6 @@ import world.World;
 
 public class MainControl {
 
-	private static StateManager stateManager;
 	private static GameTicker gameTicker;
 	private static World world;
 
@@ -14,7 +13,6 @@ public class MainControl {
 	}
 
 	public static void initialize() {
-		stateManager = new StateManager();
 		gameTicker = new GameTicker();
 	}
 
@@ -24,10 +22,6 @@ public class MainControl {
 
 	public static GameTicker getGameTicker() {
 		return gameTicker;
-	}
-
-	public static StateManager getStatemanager() {
-		return stateManager;
 	}
 
 	public static void createWorld() {

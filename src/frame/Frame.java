@@ -1,24 +1,14 @@
 package frame;
 
-import java.awt.BasicStroke;
-import java.awt.BufferCapabilities;
-import java.awt.BufferCapabilities.FlipContents;
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.image.BufferStrategy;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
@@ -26,14 +16,10 @@ import abstractclasses.CustomWindow;
 import logic.Constants;
 import logic.CustomWindowManager;
 import logic.Debugger;
-import logic.MainControl;
-import logic.StateManager.States;
 
 public class Frame implements Constants {
 
 	private static JFrame frame;
-	private static JLayeredPane mainMenuPane;
-	private static JButton mainMenuStartButton;
 	private static CustomWindowManager manager;
 	private static Long lastRepaint = System.currentTimeMillis();
 
@@ -60,33 +46,10 @@ public class Frame implements Constants {
 		// frame.setLocationRelativeTo(null);
 
 		loadLevelPane();
-		loadMainMenuPane();
 		new CustomFrameMouseAdapter(frame);
-		setState(MainControl.getStatemanager().getState());
+		manager.setVisible(true);
 
 		frame.repaint();
-	}
-
-	private static void loadMainMenuPane() {
-		mainMenuPane = new JLayeredPane();
-		mainMenuPane.setBounds(0, 0, FRAMEWIDTH, FRAMEHEIGHT);
-		mainMenuPane.setVisible(false);
-
-		mainMenuStartButton = new JButton("start");
-		mainMenuStartButton.setBackground(Color.DARK_GRAY);
-		mainMenuStartButton.setForeground(Color.BLACK);
-		mainMenuStartButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MainControl.getStatemanager().setState(States.programming);
-			}
-		});
-		mainMenuStartButton.setFocusPainted(false);
-		mainMenuStartButton.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(4)));
-		mainMenuStartButton.setBounds((mainMenuPane.getWidth() / 2) - 50, (mainMenuPane.getHeight() / 2) - 25, 100, 50);
-		mainMenuPane.add(mainMenuStartButton, JLayeredPane.PALETTE_LAYER);
-
-		frame.getContentPane().add(mainMenuPane);
 	}
 
 	private static void loadLevelPane() {
@@ -97,29 +60,16 @@ public class Frame implements Constants {
 		frame.getContentPane().add(manager);
 	}
 
-	public static void setState(States newstate) {
-		System.out.println("frame switched to " + newstate);
-		mainMenuPane.setVisible(false);
-		manager.setVisible(false);
-		@SuppressWarnings("unused")
+	public static void setState() {
+		manager.setVisible(true);
 		GraphicsDevice gd = frame.getGraphicsConfiguration().getDevice();
-		switch (newstate) {
-		case mainmenu:
-			frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
-			mainMenuPane.setVisible(true);
-			break;
-		case programming:
-		case running:
-		case pause:
-		case Levelselecting:
-			// frame.setSize(gd.getDisplayMode().getWidth(),
-			// gd.getDisplayMode().getHeight());
-			// manager.setSize(gd.getDisplayMode().getWidth(),
-			// gd.getDisplayMode().getHeight());
-			manager.setVisible(true);
-			// test();
-			break;
-		}
+		frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
+		// frame.setSize(gd.getDisplayMode().getWidth(),
+		// gd.getDisplayMode().getHeight());
+		// manager.setSize(gd.getDisplayMode().getWidth(),
+		// gd.getDisplayMode().getHeight());
+		// test();
+
 	}
 
 	public static void addWindow(CustomWindow newWindow) {
@@ -161,23 +111,6 @@ public class Frame implements Constants {
 		} else {
 			// System.out.println("Didn't repaint");
 		}
-	}
-
-	// TODO Funktion? Wenn nicht mehr benötigt, entfernen
-	public static void test() {
-		BufferStrategy strategy = frame.getBufferStrategy();
-		BufferCapabilities bufCap = strategy.getCapabilities();
-		FlipContents flipContents = bufCap.getFlipContents();
-
-		if (flipContents.equals(BufferCapabilities.FlipContents.UNDEFINED))
-			System.out.println("The contents is unknown after a flip");
-		if (flipContents.equals(BufferCapabilities.FlipContents.BACKGROUND))
-			System.out.println("The contents cleared to the components background color after a flop");
-		if (flipContents.equals(BufferCapabilities.FlipContents.PRIOR))
-			System.out.println("The contents is the contents of the front buffer just before the flip");
-		if (flipContents.equals(BufferCapabilities.FlipContents.COPIED))
-			System.out
-					.println("The contents is identical to the contents just pushed to the front buffer after a flip");
 	}
 }
 
