@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import abstractclasses.Task;
-import frame.DebuggingWindow;
 
 public class Debugger implements Constants {
 
@@ -100,8 +99,6 @@ public class Debugger implements Constants {
 			}
 		};
 		controlThread.start();
-
-		new DebuggingWindow();
 	}
 
 	public static void startTask() {
