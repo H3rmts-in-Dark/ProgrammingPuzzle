@@ -18,6 +18,7 @@ public class DebuggingWindow extends CustomWindow {
 
 	String fpsav, tpsav, executiontimeav, tasks, cpu;
 	Set<Entry<String, Integer>> tasktypes;
+
 	OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
 	public DebuggingWindow() {
@@ -41,7 +42,7 @@ public class DebuggingWindow extends CustomWindow {
 					tasks = Integer.toString(Debugger.getTaskSize());
 					tasktypes = Debugger.getTasktypes();
 					cpu = Double.toString(Math.round((os.getProcessCpuLoad() * 100) * 100.0) / 100.0);
-					setrepaintfull();
+					triggerFullRepaint();
 				}
 			}
 		}.start();
@@ -49,34 +50,38 @@ public class DebuggingWindow extends CustomWindow {
 
 	@Override
 	public BufferedImage draw() {
-		BufferedImage image = getEmptyImage();
-		Graphics2D g2 = image.createGraphics();
-		g2.setColor(Color.GRAY);
-		g2.fillRect(0, 0, getWidth(), getHeight());
+		try {
+			BufferedImage image = getEmptyImage();
+			Graphics2D g2 = image.createGraphics();
+			g2.setColor(Color.GRAY);
+			g2.fillRect(0, 0, getWidth(), getHeight());
 
-		g2.setFont(new Font("Arial", Font.BOLD, 16));
-		g2.setColor(Color.BLACK);
+			g2.setFont(new Font("Arial", Font.BOLD, 16));
+			g2.setColor(Color.BLACK);
 
-		Integer height = 0;
+			Integer height = 0;
 
-		g2.drawString("FPS:" + fpsav + " / " + FPS, 10, height += 25);
-		g2.drawString("TPS:" + tpsav + " / " + TPS, 10, height += 25);
-		g2.drawString("TPSDelay:" + Integer.toString(1000 / TPS) + "ms", 10, height += 25);
-		g2.drawString("FPSDelay:" + Integer.toString(1000 / FPS) + "ms", 10, height += 25);
+			g2.drawString("FPS:" + fpsav + " / " + FPS, 10, height += 25);
+			g2.drawString("TPS:" + tpsav + " / " + TPS, 10, height += 25);
+			g2.drawString("TPSDelay:" + Integer.toString(1000 / TPS) + "ms", 10, height += 25);
+			g2.drawString("FPSDelay:" + Integer.toString(1000 / FPS) + "ms", 10, height += 25);
 
-		g2.drawString("CPU:" + cpu + "%", 10, height += 25);
+			g2.drawString("CPU:" + cpu + "%", 10, height += 25);
 
-		g2.drawString("Executiontilme:" + executiontimeav + "ms", 10, height += 25);
-		g2.drawString("Tasks:" + tasks, 10, height += 25);
+			g2.drawString("Executiontilme:" + executiontimeav + "ms", 10, height += 25);
+			g2.drawString("Tasks:" + tasks, 10, height += 25);
 
-		synchronized (tasktypes) {
-			for (Entry<String, Integer> entry : tasktypes) {
-				g2.drawString(entry.getKey() + ":" + entry.getValue(), 10, height += 25);
+			synchronized (tasktypes) {
+				for (Entry<String, Integer> entry : tasktypes) {
+					g2.drawString(entry.getKey() + ":" + entry.getValue(), 10, height += 25);
+				}
 			}
-		}
 
-		g2.dispose();
-		return image;
+			g2.dispose();
+			return image;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@Override

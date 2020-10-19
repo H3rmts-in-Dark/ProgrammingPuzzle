@@ -13,8 +13,8 @@ public class ChangeButtonBrightnessTask extends Task {
 	private JButton button;
 	private Integer brightness = 0; // Wie intilligent bist du?
 
-	public ChangeButtonBrightnessTask(Integer tickDifference, JButton button) {
-		super(tickDifference, -1);
+	public ChangeButtonBrightnessTask(JButton button) {
+		super(4, -1);
 		this.button = button;
 	}
 
@@ -32,5 +32,6 @@ public class ChangeButtonBrightnessTask extends Task {
 
 	@Override
 	public void onEnd() {
+		// will never end
 	}
 }

@@ -92,8 +92,9 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	/**
-	 * Zeichnet das Gesamte Fenster neu. Diese Funktion sollte wenn möglich nicht
-	 * genutzt werden, da sie viel Resourcen benötigt.
+	 * Zeichnet das BufferedImage neu, das für die Zeichnung auf den Component
+	 * benutzt wird. Diese Methode sollte nicht manuell aufgerufen werden, da sie
+	 * automatisch gestartet wird wenn triggerFullRepaint() aufgerufen wurde.
 	 */
 	private void repaintAll() {
 		innerImage = getEmptyImage();
@@ -145,7 +146,11 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		fullyRepaint = false;
 	}
 
-	public void setrepaintfull() {
+	/**
+	 * Wenn diese Methode aufgerufen wurde, wird repaintAll() bei der nächsten
+	 * Zeichnung automatisch aufgerufen.
+	 */
+	public void triggerFullRepaint() {
 		fullyRepaint = true;
 	}
 
@@ -403,7 +408,7 @@ class CloseButton extends JButton implements ActionListener {
 		setBounds(window.getWidth() - 27, 6, 20, 20);
 		addActionListener(this);
 		setOpaque(false);
-		new ChangeButtonBrightnessTask(4, this);
+		new ChangeButtonBrightnessTask(this);
 		window.add(this);
 	}
 

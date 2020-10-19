@@ -7,7 +7,7 @@ import world.World.Layers;
 public class Default extends Tile {
 
 	public Default() {
-		super(FLOORHEIGHT,NOTANIMATED);
+		super(FLOORHEIGHT,NOTANIMATED,0,0);
 		setDescription("Default Tile (for testing purposes)");
 	}
 

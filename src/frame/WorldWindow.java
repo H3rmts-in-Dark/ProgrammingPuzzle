@@ -62,40 +62,21 @@ public class WorldWindow extends CustomWindow {
 			for (int y = 0; y < world.getHeight(); y++) {
 				Tile temptile = world.getTile(x, y);
 				if (temptile.hasLayer(Layers.Floor))
-					g2.drawImage(temptile.getImage(Layers.Floor), temptile.getX() * DEFAULTTILEWIDTH,
-							temptile.getY() * DEFAULTTILEWIDTH, null);
-			}
-		}
-
-		for (int x = 0; x < world.getWidth(); x++)
-			for (int y = 0; y < world.getHeight(); y++) {
-				Tile temptile = world.getTile(x, y);
+					g2.drawImage(temptile.getImage(Layers.Floor), temptile.getDrawX(0), temptile.getDrawY(0), null);
 				if (temptile.hasLayer(Layers.Cable))
-					g2.drawImage(temptile.getImage(Layers.Cable), temptile.getX() * DEFAULTTILEWIDTH,
-							temptile.getY() * DEFAULTTILEWIDTH, null);
-			}
-
-		for (int x = 0; x < world.getWidth(); x++)
-			for (int y = 0; y < world.getHeight(); y++) {
-				Tile temptile = world.getTile(x, y);
+					g2.drawImage(temptile.getImage(Layers.Cable), temptile.getDrawX(0), temptile.getDrawY(0), null);
 				if (temptile.hasLayer(Layers.Objects))
-					g2.drawImage(temptile.getObjektImage(), temptile.getX() * DEFAULTTILEWIDTH,
-							temptile.getY() * DEFAULTTILEWIDTH, null);
-			}
-
-		for (int i = 0; i < world.getEntitylistLength(); i++) {
-			Entity tempentity = world.getEntity(i);
-			g2.drawImage(tempentity.getImage(), tempentity.getX() * DEFAULTTILEWIDTH,
-					tempentity.getY() * DEFAULTTILEWIDTH, null);
-		}
-
-		for (int x = 0; x < world.getWidth(); x++)
-			for (int y = 0; y < world.getHeight(); y++) {
-				Tile temptile = world.getTile(x, y);
+					g2.drawImage(temptile.getObjektImage(), temptile.getDrawX(temptile.getRelativedrawX()),
+							temptile.getDrawY(temptile.getRelativedrawY()), null);
+				if (world.getEntityat(temptile) != null) {
+					Entity tempentity = world.getEntityat(temptile);
+					g2.drawImage(tempentity.getImage(), tempentity.getDrawX(tempentity.getRelativedrawX()),
+							tempentity.getDrawY(tempentity.getRelativedrawY()) - tempentity.getHeight(), null);
+				}
 				if (temptile.hasLayer(Layers.Effects))
-					g2.drawImage(temptile.getImage(Layers.Effects), temptile.getX() * DEFAULTTILEWIDTH,
-							temptile.getY() * DEFAULTTILEWIDTH, null);
+					g2.drawImage(temptile.getImage(Layers.Effects), temptile.getDrawX(0), temptile.getDrawY(0), null);
 			}
+		}
 
 		g2.dispose();
 		return image;
@@ -136,7 +117,7 @@ public class WorldWindow extends CustomWindow {
 	@Override
 	public void mouseWheelMoved(Integer direction) {
 		setZoom(getZoom() + direction * 0.2f);
-		setrepaintfull();
+		triggerFullRepaint();
 	}
 
 	public Tile getTile(Point point) {
