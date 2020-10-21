@@ -22,7 +22,7 @@ public class Images implements Constants {
 	private Images() {
 	}
 
-	public static String loadLayeranimation(String ObjektName, Layers layer) {
+	public static String loadLayerAnimation(String ObjektName, Layers layer) {
 		switch (layer) {
 		case Floor:
 			return "rsc/floor pictures/" + ObjektName + ".png";

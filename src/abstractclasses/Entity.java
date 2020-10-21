@@ -98,12 +98,15 @@ public abstract class Entity implements Constants {
 	public Integer getDrawX(Integer relativedrawX) {
 		return (int) getPosition().getX() * DEFAULTTILEWIDTH + relativedrawX;
 	}
+
 	public Integer getDrawY(Integer relativedrawY) {
 		return (int) getPosition().getY() * DEFAULTTILEWIDTH + relativedrawY;
 	}
+
 	public Integer getRelativedrawX() {
 		return relativedrawX;
 	}
+
 	public Integer getRelativedrawY() {
 		return relativedrawY;
 	}
@@ -155,6 +158,10 @@ public abstract class Entity implements Constants {
 		default:
 			return null;
 		}
+	}
+	
+	public void turn(Rotation rotation) {
+		this.rotation = rotation;
 	}
 
 	public abstract void onInteract(Entity entity);

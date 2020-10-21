@@ -96,7 +96,10 @@ public interface Constants {
 	public static final Boolean ANIMATED = true;
 	public static final Boolean NOTANIMATED = false;
 	public static final String DEFAULTANIMATION = "defaultanimation"; // do not change is used to load from rcs/...
-	public static final String INTERACTANIMATION = "interactanimation";
+	public static final String INTERACTANIMATION = "interactanimation"; // animation, die aktiviert wird, wenn mit dem
+																		// Tile interagiert wird
+	public static final String ACTIVEANIMATION = "activeanimation"; // animation, die aktiviert wird, wenn das Tile
+																	// aktiv ist (in irgend einer Form)
 
 	/*
 	 * Sounds

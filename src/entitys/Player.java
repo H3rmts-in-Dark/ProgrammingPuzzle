@@ -11,6 +11,10 @@ public class Player extends Entity {
 		super(interactable, position, 0, 0);
 	}
 
+	public PlayerCommand getPlayerCommand() {
+		return new PlayerCommand(this);
+	}
+
 	@Override
 	public void loadAnimation() {
 		// TODO loadAnimation muss noch eingefügt werden!!!
@@ -33,8 +37,8 @@ class PlayerCommand {
 		this.player = player;
 	}
 
-	public void interact(Entity entity) {
-		player.onInteract(entity);
+	public void interact() {
+		player.onInteract(player);
 	}
 
 	public void walk() {
@@ -53,7 +57,7 @@ class PlayerCommand {
 		return player.getPosition().x;
 	}
 
-	public Tile getTile() {
+	public Tile getTileInFront() {
 		return player.getTileInFront();
 	}
 
