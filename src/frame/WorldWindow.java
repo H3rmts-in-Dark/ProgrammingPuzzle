@@ -19,7 +19,7 @@ public class WorldWindow extends CustomWindow {
 	private Float zoom;
 	private World world;
 
-	private Boolean drawlines = true;
+	private Boolean drawlines = false;
 	private Color entityColor = Color.RED;
 	private Color tileColor = Color.BLACK;
 

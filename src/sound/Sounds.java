@@ -1,14 +1,7 @@
 package sound;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
-import javax.sound.sampled.*;
-import javax.sound.sampled.DataLine.Info;
 
 /**
  * Spielt ein Soundfile auf anfrage ab.

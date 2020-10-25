@@ -22,6 +22,8 @@ public abstract class Tile implements Constants {
 
 	private Integer relativedrawX;
 	private Integer relativedrawY;
+	
+	private Boolean animated;
 
 	/**
 	 * exluding objektlayer
@@ -39,12 +41,11 @@ public abstract class Tile implements Constants {
 		this.world = null;
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
+		this.animated = animated;
 
 		images = new HashMap<>();
 		objektAnimations = new HashMap<>();
 		loadAnimation();
-		if (animated)
-			triggerAnimation(DEFAULTANIMATION);
 	}
 
 	public abstract void loadAnimation();
@@ -56,6 +57,11 @@ public abstract class Tile implements Constants {
 	 */
 	public void setWorld(World world) {
 		this.world = world;
+	}
+	
+	public void start() {
+		if (animated)
+			triggerAnimation(DEFAULTANIMATION);
 	}
 
 	public boolean hasLayer(World.Layers layer) {
