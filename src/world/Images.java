@@ -50,22 +50,21 @@ public class Images implements Constants {
 		return im;
 	}
 
-	
-	
-	
-	
 	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName,
 			Tile animatedObject) {
 		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName),new File("rsc/sound/" + ObjektName + "/" + animationName), animatedObject,animationName == DEFAULTANIMATION));
+				new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName),
+						new File("rsc/sound/" + ObjektName + "/" + animationName), animatedObject,
+						animationName == DEFAULTANIMATION));
 	}
-	
+
 	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
 			Entity animatedObject) {
 		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation(new File("rsc/entity pictures/" + ObjektName + "/" + animationName),new File("rsc/sound/" + ObjektName + "/" + animationName), animatedObject,animationName == DEFAULTANIMATION));
+				new Animation(new File("rsc/entity pictures/" + ObjektName + "/" + animationName),
+						new File("rsc/sound/" + ObjektName + "/" + animationName), animatedObject,
+						animationName == DEFAULTANIMATION));
 	}
-	
 
 	public static String loadLayerpicture(String ObjektName, Layers layer) {
 		switch (layer) {
