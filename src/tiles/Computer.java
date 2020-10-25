@@ -8,13 +8,13 @@ import world.World.Layers;
 public class Computer extends Tile {
 
 	public Computer() {
-		super(UNPASSABLE, ANIMATED,-5,-20);
+		super(UNPASSABLE, ANIMATED, -5, -20);
 		setDescription("Computer tile that gives you" + "\n" + "some information when interacted with");
 	}
 
 	@Override
 	public void loadAnimation() {
-		setImage(Layers.Floor, Images.loadLayeranimation("Default", Layers.Floor));
+		setImage(Layers.Floor, Images.loadLayerpicture("Default", Layers.Floor));
 		addObjektAnimation(Images.loadObjektAnimation("Computer", DEFAULTANIMATION, this));
 		addObjektAnimation(Images.loadObjektAnimation("Computer", INTERACTANIMATION, this));
 	}

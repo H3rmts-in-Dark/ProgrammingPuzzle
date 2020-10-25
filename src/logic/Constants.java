@@ -97,4 +97,10 @@ public interface Constants {
 	public static final Boolean NOTANIMATED = false;
 	public static final String DEFAULTANIMATION = "defaultanimation"; // do not change is used to load from rcs/...
 	public static final String INTERACTANIMATION = "interactanimation";
+
+	/*
+	 * Sounds
+	 */
+
+	public static final String ding = "ding";
 }
