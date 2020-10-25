@@ -13,7 +13,7 @@ public class Tonne extends Tile {
 
 	@Override
 	public void loadAnimation() {
-		setImage(Layers.Floor, Images.loadLayeranimation("Default", Layers.Floor));
+		setImage(Layers.Floor, Images.loadLayerpicture("Default", Layers.Floor));
 		addObjektAnimation(Images.loadObjektAnimation("Tonne", DEFAULTANIMATION, this));
 	}
 
