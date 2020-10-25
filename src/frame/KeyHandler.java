@@ -40,7 +40,7 @@ public class KeyHandler extends KeyAdapter {
 		if (command.equals("debug")) {
 			new DebuggingWindow();
 		} else if (command.startsWith("play§")) {
-			logic.SoundManager.playSound(command.substring(5));
+			sound.SoundManager.playSound(command.substring(5));
 		}
 	}
 }

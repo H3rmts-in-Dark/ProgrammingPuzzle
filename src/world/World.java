@@ -65,7 +65,7 @@ public class World implements Constants{
 		entitylist.remove(entity);
 	}
 	
-	public Entity getEntityat(Tile tile) {
+	public Entity getEntityAt(Tile tile) {
 		for (Entity entity : entitylist) {
 			if (entity.getPosition().equals(tile.getPosition()))
 				return entity;

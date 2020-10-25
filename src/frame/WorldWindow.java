@@ -1,5 +1,6 @@
 package frame;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -17,6 +18,10 @@ public class WorldWindow extends CustomWindow {
 
 	private Float zoom;
 	private World world;
+
+	private Boolean drawlines = true;
+	private Color entityColor = Color.RED;
+	private Color tileColor = Color.BLACK;
 
 	/**
 	 * calles by World
@@ -57,6 +62,7 @@ public class WorldWindow extends CustomWindow {
 		BufferedImage image = new BufferedImage(world.getWidth() * DEFAULTTILEWIDTH,
 				world.getHeight() * DEFAULTTILEWIDTH, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D) image.getGraphics();
+		g2.setStroke(new BasicStroke(DEFAULTTILEWIDTH / 32));
 
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
@@ -68,13 +74,24 @@ public class WorldWindow extends CustomWindow {
 				if (temptile.hasLayer(Layers.Objects))
 					g2.drawImage(temptile.getObjektImage(), temptile.getDrawX(temptile.getRelativedrawX()),
 							temptile.getDrawY(temptile.getRelativedrawY()), null);
-				if (world.getEntityat(temptile) != null) {
-					Entity tempentity = world.getEntityat(temptile);
+				if (world.getEntityAt(temptile) != null) {
+					Entity tempentity = world.getEntityAt(temptile);
 					g2.drawImage(tempentity.getImage(), tempentity.getDrawX(tempentity.getRelativedrawX()),
 							tempentity.getDrawY(tempentity.getRelativedrawY()) - tempentity.getHeight(), null);
+					if (drawlines) {
+						g2.setColor(entityColor);
+						g2.drawRect(tempentity.getDrawX(tempentity.getRelativedrawX()),
+								tempentity.getDrawY(tempentity.getRelativedrawY()) - tempentity.getHeight(),
+								DEFAULTTILEWIDTH - tempentity.getRelativedrawX() - (DEFAULTTILEWIDTH / 32),
+								DEFAULTTILEWIDTH - tempentity.getRelativedrawY() - (DEFAULTTILEWIDTH / 32));
+					}
 				}
 				if (temptile.hasLayer(Layers.Effects))
 					g2.drawImage(temptile.getImage(Layers.Effects), temptile.getDrawX(0), temptile.getDrawY(0), null);
+				if (drawlines) {
+					g2.setColor(tileColor);
+					g2.drawRect(temptile.getDrawX(0), temptile.getDrawY(0), DEFAULTTILEWIDTH, DEFAULTTILEWIDTH);
+				}
 			}
 		}
 
