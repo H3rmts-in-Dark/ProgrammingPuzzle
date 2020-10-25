@@ -30,7 +30,7 @@ public class MainControl {
 		world.addEntity(new Box(1, 1));
 		world.setTile(1, 2, new Computer());
 		world.addEntity(new Box(2, 1));
-		world.setTile(2, 0, new Computer());
+		world.setTile(0, 2, new Förderband());
 	}
 
 	public static World getWorld() {

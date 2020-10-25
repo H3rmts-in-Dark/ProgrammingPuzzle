@@ -2,7 +2,6 @@ package frame;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.GraphicsDevice;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -60,6 +59,7 @@ public class Frame implements Constants {
 		frame.getContentPane().add(manager);
 	}
 
+	/*
 	public static void setState() {
 		manager.setVisible(true);
 		GraphicsDevice gd = frame.getGraphicsConfiguration().getDevice();
@@ -69,8 +69,8 @@ public class Frame implements Constants {
 		// manager.setSize(gd.getDisplayMode().getWidth(),
 		// gd.getDisplayMode().getHeight());
 		// test();
-
 	}
+	*/
 
 	public static void addWindow(CustomWindow newWindow) {
 		manager.addWindow(newWindow);

@@ -19,10 +19,10 @@ public class Animation implements Constants {
 	private Object animatedObject;
 	private ChangeImageTask task;
 	private String sound;
-	
+
 	private Boolean defaultanimtion;
 
-	public Animation(File picturesFile,File soundFile, Object animatedObject, Boolean defaultanimtion) {
+	public Animation(File picturesFile, File soundFile, Object animatedObject, Boolean defaultanimtion) {
 		this.paths = new ArrayList<>();
 		this.actualFile = 0;
 		this.animatedObject = animatedObject;
@@ -30,13 +30,14 @@ public class Animation implements Constants {
 		for (Integer i = 0; i < picturesFile.listFiles().length; i++) {
 			paths.add(picturesFile.getPath() + "/" + i + ".png");
 		}
-		sound = soundFile.getPath() + ".wav";
+		if (new File(soundFile.getPath() + ".wav").exists())
+			sound = soundFile.getPath() + ".wav";
 	}
 
 	public BufferedImage getActualImage() {
 		return Images.getImage(paths.get(actualFile));
 	}
-	
+
 	public Sound name() {
 		return Sounds.getSound(sound);
 	}
@@ -47,6 +48,8 @@ public class Animation implements Constants {
 			task = new ChangeImageTask(5, this, -1);
 		else
 			task = new ChangeImageTask(5, this, paths.size());
+		if (sound!=null)
+		Sounds.getSound(sound).play();
 	}
 
 	public void stop() {

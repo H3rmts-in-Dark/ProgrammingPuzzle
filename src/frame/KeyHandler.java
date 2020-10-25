@@ -3,6 +3,9 @@ package frame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import sound.Sounds;
+import world.World;
+
 public class KeyHandler extends KeyAdapter {
 
 	private String commandString;
@@ -20,27 +23,34 @@ public class KeyHandler extends KeyAdapter {
 			commandProcessor(commandString);
 			commandString = "";
 			return;
-		}
-		super.keyPressed(e);
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		if (!(e.getKeyCode() == KeyEvent.VK_UNDEFINED)) {
+		} else if (e.getKeyCode() == 8 || e.getKeyCode() == 127) {
+			try {
+				commandString = commandString.substring(0, commandString.length() - 1);
+				System.out.println(commandString);
+			} catch (StringIndexOutOfBoundsException e2) {
+			}
+		} else if (e.getKeyCode() != KeyEvent.VK_SHIFT) {
 			char c = e.getKeyChar();
 			commandString += c;
+			System.out.println(commandString);
 		}
-		super.keyTyped(e);
 	}
 
-	private void commandProcessor(String command) {
+	private static void commandProcessor(String command) {
 		command = command.replace("\n", "");
 		System.out.println(command);
 		command = command.toLowerCase();
 		if (command.equals("debug")) {
 			new DebuggingWindow();
-		} else if (command.startsWith("play§")) {
-			sound.SoundManager.playSound(command.substring(5));
+		}
+		if (command.startsWith("play")) {
+			Sounds.getSound(command.substring(4)).play();
+		}
+		if (command.equals("Worldselect")) {
+			new WorldSelectionWindow();
+		}
+		if (command.equals("World")) {
+			new World(10, 10);
 		}
 	}
 }
