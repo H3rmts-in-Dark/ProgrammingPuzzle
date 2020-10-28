@@ -34,7 +34,7 @@ public abstract class Entity implements Constants {
 	protected Entity(Boolean interactable, Point position, Integer relativedrawX, Integer relativedrawY) {
 		this.interactable = interactable;
 		this.rotation = Rotation.right;
-		this.pixelposition = new Point(position.x * DEFAULTTILEWIDTH, position.y * DEFAULTTILEWIDTH);
+		this.pixelposition = new Point(position.x * TILEHEIGHTWIDHT, position.y * TILEHEIGHTWIDHT);
 		this.description = "default description";
 		this.world = null;
 		this.height = FLOORHEIGHT;
@@ -56,7 +56,7 @@ public abstract class Entity implements Constants {
 	 */
 	public void setWorld(World world) {
 		this.world = world;
-		height = getTilePosition(0, 0).getHeight();
+		height = UNPASSABLE;//getTilePosition(0, 0).getHeight();
 	}
 
 	public Boolean getInteractable() {
@@ -96,10 +96,10 @@ public abstract class Entity implements Constants {
 	}
 
 	public Integer getDrawX(Integer relativedrawX) {
-		return (int) getPosition().getX() * DEFAULTTILEWIDTH + relativedrawX;
+		return (int) getPixelposition().getX() + relativedrawX;
 	}
 	public Integer getDrawY(Integer relativedrawY) {
-		return (int) getPosition().getY() * DEFAULTTILEWIDTH + relativedrawY;
+		return (int) getPixelposition().getY() + relativedrawY;
 	}
 	public Integer getRelativedrawX() {
 		return relativedrawX;
@@ -109,7 +109,7 @@ public abstract class Entity implements Constants {
 	}
 
 	public Point getPosition() {
-		return new Point(pixelposition.x / DEFAULTTILEWIDTH, pixelposition.x / DEFAULTTILEWIDTH);
+		return new Point(pixelposition.x / TILEHEIGHTWIDHT, pixelposition.x / TILEHEIGHTWIDHT);
 	}
 
 	public Integer getHeight() {
@@ -123,6 +123,10 @@ public abstract class Entity implements Constants {
 	public World getWorld() {
 		return world;
 	}
+	
+	public Rotation getRotation() {
+		return rotation;
+	}
 
 	public void setDescription(String description) {
 		this.description = description;
@@ -130,10 +134,11 @@ public abstract class Entity implements Constants {
 
 	public void move() {
 		if (getTileInFront().getHeight() <= getHeight())
-			new MoveEntityTask(2, this, null);
+			new MoveEntityTask(2, this);
 	}
 
 	public void setPixelPosition(Point point) {
+		System.out.println("pixel position" + point);
 		pixelposition = point;
 	}
 

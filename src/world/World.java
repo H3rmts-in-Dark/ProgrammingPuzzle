@@ -11,10 +11,6 @@ import tiles.Default;
 
 public class World implements Constants{
 
-	public static enum Layers {
-		Floor, Cable, Objects, Entitys, Effects
-	}
-
 	/**
 	 * Weltarray aus Tiles [x][y] layer0 1. horizontal (x) 2. vertikal (y)
 	 */

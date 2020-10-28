@@ -1,8 +1,9 @@
 package tiles;
 
 import abstractclasses.Tile;
+import logic.Layers;
+import world.Animation;
 import world.Images;
-import world.World.Layers;
 
 public class Förderband extends Tile {
 
@@ -14,7 +15,7 @@ public class Förderband extends Tile {
 	@Override
 	public void loadAnimation() {
 		setImage(Layers.Floor,Images.loadLayerpicture("Default",Layers.Floor));
-		addObjektAnimation(Images.loadObjektAnimation("Förderband", DEFAULTANIMATION, this));
+		addObjektAnimation(Animation.loadObjektAnimation("Förderband", DEFAULTANIMATION, this));
 	}
 
 }

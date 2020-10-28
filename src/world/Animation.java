@@ -2,7 +2,9 @@ package world;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.AbstractMap.SimpleEntry;
 
 import abstractclasses.Entity;
 import abstractclasses.Tile;
@@ -80,5 +82,21 @@ public class Animation implements Constants {
 		} else if (animatedObject instanceof Entity) {
 			((Entity) animatedObject).triggerAnimation(DEFAULTANIMATION);
 		}
+	}
+	
+	
+	
+
+	
+	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName,
+			Tile animatedObject) {
+		return new AbstractMap.SimpleEntry<>(animationName,
+				new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName),new File("rsc/sound/" + ObjektName + "/" + animationName), animatedObject,animationName == DEFAULTANIMATION));
+	}
+	
+	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
+			Entity animatedObject) {
+		return new AbstractMap.SimpleEntry<>(animationName,
+				new Animation(new File("rsc/entity pictures/" + ObjektName + "/" + animationName),new File("rsc/sound/" + ObjektName + "/" + animationName), animatedObject,animationName == DEFAULTANIMATION));
 	}
 }

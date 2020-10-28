@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import logic.Constants;
+import logic.Layers;
 import world.Animation;
 import world.Images;
 import world.World;
-import world.World.Layers;
 
 /**
  * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das
@@ -28,7 +28,7 @@ public abstract class Tile implements Constants {
 	/**
 	 * exluding objektlayer
 	 */
-	private HashMap<World.Layers, String> images;
+	private HashMap<Layers, String> images;
 
 	private Animation actualAnimation;
 	private HashMap<String, Animation> objektAnimations;
@@ -64,7 +64,7 @@ public abstract class Tile implements Constants {
 			triggerAnimation(DEFAULTANIMATION);
 	}
 
-	public boolean hasLayer(World.Layers layer) {
+	public boolean hasLayer(Layers layer) {
 		if (layer != Layers.Objects)
 			return images.get(layer) != null;
 		return actualAnimation != null;
@@ -115,10 +115,10 @@ public abstract class Tile implements Constants {
 	}
 
 	public Integer getDrawX(Integer relativedrawX) {
-		return (int) getPosition().getX() * DEFAULTTILEWIDTH + relativedrawX;
+		return (int) getPosition().getX() * TILEHEIGHTWIDHT + relativedrawX;
 	}
 	public Integer getDrawY(Integer relativedrawY) {
-		return (int) getPosition().getY() * DEFAULTTILEWIDTH + relativedrawY;
+		return (int) getPosition().getY() * TILEHEIGHTWIDHT + relativedrawY;
 	}
 	public Integer getRelativedrawX() {
 		return relativedrawX;

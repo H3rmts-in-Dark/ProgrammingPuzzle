@@ -29,7 +29,7 @@ public class MainControl {
 		world.setTile(0, 1, new Computer());
 		world.addEntity(new Box(1, 1));
 		world.setTile(1, 2, new Computer());
-		world.addEntity(new Box(2, 1));
+		//world.addEntity(new Box(2, 1));
 		world.setTile(0, 2, new Förderband());
 	}
 

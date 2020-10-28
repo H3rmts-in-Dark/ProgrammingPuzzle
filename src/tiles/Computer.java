@@ -2,8 +2,9 @@ package tiles;
 
 import abstractclasses.Entity;
 import abstractclasses.Tile;
+import world.Animation;
 import world.Images;
-import world.World.Layers;
+import logic.Layers;
 
 public class Computer extends Tile {
 
@@ -15,8 +16,8 @@ public class Computer extends Tile {
 	@Override
 	public void loadAnimation() {
 		setImage(Layers.Floor, Images.loadLayerpicture("Default", Layers.Floor));
-		addObjektAnimation(Images.loadObjektAnimation("Computer", DEFAULTANIMATION, this));
-		addObjektAnimation(Images.loadObjektAnimation("Computer", INTERACTANIMATION, this));
+		addObjektAnimation(Animation.loadObjektAnimation("Computer", DEFAULTANIMATION, this));
+		addObjektAnimation(Animation.loadObjektAnimation("Computer", INTERACTANIMATION, this));
 	}
 
 	@Override

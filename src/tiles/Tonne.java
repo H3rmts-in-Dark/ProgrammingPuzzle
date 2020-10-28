@@ -1,8 +1,9 @@
 package tiles;
 
 import abstractclasses.Tile;
+import world.Animation;
 import world.Images;
-import world.World.Layers;
+import logic.Layers;
 
 public class Tonne extends Tile {
 
@@ -14,7 +15,7 @@ public class Tonne extends Tile {
 	@Override
 	public void loadAnimation() {
 		setImage(Layers.Floor, Images.loadLayerpicture("Default", Layers.Floor));
-		addObjektAnimation(Images.loadObjektAnimation("Tonne", DEFAULTANIMATION, this));
+		addObjektAnimation(Animation.loadObjektAnimation("Tonne", DEFAULTANIMATION, this));
 	}
 
 }
