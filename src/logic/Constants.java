@@ -1,5 +1,6 @@
 package logic;
 
+import java.awt.Color;
 import java.awt.Image;
 
 public interface Constants {
@@ -55,6 +56,8 @@ public interface Constants {
 // --------------------World----------------------------------
 
 	public static final Integer DEFAULTTILEWIDTH = 64;
+	public static final Color ENTITYCOLOR = Color.RED;
+	public static final Color TILECOLOR = Color.BLACK;
 
 //
 // -----------------------------------------------------------

@@ -20,9 +20,6 @@ public class WorldWindow extends CustomWindow {
 	private World world;
 
 	private Boolean drawlines = true;
-	private Color entityColor = Color.RED;
-	private Color tileColor = Color.BLACK;
-
 	/**
 	 * calles by World
 	 * 
@@ -79,7 +76,7 @@ public class WorldWindow extends CustomWindow {
 					g2.drawImage(tempentity.getImage(), tempentity.getDrawX(tempentity.getRelativedrawX()),
 							tempentity.getDrawY(tempentity.getRelativedrawY()) - tempentity.getHeight(), null);
 					if (drawlines) {
-						g2.setColor(entityColor);
+						g2.setColor(ENTITYCOLOR);
 						g2.drawRect(tempentity.getDrawX(tempentity.getRelativedrawX()),
 								tempentity.getDrawY(tempentity.getRelativedrawY()) - tempentity.getHeight(),
 								DEFAULTTILEWIDTH - tempentity.getRelativedrawX() - (DEFAULTTILEWIDTH / 32),
@@ -89,7 +86,7 @@ public class WorldWindow extends CustomWindow {
 				if (temptile.hasLayer(Layers.Effects))
 					g2.drawImage(temptile.getImage(Layers.Effects), temptile.getDrawX(0), temptile.getDrawY(0), null);
 				if (drawlines) {
-					g2.setColor(tileColor);
+					g2.setColor(TILECOLOR);
 					g2.drawRect(temptile.getDrawX(0), temptile.getDrawY(0), DEFAULTTILEWIDTH, DEFAULTTILEWIDTH);
 				}
 			}
