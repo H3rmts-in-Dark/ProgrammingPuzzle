@@ -10,18 +10,14 @@ import java.awt.image.BufferedImage;
 import abstractclasses.CustomWindow;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
+import logic.Layers;
 import tiles.Computer;
 import world.World;
-import logic.Layers;
 
 public class WorldWindow extends CustomWindow {
 
 	private Float zoom;
 	private World world;
-
-	private Boolean drawlines = false;
-	private Color entityColor = Color.RED;
-	private Color tileColor = Color.BLACK;
 
 	/**
 	 * calles by World
@@ -29,42 +25,17 @@ public class WorldWindow extends CustomWindow {
 	 * @param world this
 	 */
 	public WorldWindow(World world) {
-		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2,
-				world.getHeight() * TILEHEIGHTWIDHT + TOPBARWIDTH, "World");
+		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2, world.getHeight() * TILEHEIGHTWIDHT + TOPBARWIDTH,
+				"World");
 		this.world = world;
 		zoom = 1f;
 	}
 
 	@Override
 	public BufferedImage draw() {
-
-		// creates worldimage
-		BufferedImage image = getWorldImage();
-
-		// resize Image 
-		/*
-		BufferedImage scaledimage;
-		scaledimage = (getZoom() > 3.0)
-				? getBufferedImage(image.getScaledInstance((int) (image.getWidth() * zoom),
-						(int) (image.getHeight() * zoom), Image.SCALE_FAST))
-				: getBufferedImage(image.getScaledInstance((int) (image.getWidth() * zoom),
-						(int) (image.getHeight() * zoom), Image.SCALE_SMOOTH));
-		*/
-				return image;
-	}
-
-	/**
-	 * Draws the entire world on one BufferedImage
-	 * 
-	 * @param height
-	 * @param width
-	 * @return
-	 */
-	private BufferedImage getWorldImage() {
-		BufferedImage image = new BufferedImage(world.getWidth() * TILEHEIGHTWIDHT,
-				world.getHeight() * TILEHEIGHTWIDHT, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = (Graphics2D) image.getGraphics();
-		g2.setStroke(new BasicStroke(TILEHEIGHTWIDHT / 32));
+		g2.setStroke(new BasicStroke(2));
 
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
@@ -73,44 +44,37 @@ public class WorldWindow extends CustomWindow {
 					g2.drawImage(
 							temptile.getImage(Layers.Floor).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
 									(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-							(int)(temptile.getDrawX(0)*zoom), (int)(temptile.getDrawY(0)*zoom), null);
+							(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
 				if (temptile.hasLayer(Layers.Cable))
 					g2.drawImage(
 							temptile.getImage(Layers.Cable).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
 									(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-							(int) (temptile.getDrawX(0)*zoom),(int) (temptile.getDrawY(0)*zoom), null);
+							(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
 				if (temptile.hasLayer(Layers.Objects))
 					g2.drawImage(
-							temptile.getImage(Layers.Objects).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+							temptile.getObjektImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
 									(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-							(int) (temptile.getDrawX(0)*zoom),(int) (temptile.getDrawY(0)*zoom), null);
+							(int) (temptile.getDrawX(temptile.getRelativedrawX()) * zoom),
+							(int) (temptile.getDrawY(temptile.getRelativedrawY()) * zoom), null);
 			}
 		}
-		/*
-		 * 
-		 * if (temptile.hasLayer(Layers.Cable))
-		 * g2.drawImage(temptile.getImage(Layers.Cable), temptile.getDrawX(0),
-		 * temptile.getDrawY(0), null); if (temptile.hasLayer(Layers.Objects))
-		 * g2.drawImage(temptile.getObjektImage(),
-		 * temptile.getDrawX(temptile.getRelativedrawX()),
-		 * temptile.getDrawY(temptile.getRelativedrawY()), null); if
-		 * (world.getEntityAt(temptile) != null) { Entity tempentity =
-		 * world.getEntityAt(temptile); g2.drawImage(tempentity.getImage(),
-		 * tempentity.getDrawX(tempentity.getRelativedrawX()),
-		 * tempentity.getDrawY(tempentity.getRelativedrawY()) - tempentity.getHeight(),
-		 * null); if (drawlines) { g2.setColor(entityColor);
-		 * g2.drawRect(tempentity.getDrawX(tempentity.getRelativedrawX()),
-		 * tempentity.getDrawY(tempentity.getRelativedrawY()) - tempentity.getHeight(),
-		 * DEFAULTTILEWIDTH - tempentity.getRelativedrawX() - (DEFAULTTILEWIDTH / 32),
-		 * DEFAULTTILEWIDTH - tempentity.getRelativedrawY() - (DEFAULTTILEWIDTH / 32));
-		 * } } if (temptile.hasLayer(Layers.Effects))
-		 * g2.drawImage(temptile.getImage(Layers.Effects), temptile.getDrawX(0),
-		 * temptile.getDrawY(0), null); if (drawlines) { g2.setColor(tileColor);
-		 * g2.drawRect(temptile.getDrawX(0), temptile.getDrawY(0), DEFAULTTILEWIDTH,
-		 * DEFAULTTILEWIDTH); } }
-		 * 
-		 * }
-		 */
+		for (Entity entity : world.getEntitys()) {
+			g2.drawImage(
+					entity.getImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom), (int) (TILEHEIGHTWIDHT * zoom),
+							Scaler),
+					(int) (entity.getDrawX(entity.getRelativedrawX()) * zoom),
+					(int) (entity.getDrawY(entity.getRelativedrawY()) * zoom), null);
+		}
+		for (int x = 0; x < world.getWidth(); x++) {
+			for (int y = 0; y < world.getHeight(); y++) {
+				Tile temptile = world.getTile(x, y);
+				if (temptile.hasLayer(Layers.Effects))
+					g2.drawImage(
+							temptile.getImage(Layers.Effects).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+									(int) (TILEHEIGHTWIDHT * zoom), Scaler),
+							(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
+			}
+		}
 
 		g2.dispose();
 		return image;

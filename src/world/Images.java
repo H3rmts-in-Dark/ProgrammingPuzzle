@@ -10,6 +10,7 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 import logic.Constants;
+import logic.Layers;
 
 public class Images implements Constants {
 
@@ -49,7 +50,7 @@ public class Images implements Constants {
 	}
 	
 
-	public static String loadLayerpicture(String ObjektName, logic.Layers layer) {
+	public static String loadLayerpicture(String ObjektName, Layers layer) {
 		switch (layer) {
 		case Floor:
 			return "rsc/floor pictures/" + ObjektName + ".png";

@@ -24,16 +24,17 @@ public class Animation implements Constants {
 
 	private Boolean defaultanimtion;
 
-	public Animation(File picturesFile, File soundFile, Object animatedObject, Boolean defaultanimtion) {
+	public Animation(String picturesFile, String soundFile, Object animatedObject, Boolean defaultanimtion) {
 		this.paths = new ArrayList<>();
 		this.actualFile = 0;
 		this.animatedObject = animatedObject;
 		this.defaultanimtion = defaultanimtion;
-		for (Integer i = 0; i < picturesFile.listFiles().length; i++) {
-			paths.add(picturesFile.getPath() + "/" + i + ".png");
+		
+		for (Integer i = 0; i < new File(picturesFile).listFiles().length; i++) {
+			paths.add(picturesFile + "/" + i + ".png");
 		}
-		if (new File(soundFile.getPath() + ".wav").exists())
-			sound = soundFile.getPath() + ".wav";
+		if (new File(soundFile + ".wav").exists())
+			sound = soundFile + ".wav";
 	}
 
 	public BufferedImage getActualImage() {
@@ -91,12 +92,12 @@ public class Animation implements Constants {
 	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName,
 			Tile animatedObject) {
 		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation(new File("rsc/objekt pictures/" + ObjektName + "/" + animationName),new File("rsc/sound/" + ObjektName + "/" + animationName), animatedObject,animationName == DEFAULTANIMATION));
+				new Animation("rsc/objekt pictures/" + ObjektName + "/" + animationName,"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,animationName == DEFAULTANIMATION));
 	}
 	
 	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
 			Entity animatedObject) {
 		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation(new File("rsc/entity pictures/" + ObjektName + "/" + animationName),new File("rsc/sound/" + ObjektName + "/" + animationName), animatedObject,animationName == DEFAULTANIMATION));
+				new Animation("rsc/entity pictures/" + ObjektName + "/" + animationName,"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,animationName == DEFAULTANIMATION));
 	}
 }

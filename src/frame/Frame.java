@@ -19,7 +19,7 @@ import logic.Debugger;
 public class Frame implements Constants {
 
 	private static JFrame frame;
-	private static CustomWindowManager manager;
+	private static CustomWindowManager Windowmanager;
 	private static Long lastRepaint = System.currentTimeMillis();
 
 	private Frame() {
@@ -46,17 +46,17 @@ public class Frame implements Constants {
 
 		loadLevelPane();
 		new CustomFrameMouseAdapter(frame);
-		manager.setVisible(true);
+		Windowmanager.setVisible(true);
 
 		frame.repaint();
 	}
 
 	private static void loadLevelPane() {
-		manager = new CustomWindowManager();
-		manager.setBounds(0, 0, FRAMEWIDTH, FRAMEHEIGHT);
-		manager.setVisible(false);
+		Windowmanager = new CustomWindowManager();
+		Windowmanager.setBounds(0, 0, FRAMEWIDTH, FRAMEHEIGHT);
+		Windowmanager.setVisible(false);
 
-		frame.getContentPane().add(manager);
+		frame.getContentPane().add(Windowmanager);
 	}
 
 	/*
@@ -71,20 +71,9 @@ public class Frame implements Constants {
 		// test();
 	}
 	*/
-
-	public static void addWindow(CustomWindow newWindow) {
-		manager.addWindow(newWindow);
-		repaint();
-	}
-
-	public static void removeWindow(CustomWindow window) {
-		manager.removeWindow(window);
-		repaint();
-	}
-
-	public static void windowToFront(CustomWindow window) {
-		manager.windowToFront(window);
-		repaint();
+	
+	public static CustomWindowManager getWindowManager() {
+		return Windowmanager;
 	}
 
 	public static JFrame getFrame() {
@@ -106,15 +95,13 @@ public class Frame implements Constants {
 	public static void repaint() {
 		if (lastRepaint + (1000 / FPS) < System.currentTimeMillis()) {
 			frame.repaint();
-			// System.out.println("Repainted at: " + System.currentTimeMillis());
 			lastRepaint = System.currentTimeMillis();
-		} else {
-			// System.out.println("Didn't repaint");
 		}
 	}
 }
 
 class CustomFrameMouseAdapter extends MouseAdapter {
+	
 	JFrame frame;
 
 	public CustomFrameMouseAdapter(JFrame frame) {
@@ -129,7 +116,6 @@ class CustomFrameMouseAdapter extends MouseAdapter {
 		try {
 			CustomWindow component = getWindow(e.getPoint());
 			Point componentPoint = convertPoint(e.getPoint(), component);
-
 			dragwindow = component;
 			component.processMousePressedEvent(componentPoint);
 			component.processMouseMovedEvent(componentPoint);
@@ -142,7 +128,6 @@ class CustomFrameMouseAdapter extends MouseAdapter {
 		try {
 			CustomWindow component = dragwindow;
 			Point componentPoint = convertPoint(e.getPoint(), component);
-
 			component.drag(e);
 			component.processMouseMovedEvent(componentPoint);
 			component.triggerFullRepaint();

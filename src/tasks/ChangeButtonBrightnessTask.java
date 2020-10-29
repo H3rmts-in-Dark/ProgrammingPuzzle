@@ -11,7 +11,7 @@ import frame.Frame;
 public class ChangeButtonBrightnessTask extends Task {
 
 	private JButton button;
-	private Integer brightness = 0; // Wie intilligent bist du?
+	private Integer brightness = 0;
 
 	public ChangeButtonBrightnessTask(JButton button) {
 		super(4, -1);

@@ -65,9 +65,9 @@ public abstract class Tile implements Constants {
 	}
 
 	public boolean hasLayer(Layers layer) {
-		if (layer != Layers.Objects)
-			return images.get(layer) != null;
-		return actualAnimation != null;
+		if (layer.equals(Layers.Objects))
+			return animated;
+		return images.get(layer) != null;
 	}
 
 	public Boolean isPassable(Integer height) {
