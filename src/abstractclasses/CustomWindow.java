@@ -182,6 +182,10 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		return layer;
 	}
 
+	public CustomWindow getThis() {
+		return this;
+	}
+
 	public void setLayer(Integer layer) {
 		this.layer = layer;
 	}
@@ -204,10 +208,21 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		return image;
 	}
 
-	public void drag(MouseEvent e) {
+	public void drag(MouseEvent e, Point point) {
 		new Thread() {
 			@Override
 			public void run() {
+				if (Frame.getWindowManager().isFullscreen(getThis())) {
+					Point newpos = new Point((int) ((point.getX() / getWidth()) * DEFAULTWITH), point.y);
+					saveBounds(newpos);
+					setSize(DEFAULTWITH, DEFAULTHEIGHT);
+					setLocation(point.x, point.y);
+					Frame.getWindowManager().setFullscreen(null);
+					resizeMaximum();
+					Frame.repaint();
+
+					return;
+				}
 				switch (Frame.getFrame().getCursor().getType()) {
 				case Cursor.MOVE_CURSOR:
 					setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,
@@ -244,17 +259,16 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 					setSize(e.getPoint().x - getX(), bottomRight.y - getY());
 					break;
 				}
-
 				resizeMaximum();
-
 				Frame.repaint();
 			}
 		}.start();
 	}
 
-	public void saveMouse(Point point) {
+	public void saveBounds(Point point) {
 		topLeft = point;
 		bottomRight = new Point(getX() + getWidth(), getY() + getHeight());
+		mouse = point;
 	}
 
 	void resizeMaximum() {
@@ -297,12 +311,11 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	public void processMousePressedEvent(Point point) {
-		saveMouse(point);
+		saveBounds(point);
 		if (point.getX() >= getImageborders().getX()
 				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
 				&& point.getY() >= getImageborders().getY()
 				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
-			mouse = point;
 			if (isFocused())
 				mousePressed(new Point((int) (point.getX() - getImageborders().getX()),
 						(int) (point.getY() - getImageborders().getY())));
@@ -313,7 +326,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	public void processMouseMovedEvent(Point point) {
-		if (point.getX() >= getImageborders().getX()
+		if (point.getX() >= getImageborders().getX() // test if in picture
 				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
 				&& point.getY() >= getImageborders().getY()
 				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
@@ -325,7 +338,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	public void processMouseWheelMovedEvent(Point point, MouseWheelEvent e) {
-		if (point.getX() >= getImageborders().getX()
+		if (point.getX() >= getImageborders().getX() // test if in picture
 				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
 				&& point.getY() >= getImageborders().getY()
 				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
@@ -462,15 +475,13 @@ class MaximiseButton extends JButton implements ActionListener, Constants {
 		Frame.getWindowManager().setFocused(window);
 		if (!Frame.getWindowManager().isFullscreen(window)) {
 			window.setBounds(0, 0, Frame.getWindowManager().getWidth(), Frame.getWindowManager().getHeight());
-			window.resizeMaximum();
 			Frame.getWindowManager().setFullscreen(window);
-			System.out.println(window.getImageborders());
 		} else {
 			window.setBounds(DEFAULTX, DEFAULTY, DEFAULTWITH, DEFAULTHEIGHT);
-			window.resizeMaximum();
 			Frame.getWindowManager().setFullscreen(null);
-			System.out.println(window.getImageborders());
 		}
+		window.resizeMaximum();
+		window.triggerFullRepaint();
 	}
 
 }
