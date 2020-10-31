@@ -105,9 +105,11 @@ public class WorldWindow extends CustomWindow {
 		Tile tile = getTile(point);
 		if (tile instanceof Computer) {
 			tile.triggerAnimation(INTERACTANIMATION);
-		} else { new DescriptionWindow(tile, new Point((int) point.getX() + getX() +
-		 CORNERWIDTH, (int) point.getY() + getY() + TOPBARWIDTH)); }
-		 
+		} else {
+			new DescriptionWindow(tile,
+					new Point((int) point.getX() + getX() + CORNERWIDTH, (int) point.getY() + getY() + TOPBARWIDTH));
+		}
+
 	}
 
 	@Override

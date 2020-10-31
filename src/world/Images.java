@@ -50,7 +50,7 @@ public class Images implements Constants {
 	}
 	
 
-	public static String loadLayerpicture(String ObjektName, Layers layer) {
+	public static String loadLayerPicture(String ObjektName, Layers layer) {
 		switch (layer) {
 		case Floor:
 			return "rsc/floor pictures/" + ObjektName + ".png";

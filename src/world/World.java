@@ -31,7 +31,7 @@ public class World implements Constants{
 	public void setTile(Integer x, Integer y, Tile tile) {
 		world[x][y] = tile;
 		tile.setWorld(this);
-		tile.start();
+		tile.startAnimation();
 	}
 
 	public Tile getTile(int x, int y) {

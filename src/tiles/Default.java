@@ -13,6 +13,6 @@ public class Default extends Tile {
 
 	@Override
 	public void loadAnimation() {
-		setImage(Layers.Floor, Images.loadLayerpicture("Default", Layers.Floor));
+		setImage(Layers.Floor, Images.loadLayerPicture("Default", Layers.Floor));
 	}
 }

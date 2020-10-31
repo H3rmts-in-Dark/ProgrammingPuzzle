@@ -3,13 +3,14 @@ package world;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 
 import abstractclasses.Entity;
 import abstractclasses.Tile;
 import frame.Frame;
 import logic.Constants;
+import logic.Rotation;
 import sound.Sound;
 import sound.Sounds;
 import tasks.ChangeImageTask;
@@ -21,7 +22,6 @@ public class Animation implements Constants {
 	private Object animatedObject;
 	private ChangeImageTask task;
 	private String sound;
-
 	private Boolean defaultanimtion;
 
 	public Animation(String picturesFile, String soundFile, Object animatedObject, Boolean defaultanimtion) {
@@ -29,33 +29,34 @@ public class Animation implements Constants {
 		this.actualFile = 0;
 		this.animatedObject = animatedObject;
 		this.defaultanimtion = defaultanimtion;
-		
-		for (Integer i = 0; i < new File(picturesFile).listFiles().length; i++) {
-			paths.add(picturesFile + "/" + i + ".png");
+
+		for (String filePath : new File(picturesFile).list()) {
+			if (filePath.contains(".png"))
+				paths.add(picturesFile + "/" + filePath);
+			else if (filePath.contains(".wav"))
+				sound = picturesFile + "/" + filePath;
 		}
-		if (new File(soundFile + ".wav").exists())
-			sound = soundFile + ".wav";
 	}
 
 	public BufferedImage getActualImage() {
 		return Images.getImage(paths.get(actualFile));
 	}
 
-	public Sound name() {
+	public Sound getSound() {
 		return Sounds.getSound(sound);
 	}
 
-	public void start() {
+	public void startAnimation() {
 		actualFile = 0;
 		if (defaultanimtion)
 			task = new ChangeImageTask(5, this, -1);
 		else
 			task = new ChangeImageTask(5, this, paths.size());
-		if (sound!=null)
-		Sounds.getSound(sound).play();
+		if (sound != null)
+			Sounds.getSound(sound).play();
 	}
 
-	public void stop() {
+	public void stopAnimation() {
 		task.end();
 	}
 
@@ -77,27 +78,46 @@ public class Animation implements Constants {
 		}
 	}
 
-	public void triggerdefault() {
+	public void triggerDefault() {
 		if (animatedObject instanceof Tile) {
 			((Tile) animatedObject).triggerAnimation(DEFAULTANIMATION);
 		} else if (animatedObject instanceof Entity) {
 			((Entity) animatedObject).triggerAnimation(DEFAULTANIMATION);
 		}
 	}
-	
-	
-	
 
-	
-	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName,
-			Tile animatedObject) {
-		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation("rsc/objekt pictures/" + ObjektName + "/" + animationName,"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,animationName == DEFAULTANIMATION));
+	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, Rotation direction,
+			String animationName, Tile animatedObject) {
+		return new SimpleEntry<>(animationName,
+				new Animation("rsc/objekt pictures/" + ObjektName + "/" + decodeRotation(direction) + animationName,
+						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
+						animationName == DEFAULTANIMATION));
 	}
-	
+
+	private static String decodeRotation(Rotation r) {
+		try {
+			switch (r) {
+			case down:
+				return "unten/";
+			case left:
+				return "links/";
+			case right:
+				return "rechts/";
+			case up:
+				return "unten/";
+			default:
+				return "";
+			}
+		} catch (NullPointerException npe) {
+			return "";
+		}
+	}
+
 	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
 			Entity animatedObject) {
 		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation("rsc/entity pictures/" + ObjektName + "/" + animationName,"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,animationName == DEFAULTANIMATION));
+				new Animation("rsc/entity pictures/" + ObjektName + "/" + animationName,
+						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
+						animationName == DEFAULTANIMATION));
 	}
 }
