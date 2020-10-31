@@ -77,9 +77,9 @@ public abstract class Entity implements Constants {
 
 	private void triggerAnimation(Animation animation) {
 		if (actualAnimation != null) {
-			actualAnimation.stop();
+			actualAnimation.stopAnimation();
 		}
-		animation.start();
+		animation.startAnimation();
 		actualAnimation = animation;
 	}
 
