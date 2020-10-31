@@ -40,10 +40,13 @@ public class Sound {
 			public void run() {
 				try (Line line = AudioSystem.getLine(info)) {
 					try (Clip clip = (Clip) line) {
-						System.out.println("play:" + audio.length);
+						//System.out.println("open:" + audio.length + System.currentTimeMillis());
 						clip.open(format, audio, 0, audio.length);
+						//System.out.println("opened:" + audio.length + System.currentTimeMillis());
 						clip.start();
+						//System.out.println("started:" + audio.length + System.currentTimeMillis());
 						sleep(clip.getMicrosecondLength() / 1000);
+						//System.out.println("finished:" + audio.length + System.currentTimeMillis());
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

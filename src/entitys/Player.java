@@ -7,8 +7,8 @@ import abstractclasses.Tile;
 
 public class Player extends Entity {
 
-	protected Player(Boolean interactable, Point position) {
-		super(interactable, position, 0, 0);
+	public Player(Point position) {
+		super(false, position, 0, 0);
 	}
 
 	@Override

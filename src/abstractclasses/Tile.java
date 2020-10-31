@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import logic.Constants;
+import logic.Layers;
+import logic.Rotation;
 import world.Animation;
 import world.Images;
 import world.World;
-import world.World.Layers;
 
 /**
  * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das
@@ -19,19 +20,21 @@ public abstract class Tile implements Constants {
 
 	private Integer height;
 	private String description;
-
 	private Integer relativedrawX;
 	private Integer relativedrawY;
-	
 	private Boolean animated;
 
 	/**
-	 * exluding objektlayer
+	 * Enthält die Bilder für alle Layer außer dem Object-Layer, da diese in
+	 * objectAnimations gespeichert sind.
 	 */
-	private HashMap<World.Layers, String> images;
-
-	private Animation actualAnimation;
+	private HashMap<Layers, String> images;
 	private HashMap<String, Animation> objektAnimations;
+	private Animation actualAnimation;
+
+	private Rotation direction;
+	private HashMap<Rotation, HashMap<String, Animation>> directionAnimations;
+	private Boolean hasDirectionAnimations;
 
 	protected World world;
 
@@ -45,6 +48,8 @@ public abstract class Tile implements Constants {
 
 		images = new HashMap<>();
 		objektAnimations = new HashMap<>();
+		if (hasDirectionAnimations == null || hasDirectionAnimations)
+			directionAnimations = new HashMap<>();
 		loadAnimation();
 	}
 
@@ -58,16 +63,16 @@ public abstract class Tile implements Constants {
 	public void setWorld(World world) {
 		this.world = world;
 	}
-	
-	public void start() {
+
+	public void startAnimation() {
 		if (animated)
 			triggerAnimation(DEFAULTANIMATION);
 	}
 
-	public boolean hasLayer(World.Layers layer) {
-		if (layer != Layers.Objects)
-			return images.get(layer) != null;
-		return actualAnimation != null;
+	public boolean hasLayer(Layers layer) {
+		if (layer.equals(Layers.Objects))
+			return animated;
+		return images.get(layer) != null;
 	}
 
 	public Boolean isPassable(Integer height) {
@@ -86,15 +91,34 @@ public abstract class Tile implements Constants {
 		objektAnimations.put(data.getKey(), data.getValue());
 	}
 
+	public void addDirectionAnimation(Rotation direction, Entry<String, Animation> data) {
+		if (directionAnimations.containsKey(direction)) {
+			directionAnimations.get(direction).put(data.getKey(), data.getValue());
+		} else {
+			HashMap<String, Animation> hm = new HashMap<>();
+			directionAnimations.put(direction, hm);
+			addDirectionAnimation(direction, data);
+		}
+	}
+
+	public void setDirection(Rotation direction) {
+		this.direction = direction;
+		objektAnimations = directionAnimations.get(direction);
+	}
+
+	public Rotation getDirection() {
+		return direction;
+	}
+
 	public void triggerAnimation(String animation) {
 		triggerObjektAnimation(getObjektanimation(animation));
 	}
 
 	private void triggerObjektAnimation(Animation animation) {
 		if (actualAnimation != null) {
-			actualAnimation.stop();
+			actualAnimation.stopAnimation();
 		}
-		animation.start();
+		animation.startAnimation();
 		actualAnimation = animation;
 	}
 
@@ -115,14 +139,17 @@ public abstract class Tile implements Constants {
 	}
 
 	public Integer getDrawX(Integer relativedrawX) {
-		return (int) getPosition().getX() * DEFAULTTILEWIDTH + relativedrawX;
+		return (int) getPosition().getX() * TILEHEIGHTWIDHT + relativedrawX;
 	}
+
 	public Integer getDrawY(Integer relativedrawY) {
-		return (int) getPosition().getY() * DEFAULTTILEWIDTH + relativedrawY;
+		return (int) getPosition().getY() * TILEHEIGHTWIDHT + relativedrawY;
 	}
+
 	public Integer getRelativedrawX() {
 		return relativedrawX;
 	}
+
 	public Integer getRelativedrawY() {
 		return relativedrawY;
 	}

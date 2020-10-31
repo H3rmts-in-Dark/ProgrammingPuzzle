@@ -54,7 +54,7 @@ public interface Constants {
 // -----------------------------------------------------------
 // --------------------World----------------------------------
 
-	public static final Integer DEFAULTTILEWIDTH = 64;
+	public static final Integer TILEHEIGHTWIDHT = 64;
 
 //
 // -----------------------------------------------------------
@@ -68,17 +68,17 @@ public interface Constants {
 	/**
 	 * Der höchstmögliche Wert eines Layers.
 	 */
-	public static final Integer UNPASSABLE = DEFAULTTILEWIDTH;
+	public static final Integer UNPASSABLE = TILEHEIGHTWIDHT;
 
 	/**
 	 * kann auf ein förederband fallen
 	 */
-	public static final Integer ABLAGE = DEFAULTTILEWIDTH / 2;
+	public static final Integer ABLAGE = TILEHEIGHTWIDHT / 2;
 
 	/**
 	 * Förderband
 	 */
-	public static final Integer FÖRDERBANDHÖHE = DEFAULTTILEWIDTH / 3;
+	public static final Integer FÖRDERBANDHÖHE = TILEHEIGHTWIDHT / 3;
 
 //
 // -----------------------------------------------------------

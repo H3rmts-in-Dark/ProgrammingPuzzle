@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import javax.swing.JLayeredPane;
 
 import abstractclasses.CustomWindow;
+import frame.Frame;
 
-public class CustomWindowManager extends JLayeredPane {
+public class CustomWindowManager extends JLayeredPane implements Constants {
 
-	// Haha Windows
+	CustomWindow fullscreen;
+	CustomWindow focused;
 	ArrayList<CustomWindow> windows;
 
 	public CustomWindowManager() {
@@ -18,7 +20,7 @@ public class CustomWindowManager extends JLayeredPane {
 	public void addWindow(CustomWindow window) {
 		windows.add(window);
 		window.setLayer(nextHighestLayer());
-		window.setFocused(true);
+		setFocused(window);
 		clean();
 	}
 
@@ -28,8 +30,32 @@ public class CustomWindowManager extends JLayeredPane {
 	}
 
 	public void windowToFront(CustomWindow window) {
-		window.setLayer(nextHighestLayer());
+		if (isFullscreen(window)) {
+			window.setLayer(nextHighestLayer());
+			clean();
+		}
+	}
+
+	public void setFocused(CustomWindow focused) {
+		this.focused = focused;
+	}
+
+	public void setFullscreen(CustomWindow fullscreen) {
+		if (this.fullscreen != null) {
+			this.fullscreen.setBounds(DEFAULTX, DEFAULTY, DEFAULTWITH, DEFAULTHEIGHT);
+		}
+		this.fullscreen = fullscreen;
+		if (fullscreen != null)
+			fullscreen.setLayer(nextLowestLayer());
 		clean();
+	}
+
+	public Boolean isFocused(CustomWindow test) {
+		return focused.equals(test);
+	}
+
+	public Boolean isFullscreen(CustomWindow test) {
+		return fullscreen == null ? false : fullscreen.equals(test);
 	}
 
 	private void clean() {
@@ -37,11 +63,10 @@ public class CustomWindowManager extends JLayeredPane {
 		Integer actlayer = 0;
 		for (CustomWindow window : windows) {
 			window.setLayer(actlayer);
-			window.setFocused(false);
 			actlayer++;
 		}
 		if (windows.size() > 0)
-			windows.get(windows.size() - 1).setFocused(true);
+			setFocused(windows.get(windows.size() - 1));
 		addComponents();
 	}
 
@@ -50,6 +75,7 @@ public class CustomWindowManager extends JLayeredPane {
 		for (CustomWindow window : windows) {
 			add(window, window.getLayer());
 		}
+		Frame.repaint();
 	}
 
 	private int nextHighestLayer() {
@@ -59,5 +85,14 @@ public class CustomWindowManager extends JLayeredPane {
 				layer = window.getLayer();
 		}
 		return ++layer;
+	}
+
+	private int nextLowestLayer() {
+		Integer layer = nextHighestLayer();
+		for (CustomWindow window : windows) {
+			if (window.getLayer() < layer)
+				layer = window.getLayer();
+		}
+		return --layer;
 	}
 }

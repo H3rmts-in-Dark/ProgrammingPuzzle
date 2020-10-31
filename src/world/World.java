@@ -11,10 +11,6 @@ import tiles.Default;
 
 public class World implements Constants{
 
-	public static enum Layers {
-		Floor, Cable, Objects, Entitys, Effects
-	}
-
 	/**
 	 * Weltarray aus Tiles [x][y] layer0 1. horizontal (x) 2. vertikal (y)
 	 */
@@ -35,7 +31,7 @@ public class World implements Constants{
 	public void setTile(Integer x, Integer y, Tile tile) {
 		world[x][y] = tile;
 		tile.setWorld(this);
-		tile.start();
+		tile.startAnimation();
 	}
 
 	public Tile getTile(int x, int y) {

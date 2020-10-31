@@ -4,40 +4,38 @@ import java.awt.Point;
 
 import abstractclasses.Entity;
 import abstractclasses.Task;
-import logic.Rotation;
 
 public class MoveEntityTask extends Task {
 	
 	private Entity entity;
-	private Rotation rotation;
 	
-	public MoveEntityTask(Integer tickDifference, Entity entity, Rotation rotation) {
-		super(tickDifference, DEFAULTTILEWIDTH);
+	public MoveEntityTask(Integer tickDifference, Entity entity) {
+		super(tickDifference, TILEHEIGHTWIDHT);
 		this.entity = entity;
-		this.rotation = rotation;
 	}
 
 	@Override
 	public void runCode() {
-		switch (rotation) {
+		System.out.println("switch");
+		switch (entity.getRotation()) {
 		case down:
-			entity.setPixelPosition(new Point(entity.getDrawX(0),entity.getDrawX(1)));
+			entity.setPixelPosition(new Point(entity.getPixelposition().x,entity.getPixelposition().y+1));
 			break;
 		case left:
 			entity.setPixelPosition(new Point(entity.getDrawX(-1),entity.getDrawX(0)));
 			break;
 		case right:
-			entity.setPixelPosition(new Point(entity.getDrawX(+1),entity.getDrawX(0)));
+			entity.setPixelPosition(new Point(entity.getPixelposition().x+1,entity.getPixelposition().y));
 			break;
 		case up:
 			entity.setPixelPosition(new Point(entity.getDrawX(0),entity.getDrawX(-1)));
 			break;
 		}
+		entity.getWorld().getWindow().triggerFullRepaint();
 	}
 
 	@Override
 	public void onEnd() {
-		entity.setPixelPosition(new Point(entity.getPosition().x*DEFAULTTILEWIDTH,entity.getPosition().y*DEFAULTTILEWIDTH));
 		entity.getWorld().getTile(entity.getPosition().y,entity.getPosition().y).onSteppedUpon(entity);
 	}
 

@@ -2,8 +2,9 @@ package tiles;
 
 import abstractclasses.Entity;
 import abstractclasses.Tile;
+import world.Animation;
 import world.Images;
-import world.World.Layers;
+import logic.Layers;
 
 public class Computer extends Tile {
 
@@ -14,13 +15,13 @@ public class Computer extends Tile {
 
 	@Override
 	public void loadAnimation() {
-		setImage(Layers.Floor, Images.loadLayerpicture("Default", Layers.Floor));
-		addObjektAnimation(Images.loadObjektAnimation("Computer", DEFAULTANIMATION, this));
-		addObjektAnimation(Images.loadObjektAnimation("Computer", INTERACTANIMATION, this));
+		setImage(Layers.Floor, Images.loadLayerPicture("Default", Layers.Floor));
+		addObjektAnimation(Animation.loadObjektAnimation("Computer", null, DEFAULTANIMATION, this));
+		addObjektAnimation(Animation.loadObjektAnimation("Computer", null, INTERACTANIMATION, this));
 	}
 
 	@Override
 	public void onInteract(Entity entity) {
-		System.out.println("interacted with computer " + toString() + "\n" + "USELESS INFORMATION");
+		System.out.println("interacted with computer " + toString() + "\n" + "USE LESS INFORMATION");
 	}
 }

@@ -3,8 +3,8 @@ package frame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import logic.MainControl;
 import sound.Sounds;
-import world.World;
 
 public class KeyHandler extends KeyAdapter {
 
@@ -46,11 +46,11 @@ public class KeyHandler extends KeyAdapter {
 		if (command.startsWith("play")) {
 			Sounds.getSound(command.substring(4)).play();
 		}
-		if (command.equals("Worldselect")) {
+		if (command.equals("select")) {
 			new WorldSelectionWindow();
 		}
 		if (command.equals("World")) {
-			new World(10, 10);
+			MainControl.createWorld();
 		}
 	}
 }

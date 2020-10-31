@@ -23,11 +23,12 @@ import tasks.ChangeButtonBrightnessTask;
 
 public abstract class CustomWindow extends JComponent implements Comparable<CustomWindow>, Constants {
 
-	private Boolean focused = false, fullyRepaint;
+	private Boolean fullyRepaint;
 	private Integer layer = 0;
 	private String title = "Default";
 	private Point mouse;
 	private CloseButton close;
+	private MaximiseButton maximise;
 	private BufferedImage innerImage, surroundingImage;
 	private Point topLeft = new Point(), bottomRight = new Point();
 
@@ -45,25 +46,25 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 				: Frame.getWidth() - (int) defaultPosition.getX(),
 				Frame.getHeight() > defaultHeight + defaultPosition.getY() ? defaultHeight
 						: Frame.getHeight() - (int) defaultPosition.getY());
-		resizeToDefaults();
 		setTitle(title);
 		close = new CloseButton(this);
+		maximise = new MaximiseButton(this);
 		fullyRepaint = true;
 		mouse = new Point(0, 0);
-
-		Frame.addWindow(this);
+		resizeMaximum();
+		Frame.getWindowManager().addWindow(this);
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-	public void setFocused(Boolean focused) {
-		this.focused = focused;
+	public void setFocused() {
+		Frame.getWindowManager().setFocused(this);
 	}
 
 	public Boolean isFocused() {
-		return focused;
+		return Frame.getWindowManager().isFocused(this);
 	}
 
 	@Override
@@ -81,12 +82,13 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		// surrounding image
 		g.drawImage(surroundingImage, 0, 0, null);
 
-		// closebutton
+		// buttons
 		close.paintButton((Graphics2D) g);
+		maximise.paintButton((Graphics2D) g);
 
 		// gray out unfocused
 		if (!isFocused()) {
-			g.setColor(new Color(100, 200, 200, 30));
+			g.setColor(new Color(200, 200, 200, 30));
 			g.fillRoundRect(2, 2, getWidth() - 4, getHeight() - 4, ROUNDCURVES, ROUNDCURVES);
 		}
 	}
@@ -98,22 +100,28 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 */
 	private void repaintAll() {
 		innerImage = getEmptyImage();
-		BufferedImage image = draw();
-		if (image == null)
-			image = getNullImage();
 
-		Graphics2D g = innerImage.createGraphics();
+		BufferedImage drawimage = null;
+		try {
+			drawimage = draw();
+		} catch (NullPointerException e) {
+			drawimage = getErrorImage();
+		} finally {
+			if (drawimage == null)
+				drawimage = getErrorImage();
+		}
 
-		// Zeichnet das Bild soweit nötig auf das Fenster und löscht es danach sofort
-		g.drawImage(
-				image.getSubimage(0, 0,
-						image.getWidth() > getImageborders().width ? (getImageborders().width) : image.getWidth(),
-						image.getHeight() > getImageborders().height ? (getImageborders().height) : image.getHeight()),
-				0, 0, null);
-		g.dispose();
+		Graphics2D g2 = innerImage.createGraphics();
+
+		g2.drawImage(drawimage.getSubimage(0, 0,
+				drawimage.getWidth() > getImageborders().width ? getImageborders().width : drawimage.getWidth(),
+				drawimage.getHeight() > getImageborders().height ? getImageborders().height : drawimage.getHeight()), 0,
+				0, null);
+		g2.dispose();
 
 		surroundingImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics2D g2 = surroundingImage.createGraphics();
+
+		g2 = surroundingImage.createGraphics();
 
 		// top + middle surrounding
 		g2.setStroke(new BasicStroke(CORNERWIDTH + CORNERWIDTH / 4));
@@ -141,8 +149,6 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		g2.drawRoundRect(SIDEBARWIDTH, TOPBARWIDTH, getWidth() - SIDEBARWIDTH * 2,
 				getHeight() - TOPBARWIDTH - SIDEBARWIDTH, ROUNDCURVES, ROUNDCURVES);
 
-		// Löscht das Bild aus dem Speicher, um Platz zu sparen und setzt danach die
-		// Nötigkeit zum Repainten zurück
 		g2.dispose();
 		fullyRepaint = false;
 	}
@@ -176,6 +182,10 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		return layer;
 	}
 
+	public CustomWindow getThis() {
+		return this;
+	}
+
 	public void setLayer(Integer layer) {
 		this.layer = layer;
 	}
@@ -186,7 +196,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 * 
 	 * @return
 	 */
-	private BufferedImage getNullImage() {
+	private BufferedImage getErrorImage() {
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = image.createGraphics();
 		g2.setColor(Color.BLUE);
@@ -198,10 +208,21 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		return image;
 	}
 
-	public void drag(MouseEvent e) {
+	public void drag(MouseEvent e, Point point) {
 		new Thread() {
 			@Override
 			public void run() {
+				if (Frame.getWindowManager().isFullscreen(getThis())) {
+					Point newpos = new Point((int) ((point.getX() / getWidth()) * DEFAULTWITH), point.y);
+					saveBounds(newpos);
+					setSize(DEFAULTWITH, DEFAULTHEIGHT);
+					setLocation(point.x, point.y);
+					Frame.getWindowManager().setFullscreen(null);
+					resizeMaximum();
+					Frame.repaint();
+
+					return;
+				}
 				switch (Frame.getFrame().getCursor().getType()) {
 				case Cursor.MOVE_CURSOR:
 					setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,
@@ -238,22 +259,19 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 					setSize(e.getPoint().x - getX(), bottomRight.y - getY());
 					break;
 				}
-
-				resizeToDefaults();
-
-				close.setBounds(getWidth() - 27, 6, 20, 20);
-
+				resizeMaximum();
 				Frame.repaint();
 			}
 		}.start();
 	}
 
-	public void saveMouse(Point point) {
+	public void saveBounds(Point point) {
 		topLeft = point;
 		bottomRight = new Point(getX() + getWidth(), getY() + getHeight());
+		mouse = point;
 	}
 
-	private void resizeToDefaults() {
+	void resizeMaximum() {
 		if (getWidth() <= DEFAULTMINWIDTH)
 			setSize(DEFAULTMINWIDTH, getHeight());
 		if (getHeight() <= DEFAULTMINHEIGHT)
@@ -262,6 +280,9 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 			setSize(DEFAULTMAXWIDTH, getHeight());
 		if (getHeight() >= DEFAULTMAXHEIGHT)
 			setSize(getWidth(), DEFAULTMAXHEIGHT);
+
+		close.setBounds(getWidth() - 27, 8, 20, 20);
+		maximise.setBounds(getWidth() - 57, 8, 20, 20);
 	}
 
 	/**
@@ -290,23 +311,22 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	public void processMousePressedEvent(Point point) {
-		saveMouse(point);
+		saveBounds(point);
 		if (point.getX() >= getImageborders().getX()
 				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
 				&& point.getY() >= getImageborders().getY()
 				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
-			mouse = point;
 			if (isFocused())
 				mousePressed(new Point((int) (point.getX() - getImageborders().getX()),
 						(int) (point.getY() - getImageborders().getY())));
 			else
-				Frame.windowToFront(this);
+				Frame.getWindowManager().windowToFront(this);
 		} else
-			Frame.windowToFront(this);
+			Frame.getWindowManager().windowToFront(this);
 	}
 
 	public void processMouseMovedEvent(Point point) {
-		if (point.getX() >= getImageborders().getX()
+		if (point.getX() >= getImageborders().getX() // test if in picture
 				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
 				&& point.getY() >= getImageborders().getY()
 				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
@@ -318,7 +338,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	public void processMouseWheelMovedEvent(Point point, MouseWheelEvent e) {
-		if (point.getX() >= getImageborders().getX()
+		if (point.getX() >= getImageborders().getX() // test if in picture
 				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
 				&& point.getY() >= getImageborders().getY()
 				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
@@ -406,7 +426,7 @@ class CloseButton extends JButton implements ActionListener {
 
 	public CloseButton(CustomWindow window) {
 		this.window = window;
-		setBounds(window.getWidth() - 27, 6, 20, 20);
+		setBounds(window.getWidth() - 27, 8, 20, 20);
 		addActionListener(this);
 		setOpaque(false);
 		new ChangeButtonBrightnessTask(this);
@@ -418,13 +438,50 @@ class CloseButton extends JButton implements ActionListener {
 		g2.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 4, 4);
 		g2.setStroke(new BasicStroke(3));
 		g2.setColor(getForeground());
-		g2.drawLine(4 + getX(), 2 + getY(), getWidth() - 4 + getX(), getHeight() - 3 + getY());
-		g2.drawLine(getWidth() - 4 + getX(), 2 + getY(), 4 + getX(), getHeight() - 3 + getY());
+		g2.drawLine(4 + getX(), 3 + getY(), getWidth() - 4 + getX(), getHeight() - 4 + getY());
+		g2.drawLine(getWidth() - 4 + getX(), 3 + getY(), 4 + getX(), getHeight() - 4 + getY());
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Frame.removeWindow(window);
+		Frame.getWindowManager().removeWindow(window);
+	}
+
+}
+
+class MaximiseButton extends JButton implements ActionListener, Constants {
+
+	final CustomWindow window;
+
+	public MaximiseButton(CustomWindow window) {
+		this.window = window;
+		setBounds(window.getWidth() - 57, 8, 20, 20);
+		addActionListener(this);
+		setOpaque(false);
+		new ChangeButtonBrightnessTask(this);
+		window.add(this);
+	}
+
+	public void paintButton(Graphics2D g2) {
+		g2.setColor(Color.DARK_GRAY);
+		g2.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 4, 4);
+		g2.setStroke(new BasicStroke(3));
+		g2.setColor(getForeground());
+		g2.drawRect(5 + getX(), 2 + getY(), getWidth() - 5, getHeight() - 6);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Frame.getWindowManager().setFocused(window);
+		if (!Frame.getWindowManager().isFullscreen(window)) {
+			window.setBounds(0, 0, Frame.getWindowManager().getWidth(), Frame.getWindowManager().getHeight());
+			Frame.getWindowManager().setFullscreen(window);
+		} else {
+			window.setBounds(DEFAULTX, DEFAULTY, DEFAULTWITH, DEFAULTHEIGHT);
+			Frame.getWindowManager().setFullscreen(null);
+		}
+		window.resizeMaximum();
+		window.triggerFullRepaint();
 	}
 
 }
