@@ -14,9 +14,9 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sound {
 
-	private Info info;
-	private AudioFormat format;
-	private byte[] audio;
+	Info info;
+	AudioFormat format;
+	byte[] audio;
 
 	public Sound(File file) {
 		load(file);
@@ -30,7 +30,7 @@ public class Sound {
 			info = new Info(Clip.class, format, size);
 			audioInputStream.read(audio, 0, size);
 		} catch (UnsupportedAudioFileException | IOException e) {
-			System.out.println("Musikdatei konnte nicht an Position " + file.getPath() + " nicht gefunden werden.");
+			e.printStackTrace();
 		}
 	}
 
