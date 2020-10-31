@@ -91,13 +91,13 @@ public class Animation implements Constants {
 	
 	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName,
 			Tile animatedObject) {
-		return new AbstractMap.SimpleEntry<>(animationName,
+		return new SimpleEntry<>(animationName,
 				new Animation("rsc/objekt pictures/" + ObjektName + "/" + animationName,"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,animationName == DEFAULTANIMATION));
 	}
 	
 	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
 			Entity animatedObject) {
-		return new AbstractMap.SimpleEntry<>(animationName,
+		return new SimpleEntry<>(animationName,
 				new Animation("rsc/entity pictures/" + ObjektName + "/" + animationName,"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,animationName == DEFAULTANIMATION));
 	}
 }
