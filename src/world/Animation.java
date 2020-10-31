@@ -3,8 +3,8 @@ package world;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 
 import abstractclasses.Entity;
 import abstractclasses.Tile;
@@ -29,12 +29,13 @@ public class Animation implements Constants {
 		this.actualFile = 0;
 		this.animatedObject = animatedObject;
 		this.defaultanimtion = defaultanimtion;
-		
-		for (Integer i = 0; i < new File(picturesFile).listFiles().length; i++) {
-			paths.add(picturesFile + "/" + i + ".png");
+
+		for (String filePath : new File(picturesFile).list()) {
+			if (filePath.contains(".png"))
+				paths.add(filePath);
+			else if (filePath.contains(".wav"))
+				sound = filePath;
 		}
-		if (new File(soundFile + ".wav").exists())
-			sound = soundFile + ".wav";
 	}
 
 	public BufferedImage getActualImage() {
@@ -51,8 +52,8 @@ public class Animation implements Constants {
 			task = new ChangeImageTask(5, this, -1);
 		else
 			task = new ChangeImageTask(5, this, paths.size());
-		if (sound!=null)
-		Sounds.getSound(sound).play();
+		if (sound != null)
+			Sounds.getSound(sound).play();
 	}
 
 	public void stop() {
@@ -84,20 +85,20 @@ public class Animation implements Constants {
 			((Entity) animatedObject).triggerAnimation(DEFAULTANIMATION);
 		}
 	}
-	
-	
-	
 
-	
 	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName,
 			Tile animatedObject) {
 		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation("rsc/objekt pictures/" + ObjektName + "/" + animationName,"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,animationName == DEFAULTANIMATION));
+				new Animation("rsc/objekt pictures/" + ObjektName + "/" + animationName,
+						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
+						animationName == DEFAULTANIMATION));
 	}
-	
+
 	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
 			Entity animatedObject) {
 		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation("rsc/entity pictures/" + ObjektName + "/" + animationName,"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,animationName == DEFAULTANIMATION));
+				new Animation("rsc/entity pictures/" + ObjektName + "/" + animationName,
+						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
+						animationName == DEFAULTANIMATION));
 	}
 }

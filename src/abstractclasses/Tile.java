@@ -22,7 +22,7 @@ public abstract class Tile implements Constants {
 
 	private Integer relativedrawX;
 	private Integer relativedrawY;
-	
+
 	private Boolean animated;
 
 	/**
@@ -58,7 +58,7 @@ public abstract class Tile implements Constants {
 	public void setWorld(World world) {
 		this.world = world;
 	}
-	
+
 	public void start() {
 		if (animated)
 			triggerAnimation(DEFAULTANIMATION);
@@ -117,12 +117,15 @@ public abstract class Tile implements Constants {
 	public Integer getDrawX(Integer relativedrawX) {
 		return (int) getPosition().getX() * TILEHEIGHTWIDHT + relativedrawX;
 	}
+
 	public Integer getDrawY(Integer relativedrawY) {
 		return (int) getPosition().getY() * TILEHEIGHTWIDHT + relativedrawY;
 	}
+
 	public Integer getRelativedrawX() {
 		return relativedrawX;
 	}
+
 	public Integer getRelativedrawY() {
 		return relativedrawY;
 	}
