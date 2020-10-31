@@ -10,6 +10,7 @@ import abstractclasses.Entity;
 import abstractclasses.Tile;
 import frame.Frame;
 import logic.Constants;
+import logic.Rotation;
 import sound.Sound;
 import sound.Sounds;
 import tasks.ChangeImageTask;
@@ -21,7 +22,6 @@ public class Animation implements Constants {
 	private Object animatedObject;
 	private ChangeImageTask task;
 	private String sound;
-
 	private Boolean defaultanimtion;
 
 	public Animation(String picturesFile, String soundFile, Object animatedObject, Boolean defaultanimtion) {
@@ -32,9 +32,9 @@ public class Animation implements Constants {
 
 		for (String filePath : new File(picturesFile).list()) {
 			if (filePath.contains(".png"))
-				paths.add(filePath);
+				paths.add(picturesFile + "/" + filePath);
 			else if (filePath.contains(".wav"))
-				sound = filePath;
+				sound = picturesFile + "/" + filePath;
 		}
 	}
 
@@ -42,11 +42,11 @@ public class Animation implements Constants {
 		return Images.getImage(paths.get(actualFile));
 	}
 
-	public Sound name() {
+	public Sound getSound() {
 		return Sounds.getSound(sound);
 	}
 
-	public void start() {
+	public void startAnimation() {
 		actualFile = 0;
 		if (defaultanimtion)
 			task = new ChangeImageTask(5, this, -1);
@@ -56,7 +56,7 @@ public class Animation implements Constants {
 			Sounds.getSound(sound).play();
 	}
 
-	public void stop() {
+	public void stopAnimation() {
 		task.end();
 	}
 
@@ -78,7 +78,7 @@ public class Animation implements Constants {
 		}
 	}
 
-	public void triggerdefault() {
+	public void triggerDefault() {
 		if (animatedObject instanceof Tile) {
 			((Tile) animatedObject).triggerAnimation(DEFAULTANIMATION);
 		} else if (animatedObject instanceof Entity) {
@@ -86,12 +86,31 @@ public class Animation implements Constants {
 		}
 	}
 
-	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName,
-			Tile animatedObject) {
-		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation("rsc/objekt pictures/" + ObjektName + "/" + animationName,
+	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, Rotation direction,
+			String animationName, Tile animatedObject) {
+		return new SimpleEntry<>(animationName,
+				new Animation("rsc/objekt pictures/" + ObjektName + "/" + decodeRotation(direction) + animationName,
 						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
 						animationName == DEFAULTANIMATION));
+	}
+
+	private static String decodeRotation(Rotation r) {
+		try {
+			switch (r) {
+			case down:
+				return "unten/";
+			case left:
+				return "links/";
+			case right:
+				return "rechts/";
+			case up:
+				return "unten/";
+			default:
+				return "";
+			}
+		} catch (NullPointerException npe) {
+			return "";
+		}
 	}
 
 	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,

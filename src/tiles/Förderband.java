@@ -2,6 +2,7 @@ package tiles;
 
 import abstractclasses.Tile;
 import logic.Layers;
+import logic.Rotation;
 import world.Animation;
 import world.Images;
 
@@ -14,7 +15,11 @@ public class Förderband extends Tile {
 
 	@Override
 	public void loadAnimation() {
-		setImage(Layers.Floor, Images.loadLayerpicture("Default", Layers.Floor));
-		addObjektAnimation(Animation.loadObjektAnimation("Förderband", DEFAULTANIMATION, this));
+		setImage(Layers.Floor, Images.loadLayerPicture("Default", Layers.Floor));
+		addDirectionAnimation(Rotation.left,
+				Animation.loadObjektAnimation("Förderband", Rotation.left, DEFAULTANIMATION, this));
+		addDirectionAnimation(Rotation.right,
+				Animation.loadObjektAnimation("Förderband", Rotation.right, DEFAULTANIMATION, this));
+		setDirection(Rotation.left);
 	}
 }
