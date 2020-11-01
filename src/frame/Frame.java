@@ -60,18 +60,14 @@ public class Frame implements Constants {
 	}
 
 	/*
-	public static void setState() {
-		manager.setVisible(true);
-		GraphicsDevice gd = frame.getGraphicsConfiguration().getDevice();
-		frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
-		// frame.setSize(gd.getDisplayMode().getWidth(),
-		// gd.getDisplayMode().getHeight());
-		// manager.setSize(gd.getDisplayMode().getWidth(),
-		// gd.getDisplayMode().getHeight());
-		// test();
-	}
-	*/
-	
+	 * public static void setState() { manager.setVisible(true); GraphicsDevice gd =
+	 * frame.getGraphicsConfiguration().getDevice(); frame.setSize(FRAMEWIDTH,
+	 * FRAMEHEIGHT); // frame.setSize(gd.getDisplayMode().getWidth(), //
+	 * gd.getDisplayMode().getHeight()); //
+	 * manager.setSize(gd.getDisplayMode().getWidth(), //
+	 * gd.getDisplayMode().getHeight()); // test(); }
+	 */
+
 	public static CustomWindowManager getWindowManager() {
 		return Windowmanager;
 	}
@@ -101,7 +97,7 @@ public class Frame implements Constants {
 }
 
 class CustomFrameMouseAdapter extends MouseAdapter {
-	
+
 	JFrame frame;
 
 	public CustomFrameMouseAdapter(JFrame frame) {
@@ -128,7 +124,7 @@ class CustomFrameMouseAdapter extends MouseAdapter {
 		try {
 			CustomWindow component = dragwindow;
 			Point componentPoint = convertPoint(e.getPoint(), component);
-			component.drag(e,componentPoint);
+			component.drag(e, componentPoint);
 			component.processMouseMovedEvent(componentPoint);
 			component.triggerFullRepaint();
 		} catch (PointConvertExeption | NullPointerException e2) {

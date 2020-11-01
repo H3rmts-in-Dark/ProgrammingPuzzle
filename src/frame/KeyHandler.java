@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 
 import logic.MainControl;
 import sound.Sounds;
+import tasks.MoveEntityTask;
 
 public class KeyHandler extends KeyAdapter {
 
@@ -42,15 +43,14 @@ public class KeyHandler extends KeyAdapter {
 		command = command.toLowerCase();
 		if (command.equals("debug")) {
 			new DebuggingWindow();
-		}
-		if (command.startsWith("play")) {
+		} else if (command.startsWith("play")) {
 			Sounds.getSound(command.substring(4)).play();
-		}
-		if (command.equals("select")) {
+		} else if (command.equals("select")) {
 			new WorldSelectionWindow();
-		}
-		if (command.equals("World")) {
+		} else if (command.equals("world")) {
 			MainControl.createWorld();
+		} else if (command.equals("move")) {
+			new MoveEntityTask(5, MainControl.getWorld().getEntitys().get(0));
 		}
 	}
 }

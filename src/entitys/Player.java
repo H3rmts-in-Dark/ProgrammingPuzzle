@@ -4,11 +4,12 @@ import java.awt.Point;
 
 import abstractclasses.Entity;
 import abstractclasses.Tile;
+import logic.Rotation;
 
 public class Player extends Entity {
 
-	public Player(Point position) {
-		super(false, position, 0, 0);
+	public Player(Point position, Rotation r) {
+		super(false, position, 0, 0, r);
 	}
 
 	@Override

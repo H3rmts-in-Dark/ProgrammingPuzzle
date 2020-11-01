@@ -9,7 +9,7 @@ import logic.Layers;
 public class Computer extends Tile {
 
 	public Computer() {
-		super(UNPASSABLE, ANIMATED, -5, -20);
+		super(UNPASSABLE, ANIMATED, -5, -20, null);
 		setDescription("Computer tile that gives you" + "\n" + "some information when interacted with");
 	}
 

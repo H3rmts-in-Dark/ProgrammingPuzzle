@@ -8,8 +8,8 @@ import world.Images;
 
 public class Förderband extends Tile {
 
-	public Förderband() {
-		super(FÖRDERBANDHÖHE, true, 0, 0);
+	public Förderband(Rotation r) {
+		super(FÖRDERBANDHÖHE, true, 0, 0, r);
 		setDescription("Förderband");
 	}
 

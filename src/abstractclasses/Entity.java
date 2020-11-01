@@ -31,9 +31,9 @@ public abstract class Entity implements Constants {
 
 	private World world;
 
-	protected Entity(Boolean interactable, Point position, Integer relativedrawX, Integer relativedrawY) {
+	protected Entity(Boolean interactable, Point position, Integer relativedrawX, Integer relativedrawY, Rotation r) {
 		this.interactable = interactable;
-		this.rotation = Rotation.right;
+		this.rotation = r;
 		this.pixelposition = new Point(position.x * TILEHEIGHTWIDHT, position.y * TILEHEIGHTWIDHT);
 		this.description = "default description";
 		this.world = null;
@@ -56,7 +56,7 @@ public abstract class Entity implements Constants {
 	 */
 	public void setWorld(World world) {
 		this.world = world;
-		height = UNPASSABLE;//getTilePosition(0, 0).getHeight();
+		height = UNPASSABLE;// getTilePosition(0, 0).getHeight();
 	}
 
 	public Boolean getInteractable() {
@@ -98,12 +98,15 @@ public abstract class Entity implements Constants {
 	public Integer getDrawX(Integer relativedrawX) {
 		return (int) getPixelposition().getX() + relativedrawX;
 	}
+
 	public Integer getDrawY(Integer relativedrawY) {
 		return (int) getPixelposition().getY() + relativedrawY;
 	}
+
 	public Integer getRelativedrawX() {
 		return relativedrawX;
 	}
+
 	public Integer getRelativedrawY() {
 		return relativedrawY;
 	}
@@ -123,7 +126,7 @@ public abstract class Entity implements Constants {
 	public World getWorld() {
 		return world;
 	}
-	
+
 	public Rotation getRotation() {
 		return rotation;
 	}
