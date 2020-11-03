@@ -30,6 +30,7 @@ public class Animation implements Constants {
 		this.animatedObject = animatedObject;
 		this.defaultanimtion = defaultanimtion;
 
+		System.out.println(picturesFile);
 		for (String filePath : new File(picturesFile).list()) {
 			if (filePath.contains(".png"))
 				paths.add(picturesFile + "/" + filePath);
@@ -104,7 +105,7 @@ public class Animation implements Constants {
 			case right:
 				return "rechts/";
 			case up:
-				return "unten/";
+				return "oben/";
 			default:
 				return "";
 			}
