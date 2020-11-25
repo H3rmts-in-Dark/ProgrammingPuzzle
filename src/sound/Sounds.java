@@ -19,9 +19,9 @@ public class Sounds {
 	public static Sound getSound(String path) {
 		if (sounds.get(new File(path)) != null)
 			return sounds.get(new File(path));
-		Sound newimage = null;
-		newimage = new Sound(new File(path));
-		sounds.put(new File(path), newimage);
-		return newimage;
+		Sound newsound = null;
+		newsound = new Sound(new File(path));
+		sounds.put(new File(path), newsound);
+		return newsound;
 	}
 }

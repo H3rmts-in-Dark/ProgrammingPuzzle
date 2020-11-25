@@ -22,13 +22,13 @@ public class MoveEntityTask extends Task {
 			entity.setPixelPosition(new Point(entity.getPixelposition().x, entity.getPixelposition().y + 1));
 			break;
 		case left:
-			entity.setPixelPosition(new Point(entity.getDrawX(-1), entity.getDrawX(0)));
+			entity.setPixelPosition(new Point(entity.getPixelposition().x-1, entity.getPixelposition().y));
 			break;
 		case right:
 			entity.setPixelPosition(new Point(entity.getPixelposition().x + 1, entity.getPixelposition().y));
 			break;
 		case up:
-			entity.setPixelPosition(new Point(entity.getDrawX(0), entity.getDrawX(-1)));
+			entity.setPixelPosition(new Point(entity.getPixelposition().x, entity.getPixelposition().y - 1));
 			break;
 		}
 		entity.getWorld().getWindow().triggerFullRepaint();

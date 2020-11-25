@@ -1,16 +1,15 @@
-package logic;
+package frame;
 
 import java.util.ArrayList;
 
 import javax.swing.JLayeredPane;
 
 import abstractclasses.CustomWindow;
-import frame.Frame;
+import logic.Constants;
 
 public class CustomWindowManager extends JLayeredPane implements Constants {
 
 	CustomWindow fullscreen;
-	CustomWindow focused;
 	ArrayList<CustomWindow> windows;
 
 	public CustomWindowManager() {
@@ -20,7 +19,6 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 	public void addWindow(CustomWindow window) {
 		windows.add(window);
 		window.setLayer(nextHighestLayer());
-		setFocused(window);
 		clean();
 	}
 
@@ -36,10 +34,6 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 		}
 	}
 
-	public void setFocused(CustomWindow focused) {
-		this.focused = focused;
-	}
-
 	public void setFullscreen(CustomWindow fullscreen) {
 		if (this.fullscreen != null) {
 			this.fullscreen.setBounds(DEFAULTX, DEFAULTY, DEFAULTWITH, DEFAULTHEIGHT);
@@ -48,10 +42,6 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 		if (fullscreen != null)
 			fullscreen.setLayer(nextLowestLayer());
 		clean();
-	}
-
-	public Boolean isFocused(CustomWindow test) {
-		return focused.equals(test);
 	}
 
 	public Boolean isFullscreen(CustomWindow test) {
@@ -65,8 +55,6 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 			window.setLayer(actlayer);
 			actlayer++;
 		}
-		if (windows.size() > 0)
-			setFocused(windows.get(windows.size() - 1));
 		addComponents();
 	}
 

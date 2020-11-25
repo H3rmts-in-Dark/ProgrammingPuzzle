@@ -6,17 +6,17 @@ import logic.MainControl;
 public abstract class Task implements Constants{
 
 	private Double runTick;
-	private Integer Loop, tickDifference;
+	private Integer Cycles, tickDifference;
 	private Boolean ended;
 
 	/**
 	 * 
 	 * @param tickDifference
-	 * @param loop           -1 to loop infinite
+	 * @param cycles           -1 to loop infinite
 	 */
-	public Task(Integer tickDifference, Integer loop) {
+	public Task(Integer tickDifference, Integer cycles) {
 		this.tickDifference = tickDifference;
-		this.Loop = loop;
+		this.Cycles = cycles;
 		this.ended = false;
 		MainControl.getGameTicker().addTask(this);
 		updateTickDifference();
@@ -47,9 +47,9 @@ public abstract class Task implements Constants{
 	public Boolean tryRun() {
 		if (MainControl.getGameTicker().getTick() >= runTick) {
 			runCode();
-			if (Loop > 0)
-				Loop--;
-			if (Loop == -1 || Loop > 0) {
+			if (Cycles > 0)
+				Cycles--;
+			if (Cycles == -1 || Cycles > 0) {
 				updateTickDifference();
 				return false;
 			}
@@ -69,4 +69,8 @@ public abstract class Task implements Constants{
 	public abstract void runCode();
 
 	public abstract void onEnd();
+	
+	public String getName() {
+		return getClass().getSimpleName();
+	}
 }

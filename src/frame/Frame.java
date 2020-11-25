@@ -13,7 +13,6 @@ import javax.swing.WindowConstants;
 
 import abstractclasses.CustomWindow;
 import logic.Constants;
-import logic.CustomWindowManager;
 import logic.Debugger;
 
 public class Frame implements Constants {
@@ -96,9 +95,11 @@ public class Frame implements Constants {
 	}
 }
 
-class CustomFrameMouseAdapter extends MouseAdapter {
+class CustomFrameMouseAdapter extends MouseAdapter implements Constants{
 
 	JFrame frame;
+	Long movetimer = (long) 0;
+	Long dragtimer = (long) 0;
 
 	public CustomFrameMouseAdapter(JFrame frame) {
 		this.frame = frame;
@@ -121,28 +122,32 @@ class CustomFrameMouseAdapter extends MouseAdapter {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		try {
-			CustomWindow component = dragwindow;
-			Point componentPoint = convertPoint(e.getPoint(), component);
-			component.drag(e, componentPoint);
-			component.processMouseMovedEvent(componentPoint);
-			component.triggerFullRepaint();
-		} catch (PointConvertExeption | NullPointerException e2) {
-		}
+		if (dragtimer <= System.currentTimeMillis())
+			dragtimer = System.currentTimeMillis() + dragdelay;
+			try {
+				CustomWindow component = dragwindow;
+				Point componentPoint = convertPoint(e.getPoint(), component);
+				component.drag(e, componentPoint);
+				component.processMouseMovedEvent(componentPoint);
+				component.triggerFullRepaint();
+			} catch (PointConvertExeption | NullPointerException e2) {
+			}
 	}
 
 	CustomWindow dragwindow;
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		try {
-			CustomWindow component = getWindow(e.getPoint());
-			Point componentPoint = convertPoint(e.getPoint(), component);
-			component.changeCursor(componentPoint);
-			component.processMouseMovedEvent(componentPoint);
-		} catch (GetWindowException | PointConvertExeption e1) {
-			frame.setCursor(Cursor.getDefaultCursor());
-		}
+		if (movetimer <= System.currentTimeMillis())
+			movetimer = System.currentTimeMillis() + movedelay;
+			try {
+				CustomWindow component = getWindow(e.getPoint());
+				Point componentPoint = convertPoint(e.getPoint(), component);
+				component.changeCursor(componentPoint);
+				component.processMouseMovedEvent(componentPoint);
+			} catch (GetWindowException | PointConvertExeption e1) {
+				frame.setCursor(Cursor.getDefaultCursor());
+			}
 	}
 
 	@Override
