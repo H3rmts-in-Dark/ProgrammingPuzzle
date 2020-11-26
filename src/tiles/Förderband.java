@@ -8,8 +8,8 @@ import world.Images;
 
 public class Förderband extends Tile {
 
-	public Förderband() {
-		super(FÖRDERBANDHÖHE, true, 0, 0);
+	public Förderband(Rotation r) {
+		super(FÖRDERBANDHÖHE, true, 0, 0, r);
 		setDescription("Förderband");
 	}
 
@@ -20,6 +20,10 @@ public class Förderband extends Tile {
 				Animation.loadObjektAnimation("Förderband", Rotation.left, DEFAULTANIMATION, this));
 		addDirectionAnimation(Rotation.right,
 				Animation.loadObjektAnimation("Förderband", Rotation.right, DEFAULTANIMATION, this));
-		setDirection(Rotation.left);
+		addDirectionAnimation(Rotation.up,
+				Animation.loadObjektAnimation("Förderband", Rotation.up, DEFAULTANIMATION, this));
+		addDirectionAnimation(Rotation.down,
+				Animation.loadObjektAnimation("Förderband", Rotation.down, DEFAULTANIMATION, this));
+		setDirection(this.getDirection());
 	}
 }

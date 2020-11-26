@@ -8,7 +8,7 @@ import logic.Layers;
 public class Tonne extends Tile {
 
 	public Tonne() {
-		super(UNPASSABLE, ANIMATED, 10, 20);
+		super(UNPASSABLE, ANIMATED, 10, 20, null);
 		setDescription("Barriere");
 	}
 

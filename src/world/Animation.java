@@ -30,12 +30,11 @@ public class Animation implements Constants {
 		this.animatedObject = animatedObject;
 		this.defaultanimtion = defaultanimtion;
 
-		for (String filePath : new File(picturesFile).list()) {
-			if (filePath.contains(".png"))
-				paths.add(picturesFile + "/" + filePath);
-			else if (filePath.contains(".wav"))
-				sound = picturesFile + "/" + filePath;
-		}
+		for (String filePath : new File(picturesFile).list()) 
+			paths.add(picturesFile + "/" + filePath);
+		
+		if (new File(soundFile + ".wav").exists())
+			sound = soundFile + ".wav";
 	}
 
 	public BufferedImage getActualImage() {
@@ -96,31 +95,12 @@ public class Animation implements Constants {
 	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, Rotation direction,
 			String animationName, Tile animatedObject) {
 		return new SimpleEntry<>(animationName,
-				new Animation("rsc/objekt pictures/" + ObjektName + "/" + decodeRotation(direction) + animationName,
+				new Animation("rsc/objekt pictures/" + ObjektName + "/" + Rotation.toString(direction) + animationName,
 						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
 						animationName == DEFAULTANIMATION));
 >>>>>>> ff2ac1be46ff8b2f82277a5636b4ecb4f44f2402
 	}
-
-	private static String decodeRotation(Rotation r) {
-		try {
-			switch (r) {
-			case down:
-				return "unten/";
-			case left:
-				return "links/";
-			case right:
-				return "rechts/";
-			case up:
-				return "unten/";
-			default:
-				return "";
-			}
-		} catch (NullPointerException npe) {
-			return "";
-		}
-	}
-
+	
 	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
 			Entity animatedObject) {
 <<<<<<< HEAD

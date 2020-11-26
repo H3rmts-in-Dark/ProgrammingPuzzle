@@ -40,9 +40,9 @@ public class GameTicker extends Thread implements Constants {
 			currentTick++;
 
 			// Wartet, bis der nächste Tick beginnt.
-			while ((System.currentTimeMillis() - lastTicktime) <= (1000 / TPS)) {
+			while ((System.currentTimeMillis() - lastTicktime) < (1000 / TPS)) {
 				try {
-					Thread.sleep(0, 1);
+					Thread.sleep(0,1);
 				} catch (InterruptedException e) {
 					System.out.println(e.getMessage());
 					Thread.currentThread().interrupt();
@@ -61,6 +61,10 @@ public class GameTicker extends Thread implements Constants {
 
 	public ArrayList<Task> getTaskList() {
 		return taskList;
+	}
+	
+	public void clear() {
+		taskList.clear();
 	}
 
 	@SuppressWarnings("unused")

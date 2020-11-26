@@ -8,6 +8,8 @@ import world.World;
 public class MainControl {
 
 	private static GameTicker gameTicker;
+	private static World world;
+
 	private MainControl() {
 	}
 
@@ -24,11 +26,14 @@ public class MainControl {
 	}
 
 	public static void createWorld() {
-		World world = new World(10, 10);
+		world = new World(10, 10);
 		world.setTile(0, 1, new Computer());
-		world.addEntity(new Box(1, 1));
+		world.addEntity(new Box(1, 1, Rotation.right));
 		world.setTile(1, 2, new Computer());
-		world.setTile(0, 2, new Förderband());
+		world.setTile(0, 2, new Förderband(Rotation.up));
 	}
 
+	public static World getWorld() {
+		return world;
+	}
 }

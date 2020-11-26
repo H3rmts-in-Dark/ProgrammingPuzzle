@@ -11,6 +11,7 @@ public interface Constants {
 	public static final Integer FRAMEWIDTH = 1000;
 	public static final Integer FRAMEHEIGHT = 800;
 	public static final Integer FPS = 45;
+	public static final Integer movedelay = 10, dragdelay = 10;
 
 // 
 // -----------------------------------------------------------
@@ -98,9 +99,9 @@ public interface Constants {
 	public static final String DEFAULTANIMATION = "defaultanimation"; // do not change is used to load from rcs/...
 	public static final String INTERACTANIMATION = "interactanimation";
 
-	/*
-	 * Sounds
-	 */
-
-	public static final String ding = "ding";
+//
+// -----------------------------------------------------------
+// --------------------Debugger-------------------------------
+	
+	public static final Integer RPS = 100;
 }

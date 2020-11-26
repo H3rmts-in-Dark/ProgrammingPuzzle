@@ -20,6 +20,7 @@ import javax.swing.JComponent;
 import frame.Frame;
 import logic.Constants;
 import tasks.ChangeButtonBrightnessTask;
+import tasks.RepaintTask;
 
 public abstract class CustomWindow extends JComponent implements Comparable<CustomWindow>, Constants {
 
@@ -31,16 +32,16 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	private MaximiseButton maximise;
 	private BufferedImage innerImage, surroundingImage;
 	private Point topLeft = new Point(), bottomRight = new Point();
-
+	
 	public CustomWindow(String title) {
 		this(DEFAULTWITH, DEFAULTHEIGHT, title);
 	}
 
 	public CustomWindow(Integer defaultWidht, Integer defaultHeight, String title) {
-		this(defaultWidht, defaultHeight, new Point(DEFAULTX, DEFAULTY), title);
+		this(defaultWidht, defaultHeight, new Point(DEFAULTX, DEFAULTY), title, -1);
 	}
 
-	public CustomWindow(Integer defaultWidht, Integer defaultHeight, Point defaultPosition, String title) {
+	public CustomWindow(Integer defaultWidht, Integer defaultHeight, Point defaultPosition, String title, Integer fullyrepaintdelay) {
 		setLocation(defaultPosition);
 		setSize(Frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht
 				: Frame.getWidth() - (int) defaultPosition.getX(),
@@ -51,20 +52,15 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		maximise = new MaximiseButton(this);
 		fullyRepaint = true;
 		mouse = new Point(0, 0);
+		if (fullyrepaintdelay != -1) {
+			new RepaintTask(fullyrepaintdelay,this);
+		}
 		resizeMaximum();
 		Frame.getWindowManager().addWindow(this);
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public void setFocused() {
-		Frame.getWindowManager().setFocused(this);
-	}
-
-	public Boolean isFocused() {
-		return Frame.getWindowManager().isFocused(this);
 	}
 
 	@Override
@@ -85,12 +81,6 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		// buttons
 		close.paintButton((Graphics2D) g);
 		maximise.paintButton((Graphics2D) g);
-
-		// gray out unfocused
-		if (!isFocused()) {
-			g.setColor(new Color(200, 200, 200, 30));
-			g.fillRoundRect(2, 2, getWidth() - 4, getHeight() - 4, ROUNDCURVES, ROUNDCURVES);
-		}
 	}
 
 	/**
@@ -312,17 +302,15 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 
 	public void processMousePressedEvent(Point point) {
 		saveBounds(point);
+		Frame.getWindowManager().windowToFront(this);
 		if (point.getX() >= getImageborders().getX()
 				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
 				&& point.getY() >= getImageborders().getY()
 				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
-			if (isFocused())
-				mousePressed(new Point((int) (point.getX() - getImageborders().getX()),
-						(int) (point.getY() - getImageborders().getY())));
-			else
-				Frame.getWindowManager().windowToFront(this);
-		} else
-			Frame.getWindowManager().windowToFront(this);
+
+			mousePressed(new Point((int) (point.getX() - getImageborders().getX()),
+					(int) (point.getY() - getImageborders().getY())));
+		}
 	}
 
 	public void processMouseMovedEvent(Point point) {
@@ -331,9 +319,9 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 				&& point.getY() >= getImageborders().getY()
 				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
 			mouse = point;
-			if (isFocused())
-				mouseMoved(new Point((int) (point.getX() - getImageborders().getX()),
-						(int) (point.getY() - getImageborders().getY())));
+
+			mouseMoved(new Point((int) (point.getX() - getImageborders().getX()),
+					(int) (point.getY() - getImageborders().getY())));
 		}
 	}
 
@@ -342,8 +330,8 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
 				&& point.getY() >= getImageborders().getY()
 				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
-			if (isFocused())
-				mouseWheelMoved(e.getWheelRotation());
+
+			mouseWheelMoved(e.getWheelRotation());
 		}
 	}
 
@@ -472,7 +460,6 @@ class MaximiseButton extends JButton implements ActionListener, Constants {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Frame.getWindowManager().setFocused(window);
 		if (!Frame.getWindowManager().isFullscreen(window)) {
 			window.setBounds(0, 0, Frame.getWindowManager().getWidth(), Frame.getWindowManager().getHeight());
 			Frame.getWindowManager().setFullscreen(window);

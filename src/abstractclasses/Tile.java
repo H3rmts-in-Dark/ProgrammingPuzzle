@@ -38,13 +38,14 @@ public abstract class Tile implements Constants {
 
 	protected World world;
 
-	protected Tile(Integer height, Boolean animated, Integer relativedrawX, Integer relativedrawY) {
+	protected Tile(Integer height, Boolean animated, Integer relativedrawX, Integer relativedrawY, Rotation r) {
 		this.height = height;
 		this.description = "default description";
 		this.world = null;
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
 		this.animated = animated;
+		this.direction = r;
 
 		images = new HashMap<>();
 		objektAnimations = new HashMap<>();

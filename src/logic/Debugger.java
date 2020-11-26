@@ -19,8 +19,9 @@ public class Debugger implements Constants {
 	private static ArrayList<Long> addTicks;
 
 	private static HashMap<String, Integer> taskTypes;
-	private static Long startTasks = (long) 0, endTasks = (long) 0;
+	private static Long startTasks = (long) 0, endTasks = (long) 0,setstartTasks = (long) 0;
 	private static Integer taskSize = 0;
+	
 
 	private Debugger() {
 	}
@@ -35,14 +36,23 @@ public class Debugger implements Constants {
 		taskTypes = new HashMap<>();
 
 		controlThread = new Thread() {
+			
+			Long nextcontroll = System.currentTimeMillis();
+			
 			@Override
 			public void run() {
 				while (true) {
-					try {
-						Thread.sleep(5);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+					
+					while ((System.currentTimeMillis()<nextcontroll)) {
+						try {
+							Thread.sleep(0,1);
+						} catch (InterruptedException e) {
+							System.out.println(e.getMessage());
+							Thread.currentThread().interrupt();
+						}
 					}
+					
+					nextcontroll = System.currentTimeMillis() + (1000 / RPS);
 
 					try {
 						Long lastrepaint = repaints.get(repaints.size() - 1);
@@ -85,11 +95,11 @@ public class Debugger implements Constants {
 
 						for (Task task : tasks) {
 							try {
-								if (taskTypes.containsKey(task.getClass().getSimpleName())) {
-									taskTypes.replace(task.getClass().getSimpleName(),
-											taskTypes.get(task.getClass().getSimpleName()) + 1);
+								if (taskTypes.containsKey(task.getName())) {
+									taskTypes.replace(task.getName(),
+											taskTypes.get(task.getName()) + 1);
 								} else {
-									taskTypes.put(task.getClass().getSimpleName(), 1);
+									taskTypes.put(task.getName(), 1);
 								}
 							} catch (NullPointerException e) {
 							}
@@ -102,12 +112,13 @@ public class Debugger implements Constants {
 	}
 
 	public static void startTask() {
-		startTasks = System.nanoTime();
+		setstartTasks = System.currentTimeMillis();
 	}
 
 	public static void tick() {
 		addTicks.add(System.currentTimeMillis());
-		endTasks = System.nanoTime();
+		endTasks = System.currentTimeMillis();
+		startTasks = setstartTasks;
 	}
 
 	public static void repaint() {
@@ -123,8 +134,7 @@ public class Debugger implements Constants {
 	}
 
 	public static Double getExecutionTime() {
-		return ((double) (endTasks - startTasks) / 1000000);
-		// Math.max((endTasks - startTasks),0);
+		return ((double) (endTasks - startTasks));
 	}
 
 	public static Integer getTaskSize() {
