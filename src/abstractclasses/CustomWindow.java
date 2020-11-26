@@ -33,16 +33,17 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	private BufferedImage innerImage, surroundingImage;
 	Point topLeft = new Point();
 	Point bottomRight = new Point();
-	
+
 	public CustomWindow(String title) {
-		this(DEFAULTWITH, DEFAULTHEIGHT, title);
+		this(DEFAULTWITH, DEFAULTHEIGHT, title, -1);
 	}
 
-	public CustomWindow(Integer defaultWidht, Integer defaultHeight, String title) {
-		this(defaultWidht, defaultHeight, new Point(DEFAULTX, DEFAULTY), title, -1);
+	public CustomWindow(Integer defaultWidht, Integer defaultHeight, String title, Integer fullyrepaintdelay) {
+		this(defaultWidht, defaultHeight, new Point(DEFAULTX, DEFAULTY), title, fullyrepaintdelay);
 	}
 
-	public CustomWindow(Integer defaultWidht, Integer defaultHeight, Point defaultPosition, String title, Integer fullyrepaintdelay) {
+	public CustomWindow(Integer defaultWidht, Integer defaultHeight, Point defaultPosition, String title,
+			Integer fullyrepaintdelay) {
 		setLocation(defaultPosition);
 		setSize(Frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht
 				: Frame.getWidth() - (int) defaultPosition.getX(),
@@ -54,11 +55,12 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		fullyRepaint = true;
 		mouse = new Point(0, 0);
 		if (fullyrepaintdelay != -1) {
-			new RepaintTask(fullyrepaintdelay,this);
+			new RepaintTask(fullyrepaintdelay, this);
 		}
 		resizeMaximum();
 		Frame.getWindowManager().addWindow(this);
-		setIgnoreRepaint(true);
+		triggerFullRepaint();
+		repaint();
 	}
 
 	public void setTitle(String title) {

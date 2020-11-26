@@ -1,6 +1,5 @@
 package frame;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -26,7 +25,7 @@ public class WorldWindow extends CustomWindow {
 	 */
 	public WorldWindow(World world) {
 		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2, world.getHeight() * TILEHEIGHTWIDHT + TOPBARWIDTH,
-				"World");
+				"World", 5);
 		this.world = world;
 		zoom = 1f;
 	}
@@ -35,44 +34,43 @@ public class WorldWindow extends CustomWindow {
 	public BufferedImage draw() {
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = (Graphics2D) image.getGraphics();
-		g2.setStroke(new BasicStroke(2));
 
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
 				Tile temptile = world.getTile(x, y);
-				if (temptile.hasLayer(Layers.Floor))
+				if (((int) (temptile.getDrawX(0) * zoom)) < getImageborders().getWidth() && 
+						((int) (temptile.getDrawY(0) * zoom)) < getImageborders().getHeight()) {
 					g2.drawImage(
 							temptile.getImage(Layers.Floor).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
 									(int) (TILEHEIGHTWIDHT * zoom), Scaler),
 							(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
-				if (temptile.hasLayer(Layers.Cable))
-					g2.drawImage(
-							temptile.getImage(Layers.Cable).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-									(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-							(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
-				if (temptile.hasLayer(Layers.Objects))
-					g2.drawImage(
-							temptile.getObjektImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-									(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-							(int) (temptile.getDrawX(temptile.getRelativedrawX()) * zoom),
-							(int) (temptile.getDrawY(temptile.getRelativedrawY()) * zoom), null);
+					if (temptile.hasLayer(Layers.Cable))
+						g2.drawImage(
+								temptile.getImage(Layers.Cable).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+										(int) (TILEHEIGHTWIDHT * zoom), Scaler),
+								(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
+					if (temptile.hasLayer(Layers.Objects))
+						g2.drawImage(
+								temptile.getObjektImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+										(int) (TILEHEIGHTWIDHT * zoom), Scaler),
+								(int) (temptile.getDrawX(temptile.getRelativedrawX()) * zoom),
+								(int) (temptile.getDrawY(temptile.getRelativedrawY()) * zoom), null);
+					if (temptile.hasLayer(Layers.Effects))
+						g2.drawImage(
+								temptile.getImage(Layers.Effects).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+										(int) (TILEHEIGHTWIDHT * zoom), Scaler),
+								(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
+				}	
 			}
 		}
 		for (Entity entity : world.getEntitys()) {
-			g2.drawImage(
-					entity.getImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom), (int) (TILEHEIGHTWIDHT * zoom),
-							Scaler),
-					(int) (entity.getDrawX(entity.getRelativedrawX()) * zoom),
-					(int) (entity.getDrawY(entity.getRelativedrawY()) * zoom), null);
-		}
-		for (int x = 0; x < world.getWidth(); x++) {
-			for (int y = 0; y < world.getHeight(); y++) {
-				Tile temptile = world.getTile(x, y);
-				if (temptile.hasLayer(Layers.Effects))
-					g2.drawImage(
-							temptile.getImage(Layers.Effects).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-									(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-							(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
+			if (((int) (entity.getDrawX(0) * zoom)) < getImageborders().getWidth() && 
+					((int) (entity.getDrawY(0) * zoom)) < getImageborders().getHeight()) {
+				g2.drawImage(
+						entity.getImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+								(int) (TILEHEIGHTWIDHT * zoom), Scaler),
+						(int) (entity.getDrawX(entity.getRelativedrawX()) * zoom),
+						(int) (entity.getDrawY(entity.getRelativedrawY()) * zoom), null);
 			}
 		}
 

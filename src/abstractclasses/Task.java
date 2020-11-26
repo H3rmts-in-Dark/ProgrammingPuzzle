@@ -76,6 +76,6 @@ public abstract class Task implements Constants{
 	
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "runtick:" + runTick + " Cycles:" + Cycles + " tickDifference:" + tickDifference;
+		return getClass().getSimpleName() + " runtick:" + runTick + " Cycles:" + Cycles + " tickDifference:" + tickDifference;
 	}
 }

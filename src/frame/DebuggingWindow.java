@@ -15,11 +15,10 @@ import com.sun.management.OperatingSystemMXBean;
 import abstractclasses.CustomWindow;
 import abstractclasses.Task;
 import logic.Debugger;
-import logic.GameTicker;
 import logic.MainControl;
 
 public class DebuggingWindow extends CustomWindow {
-	
+
 	String fpsav, tpsav, executiontimeav, tasks, cpu, gametick;
 	Set<Entry<String, Integer>> tasktypes;
 
@@ -111,13 +110,11 @@ public class DebuggingWindow extends CustomWindow {
 		g2.drawString("Executiontilme:" + executiontimeav + "ms", 10, height += 25);
 		g2.drawString("Tasks:" + tasks, 10, height += 25);
 
-		
 		for (Entry<String, Integer> entry : tasktypes) {
 			g2.drawString(entry.getKey() + ":" + entry.getValue(), 10, height += 25);
 		}
-		
+
 		g2.drawString("Gametick:" + gametick, 10, height += 25);
-		
 
 		g2.dispose();
 		return image;
