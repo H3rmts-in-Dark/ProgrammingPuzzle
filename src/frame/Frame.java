@@ -122,7 +122,7 @@ class CustomFrameMouseAdapter extends MouseAdapter implements Constants{
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (dragtimer <= System.currentTimeMillis())
+		if (System.currentTimeMillis() > dragtimer) {
 			dragtimer = System.currentTimeMillis() + dragdelay;
 			try {
 				CustomWindow component = dragwindow;
@@ -132,13 +132,14 @@ class CustomFrameMouseAdapter extends MouseAdapter implements Constants{
 				component.triggerFullRepaint();
 			} catch (PointConvertExeption | NullPointerException e2) {
 			}
+		}
 	}
 
 	CustomWindow dragwindow;
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (movetimer <= System.currentTimeMillis())
+		if (System.currentTimeMillis() > movetimer) {
 			movetimer = System.currentTimeMillis() + movedelay;
 			try {
 				CustomWindow component = getWindow(e.getPoint());
@@ -148,6 +149,7 @@ class CustomFrameMouseAdapter extends MouseAdapter implements Constants{
 			} catch (GetWindowException | PointConvertExeption e1) {
 				frame.setCursor(Cursor.getDefaultCursor());
 			}
+		}
 	}
 
 	@Override

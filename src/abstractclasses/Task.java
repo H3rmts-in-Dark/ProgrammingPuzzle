@@ -5,7 +5,7 @@ import logic.MainControl;
 
 public abstract class Task implements Constants{
 
-	private Double runTick;
+	private Long runTick;
 	private Integer Cycles, tickDifference;
 	private Boolean ended;
 
@@ -31,11 +31,11 @@ public abstract class Task implements Constants{
 		this(tickDifference, 0);
 	}
 
-	private void updateTickDifference() {
+	public void updateTickDifference() {
 		runTick = MainControl.getGameTicker().getTickIn(tickDifference);
 	}
 
-	public Double getRunTick() {
+	public Long getRunTick() {
 		return runTick;
 	}
 
@@ -72,5 +72,10 @@ public abstract class Task implements Constants{
 	
 	public String getName() {
 		return getClass().getSimpleName();
+	}
+	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "runtick:" + runTick + " Cycles:" + Cycles + " tickDifference:" + tickDifference;
 	}
 }

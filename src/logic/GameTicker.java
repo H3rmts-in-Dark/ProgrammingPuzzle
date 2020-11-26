@@ -1,5 +1,6 @@
 package logic;
 
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -7,7 +8,7 @@ import abstractclasses.Task;
 
 public class GameTicker extends Thread implements Constants {
 
-	private Double currentTick = 0.0;
+	private Long currentTick = (long) 0;
 	private ArrayList<Task> taskList;
 	private ArrayList<Task> addQueue;
 
@@ -51,11 +52,11 @@ public class GameTicker extends Thread implements Constants {
 		}
 	}
 
-	public Double getTick() {
+	public Long getTick() {
 		return currentTick;
 	}
 
-	public Double getTickIn(Integer time) {
+	public Long getTickIn(Integer time) {
 		return currentTick + time;
 	}
 
@@ -67,20 +68,22 @@ public class GameTicker extends Thread implements Constants {
 		taskList.clear();
 	}
 
-	@SuppressWarnings("unused")
-	private void resetTick() {
-		currentTick = 0.0;
+	public void reset() {
+		currentTick = (long) 0;
+		for (Task task : taskList) {
+			task.updateTickDifference();
+		}
 	}
 
 	public void addTask(Task task) {
 		addQueue.add(task);
 	}
-
-	@SuppressWarnings("unused")
-	private void sysoutTasks() {
+	
+	public void sysoutTasks() {
 		System.out.println(getTick());
 		for (Task task : taskList) {
 			System.out.println(task.toString());
 		}
+		System.out.print("\n");
 	}
 }

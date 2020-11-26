@@ -31,7 +31,8 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	private CloseButton close;
 	private MaximiseButton maximise;
 	private BufferedImage innerImage, surroundingImage;
-	private Point topLeft = new Point(), bottomRight = new Point();
+	Point topLeft = new Point();
+	Point bottomRight = new Point();
 	
 	public CustomWindow(String title) {
 		this(DEFAULTWITH, DEFAULTHEIGHT, title);
@@ -57,6 +58,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		}
 		resizeMaximum();
 		Frame.getWindowManager().addWindow(this);
+		setIgnoreRepaint(true);
 	}
 
 	public void setTitle(String title) {

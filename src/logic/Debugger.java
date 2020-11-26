@@ -11,16 +11,16 @@ public class Debugger implements Constants {
 
 	protected static Thread controlThread;
 
-	private static ArrayList<Long> repaints;
-	private static ArrayList<Long> ticks;
-	private static ArrayList<Long> removeRepaints;
-	private static ArrayList<Long> removeTicks;
-	private static ArrayList<Long> addRepaints;
-	private static ArrayList<Long> addTicks;
+	static ArrayList<Long> repaints;
+	static ArrayList<Long> ticks;
+	static ArrayList<Long> removeRepaints;
+	static ArrayList<Long> removeTicks;
+	static ArrayList<Long> addRepaints;
+	static ArrayList<Long> addTicks;
 
-	private static HashMap<String, Integer> taskTypes;
-	private static Long startTasks = (long) 0, endTasks = (long) 0,setstartTasks = (long) 0;
-	private static Integer taskSize = 0;
+	static HashMap<String, Integer> taskTypes;
+	static Long startTasks = (long) 0, endTasks = (long) 0,setstartTasks = (long) 0;
+	static Integer taskSize = 0;
 	
 
 	private Debugger() {
@@ -45,7 +45,7 @@ public class Debugger implements Constants {
 					
 					while ((System.currentTimeMillis()<nextcontroll)) {
 						try {
-							Thread.sleep(0,1);
+							Thread.sleep(1);
 						} catch (InterruptedException e) {
 							System.out.println(e.getMessage());
 							Thread.currentThread().interrupt();
