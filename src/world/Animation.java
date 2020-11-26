@@ -85,32 +85,19 @@ public class Animation implements Constants {
 		}
 	}
 
-<<<<<<< HEAD
-	
-	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, String animationName,
-			Tile animatedObject) {
-		return new SimpleEntry<>(animationName,
-				new Animation("rsc/objekt pictures/" + ObjektName + "/" + animationName,"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,animationName == DEFAULTANIMATION));
-=======
 	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, Rotation direction,
 			String animationName, Tile animatedObject) {
 		return new SimpleEntry<>(animationName,
 				new Animation("rsc/objekt pictures/" + ObjektName + "/" + Rotation.toString(direction) + animationName,
 						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
 						animationName == DEFAULTANIMATION));
->>>>>>> ff2ac1be46ff8b2f82277a5636b4ecb4f44f2402
 	}
 	
 	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
 			Entity animatedObject) {
-<<<<<<< HEAD
-		return new SimpleEntry<>(animationName,
-				new Animation("rsc/entity pictures/" + ObjektName + "/" + animationName,"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,animationName == DEFAULTANIMATION));
-=======
 		return new AbstractMap.SimpleEntry<>(animationName,
 				new Animation("rsc/entity pictures/" + ObjektName + "/" + animationName,
 						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
 						animationName == DEFAULTANIMATION));
->>>>>>> ff2ac1be46ff8b2f82277a5636b4ecb4f44f2402
 	}
 }
