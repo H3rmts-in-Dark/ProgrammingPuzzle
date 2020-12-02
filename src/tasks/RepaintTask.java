@@ -2,6 +2,7 @@ package tasks;
 
 import abstractclasses.CustomWindow;
 import abstractclasses.Task;
+import frame.WorldWindow;
 
 public class RepaintTask extends Task {
 	
@@ -15,6 +16,7 @@ public class RepaintTask extends Task {
 	@Override
 	public void runCode() {
 		window.triggerFullRepaint();
+		window.repaint();
 	}
 
 	@Override

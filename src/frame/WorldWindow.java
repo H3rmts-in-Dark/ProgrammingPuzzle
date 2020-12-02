@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import abstractclasses.CustomWindow;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
+import logic.Debugger;
 import logic.Layers;
 import tiles.Computer;
 import world.World;
@@ -32,6 +33,7 @@ public class WorldWindow extends CustomWindow {
 
 	@Override
 	public BufferedImage draw() {
+		Debugger.startDraw();
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = (Graphics2D) image.getGraphics();
 
@@ -39,42 +41,19 @@ public class WorldWindow extends CustomWindow {
 			for (int y = 0; y < world.getHeight(); y++) {
 				Tile temptile = world.getTile(x, y);
 				if (((int) (temptile.getDrawX(0) * zoom)) < getImageborders().getWidth() && 
-						((int) (temptile.getDrawY(0) * zoom)) < getImageborders().getHeight()) {
-					g2.drawImage(
-							temptile.getImage(Layers.Floor).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-									(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-							(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
-					if (temptile.hasLayer(Layers.Cable))
-						g2.drawImage(
-								temptile.getImage(Layers.Cable).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-										(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-								(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
-					if (temptile.hasLayer(Layers.Objects))
-						g2.drawImage(
-								temptile.getObjektImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-										(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-								(int) (temptile.getDrawX(temptile.getRelativedrawX()) * zoom),
-								(int) (temptile.getDrawY(temptile.getRelativedrawY()) * zoom), null);
-					if (temptile.hasLayer(Layers.Effects))
-						g2.drawImage(
-								temptile.getImage(Layers.Effects).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-										(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-								(int) (temptile.getDrawX(0) * zoom), (int) (temptile.getDrawY(0) * zoom), null);
-				}	
+						((int) (temptile.getDrawY(0) * zoom)) < getImageborders().getHeight()) 
+					temptile.draw(g2,zoom);
 			}
 		}
 		for (Entity entity : world.getEntitys()) {
 			if (((int) (entity.getDrawX(0) * zoom)) < getImageborders().getWidth() && 
 					((int) (entity.getDrawY(0) * zoom)) < getImageborders().getHeight()) {
-				g2.drawImage(
-						entity.getImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-								(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-						(int) (entity.getDrawX(entity.getRelativedrawX()) * zoom),
-						(int) (entity.getDrawY(entity.getRelativedrawY()) * zoom), null);
+				entity.draw(g2,zoom);
 			}
 		}
 
 		g2.dispose();
+		Debugger.endDraw();
 		return image;
 	}
 
@@ -118,28 +97,5 @@ public class WorldWindow extends CustomWindow {
 
 	public Tile getTile(Point point) {
 		return world.getTile((int) (point.x / (TILEHEIGHTWIDHT * zoom)), (int) (point.y / (TILEHEIGHTWIDHT * zoom)));
-	}
-
-	/**
-	 * Converts a given Image into a BufferedImage
-	 *
-	 * @param img The Image to be converted
-	 * @return The converted BufferedImage
-	 */
-	public static BufferedImage getBufferedImage(Image img) {
-		BufferedImage image = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-		// Draw the image on to the buffered image
-		Graphics2D g2 = image.createGraphics();
-		g2.drawImage(img, 0, 0, null);
-		g2.dispose();
-
-		return image;
-	}
-
-	@Override
-	public void drawCursor(Graphics2D g, Point point) {
-		g.setColor(Color.GREEN);
-		g.drawOval(point.x - 4, point.y - 4, 8, 8);
 	}
 }

@@ -27,10 +27,9 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	private Boolean fullyRepaint;
 	private Integer layer = 0;
 	private String title = "Default";
-	private Point mouse;
 	private CloseButton close;
 	private MaximiseButton maximise;
-	private BufferedImage innerImage, surroundingImage;
+	private BufferedImage image;
 	Point topLeft = new Point();
 	Point bottomRight = new Point();
 
@@ -53,7 +52,6 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		close = new CloseButton(this);
 		maximise = new MaximiseButton(this);
 		fullyRepaint = true;
-		mouse = new Point(0, 0);
 		if (fullyrepaintdelay != -1) {
 			new RepaintTask(fullyrepaintdelay, this);
 		}
@@ -69,22 +67,11 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 
 	@Override
 	public void paint(Graphics g) {
-		if (fullyRepaint) {
+		if (fullyRepaint) 
 			repaintAll();
-		}
-
-		// inner image
-		g.drawImage(innerImage, getImageborders().x, getImageborders().y, null);
-
-		// draw cursor
-		drawCursor((Graphics2D) g, mouse);
-
+			
 		// surrounding image
-		g.drawImage(surroundingImage, 0, 0, null);
-
-		// buttons
-		close.paintButton((Graphics2D) g);
-		maximise.paintButton((Graphics2D) g);
+		g.drawImage(image, 0, 0, null);
 	}
 
 	/**
@@ -93,7 +80,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 * automatisch gestartet wird wenn triggerFullRepaint() aufgerufen wurde.
 	 */
 	private void repaintAll() {
-		innerImage = getEmptyImage();
+		fullyRepaint = false;
 
 		BufferedImage drawimage = null;
 		try {
@@ -105,18 +92,18 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 				drawimage = getErrorImage();
 		}
 
-		Graphics2D g2 = innerImage.createGraphics();
-
-		g2.drawImage(drawimage.getSubimage(0, 0,
+		drawimage = drawimage.getSubimage(0, 0,
 				drawimage.getWidth() > getImageborders().width ? getImageborders().width : drawimage.getWidth(),
-				drawimage.getHeight() > getImageborders().height ? getImageborders().height : drawimage.getHeight()), 0,
-				0, null);
-		g2.dispose();
+				drawimage.getHeight() > getImageborders().height ? getImageborders().height : drawimage.getHeight());
+		
+		
+		image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 
-		surroundingImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D g2 = image.createGraphics();
 
-		g2 = surroundingImage.createGraphics();
-
+		//innerimage
+		g2.drawImage(drawimage, getImageborders().x, getImageborders().y, null);
+		
 		// top + middle surrounding
 		g2.setStroke(new BasicStroke(CORNERWIDTH + CORNERWIDTH / 4));
 		g2.setColor(Color.DARK_GRAY);
@@ -142,9 +129,11 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		g2.drawRoundRect(2, 2, getWidth() - 4, getHeight() - 4, ROUNDCURVES, ROUNDCURVES);
 		g2.drawRoundRect(SIDEBARWIDTH, TOPBARWIDTH, getWidth() - SIDEBARWIDTH * 2,
 				getHeight() - TOPBARWIDTH - SIDEBARWIDTH, ROUNDCURVES, ROUNDCURVES);
-
+		
+		close.paintButton(g2);
+		maximise.paintButton(g2);
+		
 		g2.dispose();
-		fullyRepaint = false;
 	}
 
 	/**
@@ -262,7 +251,6 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	public void saveBounds(Point point) {
 		topLeft = point;
 		bottomRight = new Point(getX() + getWidth(), getY() + getHeight());
-		mouse = point;
 	}
 
 	void resizeMaximum() {
@@ -322,7 +310,6 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
 				&& point.getY() >= getImageborders().getY()
 				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
-			mouse = point;
 
 			mouseMoved(new Point((int) (point.getX() - getImageborders().getX()),
 					(int) (point.getY() - getImageborders().getY())));
@@ -340,55 +327,60 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	public void changeCursor(Point mousePoint) {
-		new Thread() {
-			@Override
-			public void run() {
-				// edges
-				if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
-						&& mousePoint.getY() < getHeight() - CORNERWIDTH && mousePoint.getY() > CORNERWIDTH)
-					Frame.getFrame().setCursor(new Cursor(Cursor.W_RESIZE_CURSOR)); // left
-				else if (mousePoint.getX() >= getWidth() - SCROLLBARWIDTH && mousePoint.getX() <= getWidth()
-						&& mousePoint.getY() < getHeight() - CORNERWIDTH && mousePoint.getY() > CORNERWIDTH)
-					Frame.getFrame().setCursor(new Cursor(Cursor.E_RESIZE_CURSOR)); // right
-				else if (mousePoint.getX() > CORNERWIDTH && mousePoint.getX() < getWidth() - CORNERWIDTH
-						&& mousePoint.getY() <= SCROLLBARWIDTH && mousePoint.getY() >= 0)
-					Frame.getFrame().setCursor(new Cursor(Cursor.N_RESIZE_CURSOR)); // top
-				else if (mousePoint.getX() > CORNERWIDTH && mousePoint.getX() < getWidth() - CORNERWIDTH
-						&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - SCROLLBARWIDTH)
-					Frame.getFrame().setCursor(new Cursor(Cursor.S_RESIZE_CURSOR)); // bottom
-				// corners
-				else if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
-						&& mousePoint.getY() <= CORNERWIDTH && mousePoint.getY() >= 0)
-					Frame.getFrame().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top left
-				else if (mousePoint.getX() >= 0 && mousePoint.getX() <= CORNERWIDTH
-						&& mousePoint.getY() <= SCROLLBARWIDTH && mousePoint.getY() >= 0)
-					Frame.getFrame().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top top
-				else if (mousePoint.getX() >= getWidth() - CORNERWIDTH && mousePoint.getX() <= getWidth()
-						&& mousePoint.getY() <= SCROLLBARWIDTH && mousePoint.getY() >= 0)
-					Frame.getFrame().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top top
-				else if (mousePoint.getX() >= getWidth() - SCROLLBARWIDTH && mousePoint.getX() <= getWidth()
-						&& mousePoint.getY() <= CORNERWIDTH && mousePoint.getY() >= 0)
-					Frame.getFrame().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top right
-				else if (mousePoint.getX() >= getWidth() - CORNERWIDTH && mousePoint.getX() <= getWidth()
-						&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - SCROLLBARWIDTH)
-					Frame.getFrame().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom bottom
-				else if (mousePoint.getX() >= getWidth() - SCROLLBARWIDTH && mousePoint.getX() <= getWidth()
-						&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - CORNERWIDTH)
-					Frame.getFrame().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom right
-				else if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
-						&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - SCROLLBARWIDTH)
-					Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom left
-				else if (mousePoint.getX() >= 0 && mousePoint.getX() <= CORNERWIDTH && mousePoint.getY() <= getHeight()
-						&& mousePoint.getY() >= getHeight() - CORNERWIDTH)
-					Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom bottom
-				// move
-				else if (mousePoint.getX() > SCROLLBARWIDTH && mousePoint.getX() < getWidth() - SCROLLBARWIDTH
-						&& mousePoint.getY() < TOPBARWIDTH - SCROLLBARWIDTH && mousePoint.getY() > SCROLLBARWIDTH)
-					Frame.getFrame().setCursor(new Cursor(Cursor.MOVE_CURSOR)); // move
-				else
-					Frame.getFrame().setCursor(Cursor.getDefaultCursor());
-			}
-		}.start();
+		if (!(mousePoint.getX() >= getImageborders().getX() // test if not in picture
+				&& mousePoint.getX() <= getImageborders().getWidth() + getImageborders().getX()
+				&& mousePoint.getY() >= getImageborders().getY()
+				&& mousePoint.getY() <= getImageborders().getHeight() + getImageborders().getY())) {
+			new Thread() {
+				@Override
+				public void run() {
+					// edges
+					if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
+							&& mousePoint.getY() < getHeight() - CORNERWIDTH && mousePoint.getY() > CORNERWIDTH)
+						Frame.getFrame().setCursor(new Cursor(Cursor.W_RESIZE_CURSOR)); // left
+					else if (mousePoint.getX() >= getWidth() - SCROLLBARWIDTH && mousePoint.getX() <= getWidth()
+							&& mousePoint.getY() < getHeight() - CORNERWIDTH && mousePoint.getY() > CORNERWIDTH)
+						Frame.getFrame().setCursor(new Cursor(Cursor.E_RESIZE_CURSOR)); // right
+					else if (mousePoint.getX() > CORNERWIDTH && mousePoint.getX() < getWidth() - CORNERWIDTH
+							&& mousePoint.getY() <= SCROLLBARWIDTH && mousePoint.getY() >= 0)
+						Frame.getFrame().setCursor(new Cursor(Cursor.N_RESIZE_CURSOR)); // top
+					else if (mousePoint.getX() > CORNERWIDTH && mousePoint.getX() < getWidth() - CORNERWIDTH
+							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - SCROLLBARWIDTH)
+						Frame.getFrame().setCursor(new Cursor(Cursor.S_RESIZE_CURSOR)); // bottom
+					// corners
+					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
+							&& mousePoint.getY() <= CORNERWIDTH && mousePoint.getY() >= 0)
+						Frame.getFrame().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top left
+					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= CORNERWIDTH
+							&& mousePoint.getY() <= SCROLLBARWIDTH && mousePoint.getY() >= 0)
+						Frame.getFrame().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top top
+					else if (mousePoint.getX() >= getWidth() - CORNERWIDTH && mousePoint.getX() <= getWidth()
+							&& mousePoint.getY() <= SCROLLBARWIDTH && mousePoint.getY() >= 0)
+						Frame.getFrame().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top top
+					else if (mousePoint.getX() >= getWidth() - SCROLLBARWIDTH && mousePoint.getX() <= getWidth()
+							&& mousePoint.getY() <= CORNERWIDTH && mousePoint.getY() >= 0)
+						Frame.getFrame().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top right
+					else if (mousePoint.getX() >= getWidth() - CORNERWIDTH && mousePoint.getX() <= getWidth()
+							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - SCROLLBARWIDTH)
+						Frame.getFrame().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom bottom
+					else if (mousePoint.getX() >= getWidth() - SCROLLBARWIDTH && mousePoint.getX() <= getWidth()
+							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - CORNERWIDTH)
+						Frame.getFrame().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom right
+					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
+							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - SCROLLBARWIDTH)
+						Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom left
+					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= CORNERWIDTH
+							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - CORNERWIDTH)
+						Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom bottom
+					// move
+					else if (mousePoint.getX() > SCROLLBARWIDTH && mousePoint.getX() < getWidth() - SCROLLBARWIDTH
+							&& mousePoint.getY() < TOPBARWIDTH - SCROLLBARWIDTH && mousePoint.getY() > SCROLLBARWIDTH)
+						Frame.getFrame().setCursor(new Cursor(Cursor.MOVE_CURSOR)); // move
+					else
+						Frame.getFrame().setCursor(Cursor.getDefaultCursor());
+				}
+			}.start();
+		}
 	}
 
 	/**
@@ -397,13 +389,6 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 * @return must return a buffered image
 	 */
 	public abstract BufferedImage draw();
-
-	/**
-	 * 
-	 * @param g2    graphics objekt
-	 * @param point top left point of cursor
-	 */
-	public abstract void drawCursor(Graphics2D g2, Point point);
 
 	@Override
 	public int compareTo(CustomWindow o) {

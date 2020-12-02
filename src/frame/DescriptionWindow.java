@@ -28,8 +28,4 @@ public class DescriptionWindow extends CustomWindow {
 		g2.dispose();
 		return image;
 	}
-
-	@Override
-	public void drawCursor(Graphics2D g2, Point point) {
-	}
 }

@@ -1,5 +1,6 @@
 package abstractclasses;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -193,6 +194,29 @@ public abstract class Tile implements Constants {
 
 	public String getName() {
 		return this.getClass().getName().replace("tiles.", "");
+	}
+
+	public void draw(Graphics2D g2,Float zoom) {
+		g2.drawImage(
+				getImage(Layers.Floor).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+						(int) (TILEHEIGHTWIDHT * zoom), Scaler),
+				(int) (getDrawX(0) * zoom), (int) (getDrawY(0) * zoom), null);
+		if (hasLayer(Layers.Cable))
+			g2.drawImage(
+					getImage(Layers.Cable).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+							(int) (TILEHEIGHTWIDHT * zoom), Scaler),
+					(int) (getDrawX(0) * zoom), (int) (getDrawY(0) * zoom), null);
+		if (hasLayer(Layers.Objects))
+			g2.drawImage(
+					getObjektImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+							(int) (TILEHEIGHTWIDHT * zoom), Scaler),
+					(int) (getDrawX(getRelativedrawX()) * zoom),
+					(int) (getDrawY(getRelativedrawY()) * zoom), null);
+		if (hasLayer(Layers.Effects))
+			g2.drawImage(
+					getImage(Layers.Effects).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+							(int) (TILEHEIGHTWIDHT * zoom), Scaler),
+					(int) (getDrawX(0) * zoom), (int) (getDrawY(0) * zoom), null);
 	}
 
 }

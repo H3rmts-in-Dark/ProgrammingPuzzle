@@ -19,16 +19,17 @@ import logic.MainControl;
 
 public class DebuggingWindow extends CustomWindow {
 
-	String fpsav, tpsav, executiontimeav, tasks, cpu, gametick;
+	String fpsav, tpsav, executiontimeav, drawtimeav, tasks, cpu, gametick;
 	Set<Entry<String, Integer>> tasktypes;
 
 	OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
 	public DebuggingWindow() {
-		super(300, 400, new Point(20, 20), "Debugging", (int) (TPS * 0.2));
+		super(300, 400, new Point(20, 20), "Debugging", (int) (TPS * 0.4));
 		fpsav = "";
 		tpsav = "";
 		executiontimeav = "";
+		drawtimeav = "";
 		tasks = "";
 	}
 
@@ -36,6 +37,7 @@ public class DebuggingWindow extends CustomWindow {
 		fpsav = Double.toString(Debugger.getFPS());
 		tpsav = Double.toString(Debugger.getTPS());
 		executiontimeav = Double.toString(Debugger.getExecutionTime());
+		drawtimeav = Double.toString(Debugger.getDrawTime());
 		tasks = Integer.toString(Debugger.getTaskSize());
 		tasktypes = Debugger.getTasktypes();
 		cpu = Double.toString(Math.round((os.getProcessCpuLoad() * 100) * 100.0) / 100.0);
@@ -103,11 +105,14 @@ public class DebuggingWindow extends CustomWindow {
 		g2.drawString("FPS:" + fpsav + " / " + FPS, 10, height += 25);
 		g2.drawString("TPS:" + tpsav + " / " + TPS, 10, height += 25);
 		g2.drawString("TPSDelay:" + Integer.toString(1000 / TPS) + "ms", 10, height += 25);
+		g2.drawString("Executiontime:" + executiontimeav + "ms", 10, height += 25);
+		
 		g2.drawString("FPSDelay:" + Integer.toString(1000 / FPS) + "ms", 10, height += 25);
+		g2.drawString("Drawtime:" + drawtimeav + "ms", 10, height += 25);
 
 		g2.drawString("CPU:" + cpu + "%", 10, height += 25);
 
-		g2.drawString("Executiontilme:" + executiontimeav + "ms", 10, height += 25);
+		
 		g2.drawString("Tasks:" + tasks, 10, height += 25);
 
 		for (Entry<String, Integer> entry : tasktypes) {
@@ -121,10 +126,6 @@ public class DebuggingWindow extends CustomWindow {
 	}
 
 	@Override
-	public void drawCursor(Graphics2D g2, Point point) {
-	}
-
-	@Override
 	public void mousePressed(Point point) {
 		if (point.x > 10 && point.x < 30 && point.y > 10 && point.y < 30) {
 			new Task(1, -1) {
@@ -132,7 +133,7 @@ public class DebuggingWindow extends CustomWindow {
 				@Override
 				public void runCode() {
 					try {
-						Thread.sleep(2);
+						Thread.sleep(1);
 					} catch (InterruptedException e) {
 					}
 				}

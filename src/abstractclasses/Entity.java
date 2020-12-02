@@ -1,5 +1,6 @@
 package abstractclasses;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -169,6 +170,14 @@ public abstract class Entity implements Constants {
 
 	public String getName() {
 		return this.getClass().getName().replace("tiles.", "");
+	}
+
+	public void draw(Graphics2D g2, Float zoom) {
+		g2.drawImage(
+				getImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
+						(int) (TILEHEIGHTWIDHT * zoom), Scaler),
+				(int) (getDrawX(getRelativedrawX()) * zoom),
+				(int) (getDrawY(getRelativedrawY()) * zoom), null);
 	}
 
 }

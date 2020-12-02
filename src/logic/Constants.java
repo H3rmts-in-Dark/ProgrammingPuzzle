@@ -49,7 +49,7 @@ public interface Constants {
 	 * Einstürze auf. Beim Verschieben des Fensters gibt es starke Verzögerungen.
 	 * 
 	 */
-	public static final Integer Scaler = Image.SCALE_SMOOTH; // Scale Einstellung, Erklärung darüber.
+	public static final Integer Scaler = Image.SCALE_FAST; // Scale Einstellung, Erklärung darüber.
 
 // 
 // -----------------------------------------------------------

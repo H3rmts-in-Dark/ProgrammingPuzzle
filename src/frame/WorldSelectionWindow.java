@@ -21,8 +21,4 @@ public class WorldSelectionWindow extends CustomWindow {
 		g2.fillRect(0, 0, getWidth(), getHeight());
 		return image;
 	}
-
-	@Override
-	public void drawCursor(Graphics2D g2, Point point) {
-	}
 }

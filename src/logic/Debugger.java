@@ -19,7 +19,7 @@ public class Debugger implements Constants {
 	static ArrayList<Long> addTicks;
 
 	static HashMap<String, Integer> taskTypes;
-	static Long startTasks = (long) 0, endTasks = (long) 0,setstartTasks = (long) 0;
+	static Long startTasks = (long) 0, endTasks = (long) 0,startDraw = (long) 0, endDraw = (long) 0 ,setstartTasks = (long) 0,setstartDraw = (long) 0;
 	static Integer taskSize = 0;
 	
 
@@ -120,6 +120,15 @@ public class Debugger implements Constants {
 		endTasks = System.currentTimeMillis();
 		startTasks = setstartTasks;
 	}
+	
+	public static void startDraw() {
+		setstartDraw = System.currentTimeMillis();
+	}
+
+	public static void endDraw() {
+		endDraw = System.currentTimeMillis();
+		startDraw = setstartDraw;
+	}
 
 	public static void repaint() {
 		addRepaints.add(System.currentTimeMillis());
@@ -135,6 +144,10 @@ public class Debugger implements Constants {
 
 	public static Double getExecutionTime() {
 		return ((double) (endTasks - startTasks));
+	}
+	
+	public static Double getDrawTime() {
+		return ((double) (endDraw - startDraw));
 	}
 
 	public static Integer getTaskSize() {

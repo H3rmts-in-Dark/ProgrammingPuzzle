@@ -30,7 +30,7 @@ public class MainControl {
 		world.setTile(0, 1, new Computer());
 		world.addEntity(new Box(1, 1, Rotation.right));
 		world.setTile(1, 2, new Computer());
-		world.setTile(0, 2, new Förderband(Rotation.up));
+		world.setTile(0, 2, new Förderband(Rotation.right));
 	}
 
 	public static World getWorld() {
