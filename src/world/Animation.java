@@ -29,7 +29,7 @@ public class Animation implements Constants {
 		this.actualFile = 0;
 		this.animatedObject = animatedObject;
 		this.defaultanimtion = defaultanimtion;
-
+		
 		for (String filePath : new File(picturesFile).list()) 
 			paths.add(picturesFile + "/" + filePath);
 		
@@ -54,9 +54,17 @@ public class Animation implements Constants {
 		if (sound != null)
 			Sounds.getSound(sound).play();
 	}
-
+	
 	public void stopAnimation() {
 		task.end();
+	}
+	
+	public void redrawimage() {
+		if (animatedObject instanceof Tile) {
+			((Tile) animatedObject).updateimage();
+		} else if (animatedObject instanceof Entity) {
+			//((Entity) animatedObject).updateimage();
+		}
 	}
 
 	/**

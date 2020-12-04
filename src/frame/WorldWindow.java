@@ -1,8 +1,6 @@
 package frame;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
@@ -10,7 +8,6 @@ import abstractclasses.CustomWindow;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
 import logic.Debugger;
-import logic.Layers;
 import tiles.Computer;
 import world.World;
 
@@ -35,23 +32,25 @@ public class WorldWindow extends CustomWindow {
 	public BufferedImage draw() {
 		Debugger.startDraw();
 		BufferedImage image = getEmptyImage();
-		Graphics2D g2 = (Graphics2D) image.getGraphics();
+		Graphics2D g2 = image.createGraphics();
 
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
 				Tile temptile = world.getTile(x, y);
 				if (((int) (temptile.getDrawX(0) * zoom)) < getImageborders().getWidth() && 
 						((int) (temptile.getDrawY(0) * zoom)) < getImageborders().getHeight()) 
+					temptile.updateimage();
 					temptile.draw(g2,zoom);
 			}
 		}
+		/*
 		for (Entity entity : world.getEntitys()) {
 			if (((int) (entity.getDrawX(0) * zoom)) < getImageborders().getWidth() && 
 					((int) (entity.getDrawY(0) * zoom)) < getImageborders().getHeight()) {
 				entity.draw(g2,zoom);
 			}
 		}
-
+		*/
 		g2.dispose();
 		Debugger.endDraw();
 		return image;

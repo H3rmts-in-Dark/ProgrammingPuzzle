@@ -1,6 +1,8 @@
 package abstractclasses;
 
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -15,7 +17,7 @@ import world.World;
 
 /**
  * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das
- * Objekt sich nicht bewegen können und muss auf einer World platziert werden.
+ * Objekt sich nicht bewegen kï¿½nnen und muss auf einer World platziert werden.
  */
 public abstract class Tile implements Constants {
 
@@ -25,8 +27,10 @@ public abstract class Tile implements Constants {
 	private Integer relativedrawY;
 	private Boolean animated;
 
+	private Image drawimage;
+
 	/**
-	 * Enthält die Bilder für alle Layer außer dem Object-Layer, da diese in
+	 * Enthï¿½lt die Bilder fï¿½r alle Layer auï¿½er dem Object-Layer, da diese in
 	 * objectAnimations gespeichert sind.
 	 */
 	private HashMap<Layers, String> images;
@@ -64,6 +68,7 @@ public abstract class Tile implements Constants {
 	 */
 	public void setWorld(World world) {
 		this.world = world;
+		updateimage();
 	}
 
 	public void startAnimation() {
@@ -196,27 +201,24 @@ public abstract class Tile implements Constants {
 		return this.getClass().getName().replace("tiles.", "");
 	}
 
-	public void draw(Graphics2D g2,Float zoom) {
-		g2.drawImage(
-				getImage(Layers.Floor).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-						(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-				(int) (getDrawX(0) * zoom), (int) (getDrawY(0) * zoom), null);
-		if (hasLayer(Layers.Cable))
-			g2.drawImage(
-					getImage(Layers.Cable).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-							(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-					(int) (getDrawX(0) * zoom), (int) (getDrawY(0) * zoom), null);
-		if (hasLayer(Layers.Objects))
-			g2.drawImage(
-					getObjektImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-							(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-					(int) (getDrawX(getRelativedrawX()) * zoom),
-					(int) (getDrawY(getRelativedrawY()) * zoom), null);
-		if (hasLayer(Layers.Effects))
-			g2.drawImage(
-					getImage(Layers.Effects).getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-							(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-					(int) (getDrawX(0) * zoom), (int) (getDrawY(0) * zoom), null);
+	public void draw(Graphics2D g2, Float zoom) {
+		g2.drawImage(drawimage, (int) (getDrawX(0) * zoom), (int) (getDrawY(0) * zoom), null);
 	}
 
+	public void updateimage() {
+		BufferedImage image = new BufferedImage(DEFAULTIMAGEWIDHTHEIGHT, DEFAULTIMAGEWIDHTHEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics g = image.getGraphics();
+
+		g.drawImage(getImage(Layers.Floor), 0, 0, null);
+		if (hasLayer(Layers.Cable))
+			g.drawImage(getImage(Layers.Cable), 0, 0, null);
+		if (hasLayer(Layers.Objects))
+			g.drawImage(getImage(Layers.Objects), 0, 0, null);
+		if (hasLayer(Layers.Effects))
+			g.drawImage(getImage(Layers.Effects), 0, 0, null);
+
+		drawimage = image.getScaledInstance((int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()),
+				(int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()), Scaler);
+
+	}
 }

@@ -112,12 +112,12 @@ public class Debugger implements Constants {
 	}
 
 	public static void startTask() {
-		setstartTasks = System.currentTimeMillis();
+		setstartTasks = System.nanoTime();
 	}
 
 	public static void tick() {
 		addTicks.add(System.currentTimeMillis());
-		endTasks = System.currentTimeMillis();
+		endTasks = System.nanoTime();
 		startTasks = setstartTasks;
 	}
 	
@@ -143,7 +143,7 @@ public class Debugger implements Constants {
 	}
 
 	public static Double getExecutionTime() {
-		return ((double) (endTasks - startTasks));
+		return ((double) (endTasks - startTasks) / 1000000);
 	}
 	
 	public static Double getDrawTime() {

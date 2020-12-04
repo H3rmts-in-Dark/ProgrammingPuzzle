@@ -2,7 +2,7 @@ package logic;
 
 import entitys.Box;
 import tiles.Computer;
-import tiles.Förderband;
+import tiles.FÃ¶rderband;
 import world.World;
 
 public class MainControl {
@@ -30,7 +30,7 @@ public class MainControl {
 		world.setTile(0, 1, new Computer());
 		world.addEntity(new Box(1, 1, Rotation.right));
 		world.setTile(1, 2, new Computer());
-		world.setTile(0, 2, new Förderband(Rotation.right));
+		world.setTile(0, 2, new FÃ¶rderband(Rotation.right));
 	}
 
 	public static World getWorld() {

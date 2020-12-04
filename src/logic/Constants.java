@@ -19,9 +19,9 @@ public interface Constants {
 
 	public static final Integer SCROLLBARWIDTH = 4;
 	public static final Integer CORNERWIDTH = 6;
-	public static final Integer TOPBARWIDTH = 40;
+	public static final Integer TOPBARWIDTH = 36;
 	public static final Integer SIDEBARWIDTH = 8;
-	public static final Integer ROUNDCURVES = 8;
+	public static final Integer ROUNDCURVES = 7;
 	public static final Integer DEFAULTX = 40;
 	public static final Integer DEFAULTY = 40;
 	public static final Integer DEFAULTWITH = 200;
@@ -39,17 +39,17 @@ public interface Constants {
 	public static final Float MINZOOM = 0.2f;
 
 	/**
-	 * SCALE_FAST: Ist nicht so schön, benötigt aber weniger RAM und dauert länger
+	 * SCALE_FAST: Ist nicht so schï¿½n, benï¿½tigt aber weniger RAM und dauert lï¿½nger
 	 * um nach dem Verschieben des Fensters wieder auf das normale GPU und CPU level
 	 * zu kommen. Aber sonst ist der GPU Verbrauch geringer. Bei dieser Option
 	 * bleiben die TPS meist gleich.
 	 * 
-	 * SCALE_SMOOTH: Benötigt mehr RAM und GPU und hat die gleichen Probleme beim
-	 * Verändern der Größe wie SCALE_FAST. Bei dieser Option treten mehr TPS
-	 * Einstürze auf. Beim Verschieben des Fensters gibt es starke Verzögerungen.
+	 * SCALE_SMOOTH: Benï¿½tigt mehr RAM und GPU und hat die gleichen Probleme beim
+	 * Verï¿½ndern der Grï¿½ï¿½e wie SCALE_FAST. Bei dieser Option treten mehr TPS
+	 * Einstï¿½rze auf. Beim Verschieben des Fensters gibt es starke Verzï¿½gerungen.
 	 * 
 	 */
-	public static final Integer Scaler = Image.SCALE_FAST; // Scale Einstellung, Erklärung darüber.
+	public static final Integer Scaler = Image.SCALE_FAST; // Scale Einstellung, Erklï¿½rung darï¿½ber.
 
 // 
 // -----------------------------------------------------------
@@ -62,24 +62,24 @@ public interface Constants {
 // -------------------------Layer-----------------------------
 
 	/**
-	 * Höhe des tiefsten Layers.
+	 * Hï¿½he des tiefsten Layers.
 	 */
 	public static final Integer FLOORHEIGHT = 0;
 
 	/**
-	 * Der höchstmögliche Wert eines Layers.
+	 * Der hï¿½chstmï¿½gliche Wert eines Layers.
 	 */
 	public static final Integer UNPASSABLE = TILEHEIGHTWIDHT;
 
 	/**
-	 * kann auf ein förederband fallen
+	 * kann auf ein fï¿½rederband fallen
 	 */
 	public static final Integer ABLAGE = TILEHEIGHTWIDHT / 2;
 
 	/**
-	 * Förderband
+	 * Fï¿½rderband
 	 */
-	public static final Integer FÖRDERBANDHÖHE = TILEHEIGHTWIDHT / 3;
+	public static final Integer FÃ–RDERBANDHÃ–HE = TILEHEIGHTWIDHT / 3;
 
 //
 // -----------------------------------------------------------
@@ -98,10 +98,11 @@ public interface Constants {
 	public static final Boolean NOTANIMATED = false;
 	public static final String DEFAULTANIMATION = "defaultanimation"; // do not change is used to load from rcs/...
 	public static final String INTERACTANIMATION = "interactanimation";
+	public static final Integer DEFAULTIMAGEWIDHTHEIGHT = 128;
 
 //
 // -----------------------------------------------------------
 // --------------------Debugger-------------------------------
 	
-	public static final Integer RPS = 20;
+	public static final Integer RPS = 20; //refreshs per second
 }

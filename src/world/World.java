@@ -23,9 +23,9 @@ public class World implements Constants{
 	public World(Integer width, Integer height) {
 		world = new Tile[width][height];
 		entitylist = new ArrayList<>();
-		fillempty();
-
 		window = new WorldWindow(this);
+		
+		fillempty();
 	}
 
 	public void setTile(Integer x, Integer y, Tile tile) {

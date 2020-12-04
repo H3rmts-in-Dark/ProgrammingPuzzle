@@ -6,24 +6,24 @@ import logic.Rotation;
 import world.Animation;
 import world.Images;
 
-public class Förderband extends Tile {
+public class FÃ¶rderband extends Tile {
 
-	public Förderband(Rotation r) {
-		super(FÖRDERBANDHÖHE, true, 0, 0, r);
-		setDescription("Förderband");
+	public FÃ¶rderband(Rotation r) {
+		super(FÃ–RDERBANDHÃ–HE, true, 0, 0, r);
+		setDescription("FÃ¶rderband");
 	}
 
 	@Override
 	public void loadAnimation() {
 		setImage(Layers.Floor, Images.loadLayerPicture("Default", Layers.Floor));
 		addDirectionAnimation(Rotation.left,
-				Animation.loadObjektAnimation("Förderband", Rotation.left, DEFAULTANIMATION, this));
+				Animation.loadObjektAnimation("FÃ¶rderband", Rotation.left, DEFAULTANIMATION, this));
 		addDirectionAnimation(Rotation.right,
-				Animation.loadObjektAnimation("Förderband", Rotation.right, DEFAULTANIMATION, this));
+				Animation.loadObjektAnimation("FÃ¶rderband", Rotation.right, DEFAULTANIMATION, this));
 		addDirectionAnimation(Rotation.up,
-				Animation.loadObjektAnimation("Förderband", Rotation.up, DEFAULTANIMATION, this));
+				Animation.loadObjektAnimation("FÃ¶rderband", Rotation.up, DEFAULTANIMATION, this));
 		addDirectionAnimation(Rotation.down,
-				Animation.loadObjektAnimation("Förderband", Rotation.down, DEFAULTANIMATION, this));
+				Animation.loadObjektAnimation("FÃ¶rderband", Rotation.down, DEFAULTANIMATION, this));
 		setDirection(this.getDirection());
 	}
 }

@@ -19,7 +19,6 @@ import javax.swing.JComponent;
 
 import frame.Frame;
 import logic.Constants;
-import tasks.ChangeButtonBrightnessTask;
 import tasks.RepaintTask;
 
 public abstract class CustomWindow extends JComponent implements Comparable<CustomWindow>, Constants {
@@ -27,8 +26,8 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	private Boolean fullyRepaint;
 	private Integer layer = 0;
 	private String title = "Default";
-	private CloseButton close;
-	private MaximiseButton maximise;
+	CloseButton close;
+	MaximiseButton maximise;
 	private BufferedImage image;
 	Point topLeft = new Point();
 	Point bottomRight = new Point();
@@ -66,16 +65,16 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	@Override
-	public void paint(Graphics g) {
-		if (fullyRepaint) 
+	public void paintComponent(Graphics g) {
+		if (fullyRepaint)
 			repaintAll();
-			
+
 		// surrounding image
 		g.drawImage(image, 0, 0, null);
 	}
 
 	/**
-	 * Zeichnet das BufferedImage neu, das für die Zeichnung auf den Component
+	 * Zeichnet das BufferedImage neu, das fï¿½r die Zeichnung auf den Component
 	 * benutzt wird. Diese Methode sollte nicht manuell aufgerufen werden, da sie
 	 * automatisch gestartet wird wenn triggerFullRepaint() aufgerufen wurde.
 	 */
@@ -95,15 +94,14 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		drawimage = drawimage.getSubimage(0, 0,
 				drawimage.getWidth() > getImageborders().width ? getImageborders().width : drawimage.getWidth(),
 				drawimage.getHeight() > getImageborders().height ? getImageborders().height : drawimage.getHeight());
-		
-		
+
 		image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 
 		Graphics2D g2 = image.createGraphics();
 
-		//innerimage
+		// innerimage
 		g2.drawImage(drawimage, getImageborders().x, getImageborders().y, null);
-		
+
 		// top + middle surrounding
 		g2.setStroke(new BasicStroke(CORNERWIDTH + CORNERWIDTH / 4));
 		g2.setColor(Color.DARK_GRAY);
@@ -129,15 +127,12 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		g2.drawRoundRect(2, 2, getWidth() - 4, getHeight() - 4, ROUNDCURVES, ROUNDCURVES);
 		g2.drawRoundRect(SIDEBARWIDTH, TOPBARWIDTH, getWidth() - SIDEBARWIDTH * 2,
 				getHeight() - TOPBARWIDTH - SIDEBARWIDTH, ROUNDCURVES, ROUNDCURVES);
-		
-		close.paintButton(g2);
-		maximise.paintButton(g2);
-		
+
 		g2.dispose();
 	}
 
 	/**
-	 * Wenn diese Methode aufgerufen wurde, wird repaintAll() bei der nächsten
+	 * Wenn diese Methode aufgerufen wurde, wird repaintAll() bei der nï¿½chsten
 	 * Zeichnung automatisch aufgerufen.
 	 */
 	public void triggerFullRepaint() {
@@ -145,14 +140,14 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	/**
-	 * Gibt ein BufferedImage zurück, das die Ausmaße des Fensters hat.
+	 * Gibt ein BufferedImage zurï¿½ck, das die Ausmaï¿½e des Fensters hat.
 	 */
 	protected BufferedImage getEmptyImage() {
 		return new BufferedImage(getImageborders().width, getImageborders().height, BufferedImage.TYPE_INT_RGB);
 	}
 
 	/**
-	 * Gibt die Ausmaße des Fensters zurück.
+	 * Gibt die Ausmaï¿½e des Fensters zurï¿½ck.
 	 * 
 	 * @return
 	 */
@@ -174,7 +169,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	/**
-	 * Gibt ein Fehlerbild zurück, das leicht zu erkennen lässt, das etwas nicht
+	 * Gibt ein Fehlerbild zurï¿½ck, das leicht zu erkennen lï¿½sst, das etwas nicht
 	 * stimmt.
 	 * 
 	 * @return
@@ -334,6 +329,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 			new Thread() {
 				@Override
 				public void run() {
+					System.out.println(maximise.getModel().isRollover());
 					// edges
 					if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
 							&& mousePoint.getY() < getHeight() - CORNERWIDTH && mousePoint.getY() > CORNERWIDTH)
@@ -372,6 +368,10 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= CORNERWIDTH
 							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - CORNERWIDTH)
 						Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom bottom
+					else if (maximise.getModel().isRollover())
+						Frame.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));
+					else if (close.getModel().isRollover())
+						Frame.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));
 					// move
 					else if (mousePoint.getX() > SCROLLBARWIDTH && mousePoint.getX() < getWidth() - SCROLLBARWIDTH
 							&& mousePoint.getY() < TOPBARWIDTH - SCROLLBARWIDTH && mousePoint.getY() > SCROLLBARWIDTH)
@@ -380,6 +380,8 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 						Frame.getFrame().setCursor(Cursor.getDefaultCursor());
 				}
 			}.start();
+		} else {
+			Frame.getFrame().setCursor(Cursor.getDefaultCursor());
 		}
 	}
 
@@ -405,18 +407,17 @@ class CloseButton extends JButton implements ActionListener {
 		this.window = window;
 		setBounds(window.getWidth() - 27, 8, 20, 20);
 		addActionListener(this);
-		setOpaque(false);
-		new ChangeButtonBrightnessTask(this);
+		setFocusPainted(false);
+		setRolloverEnabled(false);
 		window.add(this);
 	}
 
-	public void paintButton(Graphics2D g2) {
-		g2.setColor(Color.DARK_GRAY);
-		g2.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 4, 4);
-		g2.setStroke(new BasicStroke(3));
-		g2.setColor(getForeground());
-		g2.drawLine(4 + getX(), 3 + getY(), getWidth() - 4 + getX(), getHeight() - 4 + getY());
-		g2.drawLine(getWidth() - 4 + getX(), 3 + getY(), 4 + getX(), getHeight() - 4 + getY());
+	@Override
+	public void paint(Graphics g) {
+		((Graphics2D) g).setStroke(new BasicStroke(3));
+		g.setColor(Color.BLACK);
+		g.drawLine(4, 3, getWidth() - 4, getHeight() - 4);
+		g.drawLine(getWidth() - 4, 3, 4, getHeight() - 4);
 	}
 
 	@Override
@@ -434,17 +435,16 @@ class MaximiseButton extends JButton implements ActionListener, Constants {
 		this.window = window;
 		setBounds(window.getWidth() - 57, 8, 20, 20);
 		addActionListener(this);
-		setOpaque(false);
-		new ChangeButtonBrightnessTask(this);
+		setFocusPainted(false);
+		setRolloverEnabled(false);
 		window.add(this);
 	}
 
-	public void paintButton(Graphics2D g2) {
-		g2.setColor(Color.DARK_GRAY);
-		g2.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 4, 4);
-		g2.setStroke(new BasicStroke(3));
-		g2.setColor(getForeground());
-		g2.drawRect(5 + getX(), 2 + getY(), getWidth() - 5, getHeight() - 6);
+	@Override
+	public void paint(Graphics g) {
+		((Graphics2D) g).setStroke(new BasicStroke(3));
+		g.setColor(Color.BLACK);
+		g.drawRect(2, 2, getWidth() - 4, getHeight() - 6);
 	}
 
 	@Override

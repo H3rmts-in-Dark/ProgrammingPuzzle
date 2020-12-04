@@ -100,18 +100,26 @@ public class DebuggingWindow extends CustomWindow {
 		g2.drawLine(x + 4, 25, x + 10, 25);
 		g2.drawLine(x + 12, 25, x + 14, 25);
 
-		Integer height = 30;
+		Integer height = 35;
 
 		g2.drawString("FPS:" + fpsav + " / " + FPS, 10, height += 25);
 		g2.drawString("TPS:" + tpsav + " / " + TPS, 10, height += 25);
+		
+		height += 5;
+		
 		g2.drawString("TPSDelay:" + Integer.toString(1000 / TPS) + "ms", 10, height += 25);
 		g2.drawString("Executiontime:" + executiontimeav + "ms", 10, height += 25);
 		
+		height += 5;
+		
 		g2.drawString("FPSDelay:" + Integer.toString(1000 / FPS) + "ms", 10, height += 25);
 		g2.drawString("Drawtime:" + drawtimeav + "ms", 10, height += 25);
-
+		
+		height += 5;
+		
 		g2.drawString("CPU:" + cpu + "%", 10, height += 25);
-
+		
+		height += 5;
 		
 		g2.drawString("Tasks:" + tasks, 10, height += 25);
 

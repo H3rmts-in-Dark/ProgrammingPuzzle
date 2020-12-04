@@ -15,6 +15,7 @@ public class ChangeImageTask extends Task {
 	@Override
 	public void runCode() {
 		animation.nextImage();
+		animation.redrawimage();
 	}
 
 	@Override
