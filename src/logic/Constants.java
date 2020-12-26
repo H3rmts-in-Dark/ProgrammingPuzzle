@@ -11,7 +11,7 @@ public interface Constants {
 	public static final Integer FRAMEWIDTH = 1000;
 	public static final Integer FRAMEHEIGHT = 800;
 	public static final Integer FPS = 45;
-	public static final Integer movedelay = 70, dragdelay = 70;
+	public static final Integer movedelay = 100, dragdelay = 100;
 
 // 
 // -----------------------------------------------------------
@@ -104,5 +104,5 @@ public interface Constants {
 // -----------------------------------------------------------
 // --------------------Debugger-------------------------------
 	
-	public static final Integer RPS = 20; //refreshs per second
+	public static final Integer RPS = 10; //refreshs per second
 }

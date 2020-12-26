@@ -1,8 +1,10 @@
 package frame;
 
+
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import abstractclasses.CustomWindow;
 import abstractclasses.Entity;
@@ -10,6 +12,7 @@ import abstractclasses.Tile;
 import logic.Debugger;
 import tiles.Computer;
 import world.World;
+
 
 public class WorldWindow extends CustomWindow {
 
@@ -22,37 +25,32 @@ public class WorldWindow extends CustomWindow {
 	 * @param world this
 	 */
 	public WorldWindow(World world) {
-		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2, world.getHeight() * TILEHEIGHTWIDHT + TOPBARWIDTH,
-				"World", 5);
+		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2,world.getHeight() * TILEHEIGHTWIDHT + TOPBARWIDTH,
+				"World",5);
 		this.world = world;
 		zoom = 1f;
 	}
 
 	@Override
 	public BufferedImage draw() {
-		Debugger.startDraw();
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = image.createGraphics();
 
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
-				Tile temptile = world.getTile(x, y);
-				if (((int) (temptile.getDrawX(0) * zoom)) < getImageborders().getWidth() && 
-						((int) (temptile.getDrawY(0) * zoom)) < getImageborders().getHeight()) 
+				Tile temptile = world.getTile(x,y);
+				if (((int) (temptile.getDrawX(0) * zoom)) < getImageborders().getWidth()
+						&& ((int) (temptile.getDrawY(0) * zoom)) < getImageborders().getHeight())
 					temptile.updateimage();
-					temptile.draw(g2,zoom);
+				temptile.draw(g2,zoom);
 			}
 		}
 		/*
-		for (Entity entity : world.getEntitys()) {
-			if (((int) (entity.getDrawX(0) * zoom)) < getImageborders().getWidth() && 
-					((int) (entity.getDrawY(0) * zoom)) < getImageborders().getHeight()) {
-				entity.draw(g2,zoom);
-			}
-		}
-		*/
+		 * for (Entity entity : world.getEntitys()) { if (((int) (entity.getDrawX(0) * zoom)) <
+		 * getImageborders().getWidth() && ((int) (entity.getDrawY(0) * zoom)) <
+		 * getImageborders().getHeight()) { entity.draw(g2,zoom); } }
+		 */
 		g2.dispose();
-		Debugger.endDraw();
 		return image;
 	}
 
@@ -83,7 +81,7 @@ public class WorldWindow extends CustomWindow {
 			tile.triggerAnimation(INTERACTANIMATION);
 		} else {
 			new DescriptionWindow(tile,
-					new Point((int) point.getX() + getX() + CORNERWIDTH, (int) point.getY() + getY() + TOPBARWIDTH));
+					new Point((int) point.getX() + getX() + CORNERWIDTH,(int) point.getY() + getY() + TOPBARWIDTH));
 		}
 
 	}
@@ -95,6 +93,7 @@ public class WorldWindow extends CustomWindow {
 	}
 
 	public Tile getTile(Point point) {
-		return world.getTile((int) (point.x / (TILEHEIGHTWIDHT * zoom)), (int) (point.y / (TILEHEIGHTWIDHT * zoom)));
+		return world.getTile((int) (point.x / (TILEHEIGHTWIDHT * zoom)),(int) (point.y / (TILEHEIGHTWIDHT * zoom)));
 	}
+
 }

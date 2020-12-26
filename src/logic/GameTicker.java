@@ -1,9 +1,11 @@
 package logic;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import abstractclasses.Task;
+
 
 public class GameTicker extends Thread implements Constants {
 
@@ -30,16 +32,14 @@ public class GameTicker extends Thread implements Constants {
 				Task task = iterator.next();
 				if (task.getEnded())
 					iterator.remove();
-				if (task.tryRun()) {
-					task.onEnd();
+				if (task.tryRun())
 					iterator.remove();
-				}
 			}
 
 			Debugger.tick();
 			currentTick++;
 
-			// Wartet, bis der nächste Tick beginnt.
+			// Wartet, bis der nï¿½chste Tick beginnt.
 			while ((System.currentTimeMillis() - lastTicktime) < (1000 / TPS)) {
 				try {
 					Thread.sleep(0,1);
@@ -62,7 +62,7 @@ public class GameTicker extends Thread implements Constants {
 	public ArrayList<Task> getTaskList() {
 		return taskList;
 	}
-	
+
 	public void clear() {
 		taskList.clear();
 	}
@@ -77,7 +77,7 @@ public class GameTicker extends Thread implements Constants {
 	public void addTask(Task task) {
 		addQueue.add(task);
 	}
-	
+
 	public void sysoutTasks() {
 		System.out.println(getTick());
 		for (Task task : taskList) {
@@ -85,4 +85,5 @@ public class GameTicker extends Thread implements Constants {
 		}
 		System.out.print("\n");
 	}
+
 }

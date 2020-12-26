@@ -48,7 +48,7 @@ public class Animation implements Constants {
 	public void startAnimation() {
 		actualFile = 0;
 		if (defaultanimtion)
-			task = new ChangeImageTask(5, this, -1);
+			
 		else
 			task = new ChangeImageTask(5, this, paths.size());
 		if (sound != null)
@@ -88,19 +88,5 @@ public class Animation implements Constants {
 		}
 	}
 
-	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, Rotation direction,
-			String animationName, Tile animatedObject) {
-		return new SimpleEntry<>(animationName,
-				new Animation("rsc/objekt pictures/" + ObjektName + "/" + Rotation.toString(direction) + animationName,
-						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
-						animationName == DEFAULTANIMATION));
-	}
 	
-	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
-			Entity animatedObject) {
-		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation("rsc/entity pictures/" + ObjektName + "/" + animationName,
-						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
-						animationName == DEFAULTANIMATION));
-	}
 }

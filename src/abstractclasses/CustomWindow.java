@@ -19,6 +19,7 @@ import javax.swing.JComponent;
 
 import frame.Frame;
 import logic.Constants;
+import logic.Debugger;
 import tasks.RepaintTask;
 
 public abstract class CustomWindow extends JComponent implements Comparable<CustomWindow>, Constants {
@@ -83,7 +84,9 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 
 		BufferedImage drawimage = null;
 		try {
+			Debugger.startDraw(this);
 			drawimage = draw();
+			Debugger.endDraw(this);
 		} catch (NullPointerException e) {
 			drawimage = getErrorImage();
 		} finally {
@@ -395,6 +398,11 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	@Override
 	public int compareTo(CustomWindow o) {
 		return (int) Math.signum(this.getLayer() - o.getLayer());
+	}
+	
+	@Override
+	public String getName() {
+		return getClass().getSimpleName();
 	}
 
 }

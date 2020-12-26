@@ -1,61 +1,61 @@
 package abstractclasses;
 
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 
 import logic.Constants;
 import logic.Layers;
 import logic.Rotation;
+import tasks.ChangeImageTask;
 import world.Animation;
 import world.Images;
 import world.World;
 
+
 /**
- * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das
- * Objekt sich nicht bewegen k�nnen und muss auf einer World platziert werden.
+ * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das Objekt sich
+ * nicht bewegen k�nnen und muss auf einer World platziert werden.
  */
 public abstract class Tile implements Constants {
 
-	private Integer height;
+	private int height;
 	private String description;
-	private Integer relativedrawX;
-	private Integer relativedrawY;
-	private Boolean animated;
+	private int relativedrawX;
+	private int relativedrawY;
 
 	private Image drawimage;
 
-	/**
-	 * Enth�lt die Bilder f�r alle Layer au�er dem Object-Layer, da diese in
-	 * objectAnimations gespeichert sind.
-	 */
-	private HashMap<Layers, String> images;
-	private HashMap<String, Animation> objektAnimations;
-	private Animation actualAnimation;
+	HashMap<String,ArrayList<String>> animations;
+	String actualanimation;
+	int actualpic;
+	HashMap<Layers,String> pictures;
 
 	private Rotation direction;
-	private HashMap<Rotation, HashMap<String, Animation>> directionAnimations;
-	private Boolean hasDirectionAnimations;
 
 	protected World world;
 
-	protected Tile(Integer height, Boolean animated, Integer relativedrawX, Integer relativedrawY, Rotation r) {
+	protected Tile(Integer height,Boolean animated,Integer relativedrawX,Integer relativedrawY,Rotation rotation) {
 		this.height = height;
 		this.description = "default description";
 		this.world = null;
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
-		this.animated = animated;
-		this.direction = r;
+		if (animated) {
+			new ChangeImageTask(5,this,-1);
+		}
+		this.direction = rotation;
 
-		images = new HashMap<>();
-		objektAnimations = new HashMap<>();
-		if (hasDirectionAnimations == null || hasDirectionAnimations)
-			directionAnimations = new HashMap<>();
 		loadAnimation();
 	}
 
@@ -71,17 +71,6 @@ public abstract class Tile implements Constants {
 		updateimage();
 	}
 
-	public void startAnimation() {
-		if (animated)
-			triggerAnimation(DEFAULTANIMATION);
-	}
-
-	public boolean hasLayer(Layers layer) {
-		if (layer.equals(Layers.Objects))
-			return animated;
-		return images.get(layer) != null;
-	}
-
 	public Boolean isPassable(Integer height) {
 		return height >= this.height ? true : false;
 	}
@@ -94,17 +83,17 @@ public abstract class Tile implements Constants {
 		return actualAnimation.getActualImage();
 	}
 
-	public void addObjektAnimation(Entry<String, Animation> data) {
-		objektAnimations.put(data.getKey(), data.getValue());
+	public void addObjektAnimation(Entry<String,Animation> data) {
+		objektAnimations.put(data.getKey(),data.getValue());
 	}
 
-	public void addDirectionAnimation(Rotation direction, Entry<String, Animation> data) {
+	public void addDirectionAnimation(Rotation direction,Entry<String,Animation> data) {
 		if (directionAnimations.containsKey(direction)) {
-			directionAnimations.get(direction).put(data.getKey(), data.getValue());
+			directionAnimations.get(direction).put(data.getKey(),data.getValue());
 		} else {
-			HashMap<String, Animation> hm = new HashMap<>();
-			directionAnimations.put(direction, hm);
-			addDirectionAnimation(direction, data);
+			HashMap<String,Animation> hm = new HashMap<>();
+			directionAnimations.put(direction,hm);
+			addDirectionAnimation(direction,data);
 		}
 	}
 
@@ -133,8 +122,8 @@ public abstract class Tile implements Constants {
 	 * @param layers exclusive objektlayer
 	 * @param path
 	 */
-	public void setImage(Layers layers, String path) {
-		images.put(layers, path);
+	public void setImage(Layers layers,String path) {
+		images.put(layers,path);
 	}
 
 	public Animation getObjektanimation(String identifier) {
@@ -198,27 +187,40 @@ public abstract class Tile implements Constants {
 	}
 
 	public String getName() {
-		return this.getClass().getName().replace("tiles.", "");
+		return this.getClass().getName().replace("tiles.","");
 	}
 
-	public void draw(Graphics2D g2, Float zoom) {
-		g2.drawImage(drawimage, (int) (getDrawX(0) * zoom), (int) (getDrawY(0) * zoom), null);
+	public void draw(Graphics2D g2,float zoom) {
+		g2.drawImage(drawimage,(int) (getDrawX(0) * zoom),(int) (getDrawY(0) * zoom),null);
 	}
 
 	public void updateimage() {
-		BufferedImage image = new BufferedImage(DEFAULTIMAGEWIDHTHEIGHT, DEFAULTIMAGEWIDHTHEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
+		BufferedImage image = new BufferedImage(DEFAULTIMAGEWIDHTHEIGHT,DEFAULTIMAGEWIDHTHEIGHT,
+				BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics g = image.getGraphics();
 
-		g.drawImage(getImage(Layers.Floor), 0, 0, null);
+		g.drawImage(getImage(Layers.Floor),0,0,null);
 		if (hasLayer(Layers.Cable))
-			g.drawImage(getImage(Layers.Cable), 0, 0, null);
+			g.drawImage(getImage(Layers.Cable),0,0,null);
 		if (hasLayer(Layers.Objects))
-			g.drawImage(getImage(Layers.Objects), 0, 0, null);
+			g.drawImage(getImage(Layers.Objects),0,0,null);
 		if (hasLayer(Layers.Effects))
-			g.drawImage(getImage(Layers.Effects), 0, 0, null);
+			g.drawImage(getImage(Layers.Effects),0,0,null);
 
 		drawimage = image.getScaledInstance((int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()),
-				(int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()), Scaler);
+				(int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()),Scaler);
 
 	}
+
+	public static void loadAnimation(String Objekt,Rotation rotation,String name,Tile tile,boolean obj) {
+		ArrayList<String> add = new ArrayList<>();
+		for (String file : new File("rsc/" + (obj ? "objekt" : "entity") + " pictures/" + Objekt + "/" + Rotation.toString(rotation) + name).list()) {
+			add.add(file);
+		}
+	}
+
+	public void nextimage() {
+		actualpic++;
+	}
+
 }
