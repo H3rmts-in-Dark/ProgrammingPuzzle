@@ -103,20 +103,5 @@ public class World implements Constants{
 	public ArrayList<Entity> getEntitys() {
 		return entitylist;
 	}
-	
-	public static SimpleEntry<String, Animation> loadObjektAnimation(String ObjektName, Rotation direction,
-			String animationName, Tile animatedObject) {
-		return new SimpleEntry<>(animationName,
-				new Animation("rsc/objekt pictures/" + ObjektName + "/" + Rotation.toString(direction) + animationName,
-						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
-						animationName == DEFAULTANIMATION));
-	}
-	
-	public static SimpleEntry<String, Animation> loadEntityAnimation(String ObjektName, String animationName,
-			Entity animatedObject) {
-		return new AbstractMap.SimpleEntry<>(animationName,
-				new Animation("rsc/entity pictures/" + ObjektName + "/" + animationName,
-						"rsc/sound/" + ObjektName + "/" + animationName, animatedObject,
-						animationName == DEFAULTANIMATION));
-	}
+
 }
