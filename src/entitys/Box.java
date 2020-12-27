@@ -4,12 +4,12 @@ package entitys;
 import java.awt.Point;
 
 import abstractclasses.Entity;
-import logic.Rotation;
+import logic.Rotations;
 import world.Animation;
 
 public class Box extends Entity {
 
-	public Box(Integer X, Integer Y, Rotation r) {
+	public Box(Integer X, Integer Y, Rotations r) {
 		super(true, new Point(X, Y), 8, 15, r);
 		setDescription("geudrsgzhiuedhgt");
 	}
@@ -21,7 +21,7 @@ public class Box extends Entity {
 
 	@Override
 	public void loadAnimation() {
-		addAnimation(Animation.loadEntityAnimation("Box", DEFAULTANIMATION, this));
+		//addAnimation(Animation.loadEntityAnimation("Box", DEFAULTANIMATION, this));
 	}
 
 }

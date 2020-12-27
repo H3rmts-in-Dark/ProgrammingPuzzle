@@ -1,15 +1,12 @@
 package world;
 
 import java.awt.Point;
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.AbstractMap.SimpleEntry;
 
 import abstractclasses.Entity;
 import abstractclasses.Tile;
 import frame.WorldWindow;
 import logic.Constants;
-import logic.Rotation;
 import tiles.Default;
 
 public class World implements Constants{
@@ -34,7 +31,6 @@ public class World implements Constants{
 	public void setTile(Integer x, Integer y, Tile tile) {
 		world[x][y] = tile;
 		tile.setWorld(this);
-		tile.startAnimation();
 	}
 
 	public Tile getTile(int x, int y) {

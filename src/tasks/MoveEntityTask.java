@@ -1,16 +1,18 @@
 package tasks;
 
+
 import java.awt.Point;
 
 import abstractclasses.Entity;
 import abstractclasses.Task;
 
+
 public class MoveEntityTask extends Task {
 
 	private Entity entity;
 
-	public MoveEntityTask(Integer tickDifference, Entity entity) {
-		super(tickDifference, TILEHEIGHTWIDHT);
+	public MoveEntityTask(Integer tickDifference,Entity entity) {
+		super(tickDifference,TILEHEIGHTWIDHT);
 		this.entity = entity;
 	}
 
@@ -18,25 +20,26 @@ public class MoveEntityTask extends Task {
 	public void runCode() {
 		System.out.println("switch");
 		switch (entity.getRotation()) {
-		case down:
-			entity.setPixelPosition(new Point(entity.getPixelposition().x, entity.getPixelposition().y + 1));
+			case down:
+				entity.changePixelpositionY(1);
 			break;
-		case left:
-			entity.setPixelPosition(new Point(entity.getPixelposition().x-1, entity.getPixelposition().y));
+			case left:
+				entity.changePixelpositionX(-1);
 			break;
-		case right:
-			entity.setPixelPosition(new Point(entity.getPixelposition().x + 1, entity.getPixelposition().y));
+			case right:
+				entity.changePixelpositionX(1);
 			break;
-		case up:
-			entity.setPixelPosition(new Point(entity.getPixelposition().x, entity.getPixelposition().y - 1));
+			case up:
+				entity.changePixelpositionY(-1);
 			break;
+				// $CASES-OMITTED$
 		}
 		entity.getWorld().getWindow().triggerFullRepaint();
 	}
 
 	@Override
 	public void onEnd() {
-		entity.getWorld().getTile(entity.getPosition().y, entity.getPosition().y).onSteppedUpon(entity);
+		entity.getWorld().getTile(entity.getPosition().y,entity.getPosition().y).onSteppedUpon(entity);
 	}
 
 }

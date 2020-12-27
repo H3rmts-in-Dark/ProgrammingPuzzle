@@ -39,17 +39,17 @@ public interface Constants {
 	public static final Float MINZOOM = 0.2f;
 
 	/**
-	 * SCALE_FAST: Ist nicht so sch�n, ben�tigt aber weniger RAM und dauert l�nger
+	 * SCALE_FAST: Ist nicht so schön, benötigt aber weniger RAM und dauert lönger
 	 * um nach dem Verschieben des Fensters wieder auf das normale GPU und CPU level
 	 * zu kommen. Aber sonst ist der GPU Verbrauch geringer. Bei dieser Option
 	 * bleiben die TPS meist gleich.
 	 * 
-	 * SCALE_SMOOTH: Ben�tigt mehr RAM und GPU und hat die gleichen Probleme beim
-	 * Ver�ndern der Gr��e wie SCALE_FAST. Bei dieser Option treten mehr TPS
-	 * Einst�rze auf. Beim Verschieben des Fensters gibt es starke Verz�gerungen.
+	 * SCALE_SMOOTH: Benötigt mehr RAM und GPU und hat die gleichen Probleme beim
+	 * Verändern der Größe wie SCALE_FAST. Bei dieser Option treten mehr TPS
+	 * Einstürze auf. Beim Verschieben des Fensters gibt es starke Verzögerungen.
 	 * 
 	 */
-	public static final Integer Scaler = Image.SCALE_FAST; // Scale Einstellung, Erkl�rung dar�ber.
+	public static final Integer Scaler = Image.SCALE_FAST; // Scale Einstellung, Erklärung darüber.
 
 // 
 // -----------------------------------------------------------
@@ -96,8 +96,7 @@ public interface Constants {
 
 	public static final Boolean ANIMATED = true;
 	public static final Boolean NOTANIMATED = false;
-	public static final String DEFAULTANIMATION = "defaultanimation"; // do not change is used to load from rcs/...
-	public static final String INTERACTANIMATION = "interactanimation";
+	
 	public static final Integer DEFAULTIMAGEWIDHTHEIGHT = 128;
 
 //

@@ -7,25 +7,21 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.Map.Entry;
 
+import logic.Animations;
 import logic.Constants;
 import logic.Layers;
-import logic.Rotation;
+import logic.Rotations;
 import tasks.ChangeImageTask;
-import world.Animation;
 import world.Images;
 import world.World;
 
 
 /**
  * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das Objekt sich
- * nicht bewegen k�nnen und muss auf einer World platziert werden.
+ * nicht bewegen können und muss auf einer World platziert werden.
  */
 public abstract class Tile implements Constants {
 
@@ -34,32 +30,30 @@ public abstract class Tile implements Constants {
 	private int relativedrawX;
 	private int relativedrawY;
 
-	private Image drawimage;
+	protected Image drawimage;
 
-	HashMap<String,ArrayList<String>> animations;
-	String actualanimation;
-	int actualpic;
-	HashMap<Layers,String> pictures;
+	protected HashMap<Rotations,HashMap<Animations,ArrayList<String>>> animations = new HashMap<>();
+	protected HashMap<Layers,Animations> actualanimation = new HashMap<>();
+	protected HashMap<Layers,Integer> actualanimationcunter = new HashMap<>();
 
-	private Rotation direction;
+	protected HashMap<Layers,HashMap<Animations,ArrayList<String>>> pictures = new HashMap<>();
+
+	protected Rotations rotation;
 
 	protected World world;
 
-	protected Tile(Integer height,Boolean animated,Integer relativedrawX,Integer relativedrawY,Rotation rotation) {
+	protected Tile(Integer height,Boolean animated,Integer relativedrawX,Integer relativedrawY,Rotations rotation) {
 		this.height = height;
 		this.description = "default description";
 		this.world = null;
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
-		if (animated) {
-			new ChangeImageTask(5,this,-1);
-		}
-		this.direction = rotation;
+		this.rotation = rotation;
 
-		loadAnimation();
+		loadAnimations();
 	}
 
-	public abstract void loadAnimation();
+	public abstract void loadAnimations();
 
 	/**
 	 * This method is to be called when the tile is added to a world.
@@ -72,62 +66,15 @@ public abstract class Tile implements Constants {
 	}
 
 	public Boolean isPassable(Integer height) {
-		return height >= this.height ? true : false;
+		return height >= this.height;
 	}
 
-	public BufferedImage getImage(Layers layer) {
-		return Images.getImage(images.get(layer));
+	public void setRotation(Rotations direction) {
+		this.rotation = direction;
 	}
 
-	public BufferedImage getObjektImage() {
-		return actualAnimation.getActualImage();
-	}
-
-	public void addObjektAnimation(Entry<String,Animation> data) {
-		objektAnimations.put(data.getKey(),data.getValue());
-	}
-
-	public void addDirectionAnimation(Rotation direction,Entry<String,Animation> data) {
-		if (directionAnimations.containsKey(direction)) {
-			directionAnimations.get(direction).put(data.getKey(),data.getValue());
-		} else {
-			HashMap<String,Animation> hm = new HashMap<>();
-			directionAnimations.put(direction,hm);
-			addDirectionAnimation(direction,data);
-		}
-	}
-
-	public void setDirection(Rotation direction) {
-		this.direction = direction;
-		objektAnimations = directionAnimations.get(direction);
-	}
-
-	public Rotation getDirection() {
-		return direction;
-	}
-
-	public void triggerAnimation(String animation) {
-		triggerObjektAnimation(getObjektanimation(animation));
-	}
-
-	private void triggerObjektAnimation(Animation animation) {
-		if (actualAnimation != null) {
-			actualAnimation.stopAnimation();
-		}
-		animation.startAnimation();
-		actualAnimation = animation;
-	}
-
-	/**
-	 * @param layers exclusive objektlayer
-	 * @param path
-	 */
-	public void setImage(Layers layers,String path) {
-		images.put(layers,path);
-	}
-
-	public Animation getObjektanimation(String identifier) {
-		return objektAnimations.get(identifier);
+	public Rotations getRotation() {
+		return rotation;
 	}
 
 	public Point getPosition() {
@@ -187,7 +134,7 @@ public abstract class Tile implements Constants {
 	}
 
 	public String getName() {
-		return this.getClass().getName().replace("tiles.","");
+		return getClass().getSimpleName();// this.getClass().getName().replace("tiles.","");
 	}
 
 	public void draw(Graphics2D g2,float zoom) {
@@ -199,28 +146,79 @@ public abstract class Tile implements Constants {
 				BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics g = image.getGraphics();
 
-		g.drawImage(getImage(Layers.Floor),0,0,null);
-		if (hasLayer(Layers.Cable))
-			g.drawImage(getImage(Layers.Cable),0,0,null);
-		if (hasLayer(Layers.Objects))
-			g.drawImage(getImage(Layers.Objects),0,0,null);
-		if (hasLayer(Layers.Effects))
-			g.drawImage(getImage(Layers.Effects),0,0,null);
+		try {
+			g.drawImage(Images.getImage(pictures.get(Layers.Floor).get(Animations.noanimation).get(0)),0,0,null);
+		} catch (NullPointerException e) {
+		}
+
+		try {
+			g.drawImage(Images.getImage(pictures.get(Layers.Cable).get(actualanimation.get(Layers.Cable))
+					.get(actualanimationcunter.get(Layers.Cable))),0,0,null);
+		} catch (NullPointerException e) {
+		}
+
+		try {
+			g.drawImage(Images.getImage(animations.get(rotation).get(actualanimation.get(Layers.Objects))
+					.get(actualanimationcunter.get(Layers.Objects))),0,0,null);
+		} catch (NullPointerException e) {
+		}
+
+		try {
+			g.drawImage(Images.getImage(pictures.get(Layers.Effects).get(actualanimation.get(Layers.Effects))
+					.get(actualanimationcunter.get(Layers.Effects))),0,0,null);
+		} catch (NullPointerException e) {
+		}
 
 		drawimage = image.getScaledInstance((int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()),
 				(int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()),Scaler);
 
 	}
 
-	public static void loadAnimation(String Objekt,Rotation rotation,String name,Tile tile,boolean obj) {
-		ArrayList<String> add = new ArrayList<>();
-		for (String file : new File("rsc/" + (obj ? "objekt" : "entity") + " pictures/" + Objekt + "/" + Rotation.toString(rotation) + name).list()) {
+	public static void loadAnimation(Rotations rotation,Animations animation,Tile tile,boolean obj) {
+		var add = new ArrayList<String>();
+		System.out.println("rsc/" + (obj ? "objekt" : "entity") + " pictures/" + tile.getName() + "/"
+				+ Rotations.toString(rotation) + animation);
+		for (String file : new File("rsc/" + (obj ? "objekt" : "entity") + " pictures/" + tile.getName() + "/"
+				+ Rotations.toString(rotation) + animation).list()) {
 			add.add(file);
 		}
+		if (!tile.animations.containsKey(rotation)) {
+			var addMap = new HashMap<Animations,ArrayList<String>>();
+			tile.animations.put(rotation,addMap);
+		}
+		tile.animations.get(rotation).put(animation,add);
 	}
 
-	public void nextimage() {
-		actualpic++;
+	public static void loadPicture(Layers layer,Animations animation,Tile tile,String name) {
+		var add = new ArrayList<String>();
+		for (String file : new File("rsc/" + Layers.toString(layer) + name + "/" + (layer == Layers.Floor ? "" : animation)).list()) {
+			add.add(file);
+		}
+		if (!tile.pictures.containsKey(layer)) {
+			var addMap = new HashMap<Animations,ArrayList<String>>();
+			tile.pictures.put(layer,addMap);
+		}
+		tile.pictures.get(layer).put(animation,add);
+	}
+
+	public void nextimage(Layers layer) {
+		actualanimationcunter.replace(layer,actualanimationcunter.get(layer) + 1);
+	}
+
+	public void triggerAnimation(Animations animation) {
+		Layers layer = Animations.getLayer(animation);
+		if (actualanimation.containsKey(layer)) {
+			actualanimation.replace(layer,animation);
+			actualanimationcunter.replace(layer,0);
+		} else {
+			actualanimation.put(layer,animation);
+			actualanimationcunter.put(layer,0);
+		}
+		if (layer == Layers.Objects) {
+			new ChangeImageTask(5,this,animations.get(rotation).get(animation).size(),Layers.Objects);
+		} else {
+			new ChangeImageTask(5,this,pictures.get(layer).get(animation).size(),layer);
+		}
 	}
 
 }

@@ -1,7 +1,7 @@
 /frame/
-/logic/
 /abstractclasses/
-/world/
 /entitys/
-/tiles/
+/logic/
 /tasks/
+/tiles/
+/world/

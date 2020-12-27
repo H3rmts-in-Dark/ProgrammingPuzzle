@@ -2,6 +2,7 @@ package tasks;
 
 import abstractclasses.CustomWindow;
 import abstractclasses.Task;
+import frame.Frame;
 
 public class RepaintTask extends Task {
 
@@ -16,11 +17,6 @@ public class RepaintTask extends Task {
 	public void runCode() {
 		window.triggerFullRepaint();
 		window.repaint();
-	}
-
-	@Override
-	public void onEnd() {
-		// will not end
 	}
 
 }

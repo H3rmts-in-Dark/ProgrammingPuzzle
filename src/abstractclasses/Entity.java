@@ -1,3 +1,4 @@
+
 package abstractclasses;
 
 import java.awt.Graphics2D;
@@ -7,18 +8,18 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import logic.Constants;
-import logic.Rotation;
+import logic.Rotations;
 import tasks.MoveEntityTask;
-import world.Animation;
 import world.World;
 
 /**
  * Die Grundklasse aller Entities. Um als ein Entity klassifiziert zu werden,
- * muss das Objekt / Lebewesen sich bewegen können.
+ * muss das Objekt / Lebewesen sich bewegen kï¿½nnen.
  */
+
 public abstract class Entity implements Constants {
 
-	private Rotation rotation;
+	private Rotations rotation;
 	private Boolean interactable;
 	private Integer height;
 	private String description;
@@ -32,7 +33,7 @@ public abstract class Entity implements Constants {
 
 	private World world;
 
-	protected Entity(Boolean interactable, Point position, Integer relativedrawX, Integer relativedrawY, Rotation r) {
+	protected Entity(Boolean interactable, Point position, Integer relativedrawX, Integer relativedrawY, Rotations r) {
 		this.interactable = interactable;
 		this.rotation = r;
 		this.pixelposition = new Point(position.x * TILEHEIGHTWIDHT, position.y * TILEHEIGHTWIDHT);
@@ -87,7 +88,7 @@ public abstract class Entity implements Constants {
 	public Animation getanimation(String identifier) {
 		return animations.get(identifier);
 	}
-
+	
 	public Tile getTilePosition(Integer xoffset, Integer yoffset) {
 		return world.getTile(getPosition().x - xoffset, getPosition().y - yoffset);
 	}
@@ -128,7 +129,7 @@ public abstract class Entity implements Constants {
 		return world;
 	}
 
-	public Rotation getRotation() {
+	public Rotations getRotation() {
 		return rotation;
 	}
 
@@ -141,13 +142,18 @@ public abstract class Entity implements Constants {
 			new MoveEntityTask(2, this);
 	}
 
-	public void setPixelPosition(Point point) {
-		System.out.println("pixel position" + point);
-		pixelposition = point;
+	public void changePixelpositionY(int y) {
+		System.out.println("pixel positionY" + y);
+		pixelposition.y = y;
+	}
+	
+	public void changePixelpositionX(int x) {
+		System.out.println("pixel positionX" + x);
+		pixelposition.x = x;
 	}
 
 	/**
-	 * Gibt das Tile vor dem Entity zurück (in die Richtung, in die es schaut).
+	 * Gibt das Tile vor dem Entity zurï¿½ck (in die Richtung, in die es schaut).
 	 * 
 	 * @return
 	 */

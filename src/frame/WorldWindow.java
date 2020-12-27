@@ -4,12 +4,10 @@ package frame;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import abstractclasses.CustomWindow;
-import abstractclasses.Entity;
 import abstractclasses.Tile;
-import logic.Debugger;
+import logic.Animations;
 import tiles.Computer;
 import world.World;
 
@@ -26,7 +24,7 @@ public class WorldWindow extends CustomWindow {
 	 */
 	public WorldWindow(World world) {
 		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2,world.getHeight() * TILEHEIGHTWIDHT + TOPBARWIDTH,
-				"World",5);
+				"World",(int) (TPS * 0.1));
 		this.world = world;
 		zoom = 1f;
 	}
@@ -78,7 +76,7 @@ public class WorldWindow extends CustomWindow {
 	public void mousePressed(Point point) {
 		Tile tile = getTile(point);
 		if (tile instanceof Computer) {
-			tile.triggerAnimation(INTERACTANIMATION);
+			tile.triggerAnimation(Animations.interactanimation);
 		} else {
 			new DescriptionWindow(tile,
 					new Point((int) point.getX() + getX() + CORNERWIDTH,(int) point.getY() + getY() + TOPBARWIDTH));

@@ -1,29 +1,26 @@
 package tiles;
 
+
 import abstractclasses.Tile;
+import logic.Animations;
 import logic.Layers;
-import logic.Rotation;
-import world.Animation;
-import world.Images;
+import logic.Rotations;
+
 
 public class Förderband extends Tile {
 
-	public Förderband(Rotation r) {
-		super(FÖRDERBANDHÖHE, true, 0, 0, r);
+	public Förderband(Rotations r) {
+		super(FÖRDERBANDHÖHE,true,0,0,r);
 		setDescription("Förderband");
 	}
 
 	@Override
-	public void loadAnimation() {
-		setImage(Layers.Floor, Images.loadLayerPicture("Default", Layers.Floor));
-		addDirectionAnimation(Rotation.left,
-				Animation.loadObjektAnimation("Förderband", Rotation.left, DEFAULTANIMATION, this));
-		addDirectionAnimation(Rotation.right,
-				Animation.loadObjektAnimation("Förderband", Rotation.right, DEFAULTANIMATION, this));
-		addDirectionAnimation(Rotation.up,
-				Animation.loadObjektAnimation("Förderband", Rotation.up, DEFAULTANIMATION, this));
-		addDirectionAnimation(Rotation.down,
-				Animation.loadObjektAnimation("Förderband", Rotation.down, DEFAULTANIMATION, this));
-		setDirection(this.getDirection());
+	public void loadAnimations() {
+		loadPicture(Layers.Floor,Animations.noanimation,this,"Default");
+		loadAnimation(Rotations.left,Animations.defaultanimation,this,true);
+		loadAnimation(Rotations.right,Animations.defaultanimation,this,true);
+		loadAnimation(Rotations.down,Animations.defaultanimation,this,true);
+		loadAnimation(Rotations.up,Animations.defaultanimation,this,true);
 	}
+
 }

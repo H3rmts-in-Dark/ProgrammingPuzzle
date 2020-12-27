@@ -1,11 +1,12 @@
 package frame;
 
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import logic.MainControl;
-import sound.Sounds;
 import tasks.MoveEntityTask;
+
 
 public class KeyHandler extends KeyAdapter {
 
@@ -26,7 +27,7 @@ public class KeyHandler extends KeyAdapter {
 			return;
 		} else if (e.getKeyCode() == 8 || e.getKeyCode() == 127) {
 			try {
-				commandString = commandString.substring(0, commandString.length() - 1);
+				commandString = commandString.substring(0,commandString.length() - 1);
 				System.out.println(commandString);
 			} catch (StringIndexOutOfBoundsException e2) {
 			}
@@ -38,19 +39,18 @@ public class KeyHandler extends KeyAdapter {
 	}
 
 	private static void commandProcessor(String command) {
-		command = command.replace("\n", "");
+		command = command.replace("\n","");
 		System.out.println(command);
 		command = command.toLowerCase();
 		if (command.equals("debug")) {
 			new DebuggingWindow();
-		} else if (command.startsWith("play")) {
-			Sounds.getSound(command.substring(4)).play();
 		} else if (command.equals("select")) {
 			new WorldSelectionWindow();
 		} else if (command.equals("world")) {
 			MainControl.createWorld();
 		} else if (command.equals("move")) {
-			new MoveEntityTask(5, MainControl.getWorld().getEntitys().get(0));
+			//new MoveEntityTask(5,MainControl.getWorld().getEntitys().get(0));
 		}
 	}
+
 }

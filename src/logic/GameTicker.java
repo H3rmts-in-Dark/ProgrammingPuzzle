@@ -2,7 +2,6 @@ package logic;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import abstractclasses.Task;
 
@@ -10,12 +9,11 @@ import abstractclasses.Task;
 public class GameTicker extends Thread implements Constants {
 
 	private Long currentTick = (long) 0;
-	private ArrayList<Task> taskList;
-	private ArrayList<Task> addQueue;
+	private ArrayList<Task> taskList = new ArrayList<>();
+	private ArrayList<Task> addQueue = new ArrayList<>();
+	private ArrayList<Task> removeQueue = new ArrayList<>();
 
 	public GameTicker() {
-		taskList = new ArrayList<>();
-		addQueue = new ArrayList<>();
 	}
 
 	@Override
@@ -27,14 +25,18 @@ public class GameTicker extends Thread implements Constants {
 
 			Debugger.startTask();
 
-			Iterator<Task> iterator = taskList.iterator();
-			while (iterator.hasNext()) {
-				Task task = iterator.next();
-				if (task.getEnded())
-					iterator.remove();
-				if (task.tryRun())
-					iterator.remove();
+			for (Task task : taskList) {
+				if (task.tryRun()) {
+					task.onEnd();
+					removeQueue.add(task);
+				}
+				if (task.getEnded()) {
+					removeQueue.add(task);
+				}
 			}
+
+			taskList.removeAll(removeQueue);
+			removeQueue.clear();
 
 			Debugger.tick();
 			currentTick++;

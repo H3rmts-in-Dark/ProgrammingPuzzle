@@ -4,17 +4,17 @@ import java.awt.Point;
 
 import abstractclasses.Entity;
 import abstractclasses.Tile;
-import logic.Rotation;
+import logic.Rotations;
 
 public class Player extends Entity {
 
-	public Player(Point position, Rotation r) {
+	public Player(Point position, Rotations r) {
 		super(false, position, 0, 0, r);
 	}
 
 	@Override
 	public void loadAnimation() {
-		// TODO loadAnimation muss noch eingefügt werden!!!
+		// TODO loadAnimation muss noch eingefï¿½gt werden!!!
 	}
 
 	@Override

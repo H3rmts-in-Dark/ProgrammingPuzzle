@@ -67,7 +67,10 @@ public abstract class Task implements Constants{
 	}
 
 	public abstract void runCode();
-
+	
+	public void onEnd() {
+		
+	}
 	
 	public String getName() {
 		return getClass().getSimpleName();
