@@ -10,7 +10,6 @@ public interface Constants {
 
 	public static final Integer FRAMEWIDTH = 1000;
 	public static final Integer FRAMEHEIGHT = 800;
-	public static final Integer FPS = 45;
 	public static final Integer movedelay = 100, dragdelay = 100;
 
 // 
@@ -97,7 +96,7 @@ public interface Constants {
 	public static final Boolean ANIMATED = true;
 	public static final Boolean NOTANIMATED = false;
 	
-	public static final Integer DEFAULTIMAGEWIDHTHEIGHT = 128;
+	public static final Integer DEFAULTIMAGEWIDHTHEIGHT = 64;
 
 //
 // -----------------------------------------------------------

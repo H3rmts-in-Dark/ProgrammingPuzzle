@@ -1,8 +1,6 @@
 package tasks;
 
 
-import java.awt.Point;
-
 import abstractclasses.Entity;
 import abstractclasses.Task;
 
@@ -16,6 +14,7 @@ public class MoveEntityTask extends Task {
 		this.entity = entity;
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void runCode() {
 		System.out.println("switch");
@@ -34,7 +33,7 @@ public class MoveEntityTask extends Task {
 			break;
 				// $CASES-OMITTED$
 		}
-		entity.getWorld().getWindow().triggerFullRepaint();
+		WindowRepaintTask.RepaintWindow(entity.getWorld().getWindow());
 	}
 
 	@Override

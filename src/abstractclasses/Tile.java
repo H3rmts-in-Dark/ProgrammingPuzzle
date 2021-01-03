@@ -33,16 +33,19 @@ public abstract class Tile implements Constants {
 	protected Image drawimage;
 
 	protected HashMap<Rotations,HashMap<Animations,ArrayList<String>>> animations = new HashMap<>();
-	protected HashMap<Layers,Animations> actualanimation = new HashMap<>();
-	protected HashMap<Layers,Integer> actualanimationcunter = new HashMap<>();
-
 	protected HashMap<Layers,HashMap<Animations,ArrayList<String>>> pictures = new HashMap<>();
+
+	protected HashMap<Layers,Animations> actualanimation = new HashMap<>();
+	protected HashMap<Layers,Integer> actualanimationcounter = new HashMap<>();
+	protected HashMap<Layers,ChangeImageTask> tasks = new HashMap<>();
 
 	protected Rotations rotation;
 
 	protected World world;
 
-	protected Tile(Integer height,Boolean animated,Integer relativedrawX,Integer relativedrawY,Rotations rotation) {
+	private Point position;
+
+	protected Tile(Integer height,Boolean animated,int relativedrawX,int relativedrawY,Rotations rotation) {
 		this.height = height;
 		this.description = "default description";
 		this.world = null;
@@ -51,6 +54,8 @@ public abstract class Tile implements Constants {
 		this.rotation = rotation;
 
 		loadAnimations();
+		if (animated)
+			triggerAnimation(Animations.defaultanimation);
 	}
 
 	public abstract void loadAnimations();
@@ -62,6 +67,7 @@ public abstract class Tile implements Constants {
 	 */
 	public void setWorld(World world) {
 		this.world = world;
+		position = world.getTilePoint(this);
 		updateimage();
 	}
 
@@ -75,18 +81,6 @@ public abstract class Tile implements Constants {
 
 	public Rotations getRotation() {
 		return rotation;
-	}
-
-	public Point getPosition() {
-		return world.getTilePoint(this);
-	}
-
-	public Integer getDrawX(Integer relativedrawX) {
-		return (int) getPosition().getX() * TILEHEIGHTWIDHT + relativedrawX;
-	}
-
-	public Integer getDrawY(Integer relativedrawY) {
-		return (int) getPosition().getY() * TILEHEIGHTWIDHT + relativedrawY;
 	}
 
 	public Integer getRelativedrawX() {
@@ -107,6 +101,10 @@ public abstract class Tile implements Constants {
 
 	public World getWorld() {
 		return world;
+	}
+
+	public Point getPosition() {
+		return position;
 	}
 
 	public void setDescription(String description) {
@@ -134,53 +132,63 @@ public abstract class Tile implements Constants {
 	}
 
 	public String getName() {
-		return getClass().getSimpleName();// this.getClass().getName().replace("tiles.","");
+		return getClass().getSimpleName();
 	}
 
-	public void draw(Graphics2D g2,float zoom) {
-		g2.drawImage(drawimage,(int) (getDrawX(0) * zoom),(int) (getDrawY(0) * zoom),null);
+	public void draw(Graphics2D g2) {
+		g2.drawImage(drawimage,(int) position.getX() * TILEHEIGHTWIDHT,(int) position.getY() * TILEHEIGHTWIDHT,null);
+	}
+	
+	public void triggerimageupdate() {
+		new Thread() {
+			@Override
+			public void run() {
+				updateimage();
+			}
+		}.start();
 	}
 
-	public void updateimage() {
-		BufferedImage image = new BufferedImage(DEFAULTIMAGEWIDHTHEIGHT,DEFAULTIMAGEWIDHTHEIGHT,
-				BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics g = image.getGraphics();
-
+	private void updateimage() {
+		Graphics g;
 		try {
-			g.drawImage(Images.getImage(pictures.get(Layers.Floor).get(Animations.noanimation).get(0)),0,0,null);
+			g = drawimage.getGraphics();
+		} catch (NullPointerException e) {
+			drawimage = new BufferedImage(DEFAULTIMAGEWIDHTHEIGHT,DEFAULTIMAGEWIDHTHEIGHT * 2,
+					BufferedImage.TYPE_4BYTE_ABGR);
+			g = drawimage.getGraphics();
+		}
+		try {
+			g.drawImage(Images.getImage(pictures.get(Layers.Floor).get(Animations.noanimation).get(0)),0,
+					DEFAULTIMAGEWIDHTHEIGHT,null);
 		} catch (NullPointerException e) {
 		}
 
 		try {
 			g.drawImage(Images.getImage(pictures.get(Layers.Cable).get(actualanimation.get(Layers.Cable))
-					.get(actualanimationcunter.get(Layers.Cable))),0,0,null);
+					.get(actualanimationcounter.get(Layers.Cable))),0,DEFAULTIMAGEWIDHTHEIGHT,null);
 		} catch (NullPointerException e) {
 		}
 
 		try {
-			g.drawImage(Images.getImage(animations.get(rotation).get(actualanimation.get(Layers.Objects))
-					.get(actualanimationcunter.get(Layers.Objects))),0,0,null);
+			g.drawImage(
+					Images.getImage(animations.get(rotation).get(actualanimation.get(Layers.Objects))
+							.get(actualanimationcounter.get(Layers.Objects))),
+					relativedrawX,relativedrawY + DEFAULTIMAGEWIDHTHEIGHT,null);
 		} catch (NullPointerException e) {
 		}
 
 		try {
 			g.drawImage(Images.getImage(pictures.get(Layers.Effects).get(actualanimation.get(Layers.Effects))
-					.get(actualanimationcunter.get(Layers.Effects))),0,0,null);
+					.get(actualanimationcounter.get(Layers.Effects))),0,DEFAULTIMAGEWIDHTHEIGHT,null);
 		} catch (NullPointerException e) {
 		}
-
-		drawimage = image.getScaledInstance((int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()),
-				(int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()),Scaler);
-
 	}
 
 	public static void loadAnimation(Rotations rotation,Animations animation,Tile tile,boolean obj) {
 		var add = new ArrayList<String>();
-		System.out.println("rsc/" + (obj ? "objekt" : "entity") + " pictures/" + tile.getName() + "/"
-				+ Rotations.toString(rotation) + animation);
-		for (String file : new File("rsc/" + (obj ? "objekt" : "entity") + " pictures/" + tile.getName() + "/"
-				+ Rotations.toString(rotation) + animation).list()) {
-			add.add(file);
+		for (File file : new File("rsc/" + (obj ? "objekt" : "entity") + " pictures/" + tile.getName() + "/"
+				+ Rotations.toString(rotation) + animation).listFiles()) {
+			add.add(file.getPath());
 		}
 		if (!tile.animations.containsKey(rotation)) {
 			var addMap = new HashMap<Animations,ArrayList<String>>();
@@ -191,33 +199,34 @@ public abstract class Tile implements Constants {
 
 	public static void loadPicture(Layers layer,Animations animation,Tile tile,String name) {
 		var add = new ArrayList<String>();
-		for (String file : new File("rsc/" + Layers.toString(layer) + name + "/" + (layer == Layers.Floor ? "" : animation)).list()) {
-			add.add(file);
+		for (File file : new File("rsc/" + Layers.toString(layer) + name + "/" + (layer == Layers.Floor ? "" : animation))
+				.listFiles()) {
+			add.add(file.getPath());
 		}
 		if (!tile.pictures.containsKey(layer)) {
 			var addMap = new HashMap<Animations,ArrayList<String>>();
 			tile.pictures.put(layer,addMap);
 		}
+
 		tile.pictures.get(layer).put(animation,add);
 	}
 
 	public void nextimage(Layers layer) {
-		actualanimationcunter.replace(layer,actualanimationcunter.get(layer) + 1);
+		actualanimationcounter.replace(layer,actualanimationcounter.get(layer) + 1);
 	}
 
 	public void triggerAnimation(Animations animation) {
 		Layers layer = Animations.getLayer(animation);
-		if (actualanimation.containsKey(layer)) {
-			actualanimation.replace(layer,animation);
-			actualanimationcunter.replace(layer,0);
-		} else {
-			actualanimation.put(layer,animation);
-			actualanimationcunter.put(layer,0);
+		actualanimation.put(layer,animation);
+		actualanimationcounter.put(layer,0);
+		try {
+			tasks.get(layer).end();
+		} catch (NullPointerException e) {
 		}
 		if (layer == Layers.Objects) {
-			new ChangeImageTask(5,this,animations.get(rotation).get(animation).size(),Layers.Objects);
+			tasks.put(layer,new ChangeImageTask(5,this,animations.get(rotation).get(animation).size() - 1,Layers.Objects));
 		} else {
-			new ChangeImageTask(5,this,pictures.get(layer).get(animation).size(),layer);
+			tasks.put(layer,new ChangeImageTask(5,this,pictures.get(layer).get(animation).size() - 1,layer));
 		}
 	}
 

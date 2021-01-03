@@ -24,18 +24,4 @@ public class Tonne extends Tile {
 		loadAnimation(Rotations.norotation,Animations.defaultanimation,this,true);
 	}
 
-	@Override
-	public void updateimage() {
-		BufferedImage image = new BufferedImage(DEFAULTIMAGEWIDHTHEIGHT,DEFAULTIMAGEWIDHTHEIGHT,
-				BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics g = image.getGraphics();
-		g.drawImage(Images.getImage(pictures.get(Layers.Floor).get(Animations.noanimation).get(0)),0,0,null);
-
-		g.drawImage(Images.getImage(animations.get(Rotations.norotation).get(actualanimation.get(Layers.Objects)).get(0)),
-				0,0,null);
-
-		drawimage = image.getScaledInstance((int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()),
-				(int) (TILEHEIGHTWIDHT * world.getWindow().getZoom()),Scaler);
-	}
-
 }

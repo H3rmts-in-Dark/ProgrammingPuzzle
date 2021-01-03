@@ -14,7 +14,8 @@ public class Debugger implements Constants {
 
 	protected static Thread controlThread;
 
-	static ArrayList<Long> repaints = new ArrayList<>();
+	static long starttime = 0;
+
 	static ArrayList<Long> ticks = new ArrayList<>();
 	static ArrayList<Long> removeRepaints = new ArrayList<>();
 	static ArrayList<Long> removeTicks = new ArrayList<>();
@@ -22,8 +23,8 @@ public class Debugger implements Constants {
 	static ArrayList<Long> addTicks = new ArrayList<>();
 
 	static HashMap<String,Integer> taskTypes = new HashMap<>();
-	static long startTasks = 0,endTasks = 0,startDraw = 0,setstartTasks = 0;
-	static int taskSize = 0;
+	static long startTasks = 0,endTasks = 0,startDraw = 0,setstartTasks = 0,executionpeek = 0;
+	static int taskSize = 0,tps = 0;
 	static HashMap<CustomWindow,Window> windows = new HashMap<>();
 
 	private Debugger() {
@@ -48,32 +49,20 @@ public class Debugger implements Constants {
 					nextcontroll = System.currentTimeMillis() + (1000 / RPS);
 
 					try {
-						long lastrepaint = repaints.get(repaints.size() - 1);
-						for (Long repaint : repaints) {
-							if (repaint + 1000 < lastrepaint)
-								removeRepaints.add(repaint);
-						}
-
-						long lasttick = ticks.get(ticks.size() - 1);
-						for (long tick : ticks) {
-							if (tick + 1000 < lasttick)
-								removeTicks.add(tick);
+						if (ticks.get(0) + 1000 <= System.currentTimeMillis()) {
+							tps = ticks.size();
+							ticks.clear();
+							executionpeek = 0;
 						}
 					} catch (IndexOutOfBoundsException | NullPointerException e) {
 					}
 
-					for (long repaint : removeRepaints) {
-						repaints.remove(repaint);
-					}
-					for (long tick : removeTicks) {
-						ticks.remove(tick);
-					}
+					ticks.removeAll(removeTicks);
 
 					removeRepaints.clear();
 					removeTicks.clear();
 
 					ticks.addAll(addTicks);
-					repaints.addAll(addRepaints);
 
 					addRepaints.clear();
 					addTicks.clear();
@@ -88,7 +77,8 @@ public class Debugger implements Constants {
 					if (tasksize != taskSize) {
 						taskTypes.clear();
 
-						ArrayList<Task> tasks = MainControl.getGameTicker().getTaskList();
+						@SuppressWarnings("unchecked")
+						ArrayList<Task> tasks = (ArrayList<Task>) MainControl.getGameTicker().getTaskList().clone();
 
 						for (Task task : tasks) {
 							try {
@@ -108,14 +98,15 @@ public class Debugger implements Constants {
 		controlThread.start();
 	}
 
-	public static void startTask() {
+	public static void starttick() {
 		setstartTasks = System.nanoTime();
 	}
 
 	public static void tick() {
 		addTicks.add(System.currentTimeMillis());
 		endTasks = System.nanoTime();
-		startTasks = setstartTasks;
+		startTasks = setstartTasks;   // (
+		executionpeek = (executionpeek < (endTasks - startTasks) / 1000000 ) ? ((endTasks - startTasks) / 1000000) : executionpeek;
 	}
 
 	public static void startDraw(CustomWindow wind) {
@@ -132,16 +123,12 @@ public class Debugger implements Constants {
 		addRepaints.add(System.currentTimeMillis());
 	}
 
-	public static int getFPS() {
-		return repaints.size();
-	}
-
 	public static int getTPS() {
-		return ticks.size();
+		return tps;
 	}
 
-	public static long getExecutionTime() {
-		return (endTasks - startTasks) / 1000000;
+	public static long getExecutionTimePeek() {
+		return executionpeek;
 	}
 
 	public static int getTaskSize() {
@@ -155,7 +142,7 @@ public class Debugger implements Constants {
 	public static Set<Entry<String,String>> getWindows() {
 		var returnmap = new HashMap<String,String>();
 		for (Entry<CustomWindow,Window> entry : windows.entrySet()) {
-			returnmap.put(entry.getKey().getName(),entry.getValue().getDrawtime());
+			returnmap.put(entry.getKey().getClass().getSimpleName(),entry.getValue().getDrawtime());
 		}
 		return returnmap.entrySet();
 	}

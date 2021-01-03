@@ -1,6 +1,5 @@
 package logic;
 
-import entitys.Box;
 import tiles.Computer;
 import tiles.Förderband;
 import world.World;
@@ -26,11 +25,18 @@ public class MainControl {
 	}
 
 	public static void createWorld() {
-		world = new World(10, 10);
-		world.setTile(0, 1, new Computer());
-	//	world.addEntity(new Box(1, 1, Rotations.right));
+		world = new World(8, 8);
+		world.setTile(1, 1, new Computer());
 		world.setTile(1, 2, new Computer());
+		world.setTile(1, 3, new Computer());
+		world.setTile(1, 4, new Computer());
 		world.setTile(0, 2, new Förderband(Rotations.right));
+		world.setTile(1, 2, new Förderband(Rotations.right));
+		world.setTile(2, 2, new Förderband(Rotations.right));
+		world.setTile(4, 3, new Förderband(Rotations.left));
+		world.setTile(3, 3, new Förderband(Rotations.down));
+		world.setTile(3, 4, new Förderband(Rotations.right));
+		world.setTile(4, 4, new Förderband(Rotations.up));
 	}
 
 	public static World getWorld() {

@@ -44,7 +44,7 @@ public class World implements Constants{
 	public Point getTilePoint(Tile tile) {
 		for (Integer x = 0; x < getWidth(); x++) {
 			for (Integer y = 0; y < getHeight(); y++) {
-				if (world[x][y].equals(tile)) {
+				if (world[x][y] == tile) {
 					return new Point(x, y);
 				}
 			}

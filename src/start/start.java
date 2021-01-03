@@ -7,7 +7,7 @@ import logic.MainControl;
 
 public class start {
 	/**
-	 * Die Tatsächliche main Methode
+	 * Die Tatsï¿½chliche main Methode
 	 * 
 	 * @param args
 	 */
@@ -20,6 +20,6 @@ public class start {
 		Frame.setVisible();
 
 		MainControl.createWorld();
-		new DebuggingWindow();
+		//new DebuggingWindow();
 	}
 }

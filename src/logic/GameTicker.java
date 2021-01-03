@@ -23,7 +23,7 @@ public class GameTicker extends Thread implements Constants {
 			taskList.addAll(addQueue);
 			addQueue.clear();
 
-			Debugger.startTask();
+			Debugger.starttick();
 
 			for (Task task : taskList) {
 				if (task.tryRun()) {

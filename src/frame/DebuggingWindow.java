@@ -20,27 +20,24 @@ import logic.MainControl;
 
 public class DebuggingWindow extends CustomWindow {
 
-	String fpsav = "",tpsav = "",executiontimeav = "",tasks = "",cpu = "",gametick = "";
+	String tpsav = "",executiontimepeak = "",tasks = "",cpu = "",gametick = "";
 	Set<Entry<String,Integer>> tasktypes;
 	Set<Entry<String,String>> windows;
 
 	OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
 	public DebuggingWindow() {
-		super(300,400,new Point(20,20),"Debugging",(int) (TPS * 0.4));
+		super(300,500,new Point(20,20),"Debugging",(int) (TPS * 0.4));
 	}
 
 	private void loadValues() {
-		System.out.println("s" + System.currentTimeMillis());
-		fpsav = Double.toString(Debugger.getFPS());
 		tpsav = Double.toString(Debugger.getTPS());
-		executiontimeav = Double.toString(Debugger.getExecutionTime());
+		executiontimepeak = Double.toString(Debugger.getExecutionTimePeek());
 		windows = Debugger.getWindows();
 		tasks = Integer.toString(Debugger.getTaskSize());
 		tasktypes = Debugger.getTasktypes();
 		gametick = Long.toString(MainControl.getGameTicker().getTick());
 		// cpu = Double.toString(Math.round((os.getProcessCpuLoad() * 100) * 100.0) / 100.0);
-		System.out.println("e" + System.currentTimeMillis());
 	}
 
 	@Override
@@ -58,14 +55,14 @@ public class DebuggingWindow extends CustomWindow {
 
 		g2.setColor(Color.BLACK);
 		g2.setStroke(new BasicStroke(2));
-
+		
 		g2.drawRect(x += 10,10,20,20);
 		/*
 		 * g2.drawLine(x + 4, 13, x + 16, 13); g2.drawLine(x + 4, 27, x + 16, 27); g2.drawLine(x +
 		 * 4, 14, x + 8, 20); g2.drawLine(x + 16, 14, x + 12, 20); g2.drawLine(x + 8, 20, x + 4,
 		 * 26); g2.drawLine(x + 12, 20, x + 16, 26);
 		 */
-
+		/*
 		g2.setColor(Color.RED);
 		g2.drawLine(x += 30,10,x + 20,30);
 		g2.drawLine(x + 20,10,x,30);
@@ -98,27 +95,28 @@ public class DebuggingWindow extends CustomWindow {
 		g2.drawLine(x + 4,25,x + 10,25);
 		g2.drawLine(x + 12,25,x + 14,25);
 
+		*/
+		
 		Integer height = 35;
 
-		g2.drawString("FPS:" + fpsav + " / " + FPS,10,height += 25);
 		g2.drawString("TPS:" + tpsav + " / " + TPS,10,height += 25);
-
-		height += 5;
 		g2.drawString("TPSDelay:" + Integer.toString(1000 / TPS) + "ms",10,height += 25);
-		g2.drawString("Executiontime:" + executiontimeav + "ms",10,height += 25);
 
 		height += 5;
-		g2.drawString("FPSDelay:" + Integer.toString(1000 / FPS) + "ms",10,height += 25);
-
+		
+		g2.drawString("ExecutiontimePeak:" + executiontimepeak + "ms",10,height += 25);
+		
+		
 		height += 5;
-		g2.drawString("CPU:" + cpu + "%",10,height += 25);
+		g2.drawString("CPU:" + cpu + "%",10,height += 25); 
 
 		height += 5;
 		g2.drawString("Tasks:" + tasks,10,height += 25);
 		for (Entry<String,Integer> entry : tasktypes) {
 			g2.drawString(entry.getKey() + ":" + entry.getValue(),10,height += 25);
 		}
-
+		
+		height += 5;
 		g2.drawString("Gametick:" + gametick,10,height += 25);
 
 		height += 5;

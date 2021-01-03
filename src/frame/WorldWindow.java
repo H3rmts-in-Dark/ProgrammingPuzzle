@@ -2,13 +2,16 @@ package frame;
 
 
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import abstractclasses.CustomWindow;
 import abstractclasses.Tile;
 import logic.Animations;
+import tasks.WindowRepaintTask;
 import tiles.Computer;
+import tiles.Förderband;
 import world.World;
 
 
@@ -23,24 +26,21 @@ public class WorldWindow extends CustomWindow {
 	 * @param world this
 	 */
 	public WorldWindow(World world) {
-		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2,world.getHeight() * TILEHEIGHTWIDHT + TOPBARWIDTH,
-				"World",(int) (TPS * 0.1));
+		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2,(world.getHeight()+1) * TILEHEIGHTWIDHT + TOPBARWIDTH,
+				"World",-1);
 		this.world = world;
 		zoom = 1f;
 	}
 
 	@Override
-	public BufferedImage draw() {
-		BufferedImage image = getEmptyImage();
+	public Image draw() {
+		BufferedImage image = new BufferedImage(world.getWidth() * TILEHEIGHTWIDHT * 5,
+				world.getHeight() * TILEHEIGHTWIDHT * 5,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = image.createGraphics();
 
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
-				Tile temptile = world.getTile(x,y);
-				if (((int) (temptile.getDrawX(0) * zoom)) < getImageborders().getWidth()
-						&& ((int) (temptile.getDrawY(0) * zoom)) < getImageborders().getHeight())
-					temptile.updateimage();
-				temptile.draw(g2,zoom);
+				world.getTile(x,y).draw(g2);
 			}
 		}
 		/*
@@ -49,7 +49,8 @@ public class WorldWindow extends CustomWindow {
 		 * getImageborders().getHeight()) { entity.draw(g2,zoom); } }
 		 */
 		g2.dispose();
-		return image;
+
+		return image.getScaledInstance((int) (image.getWidth() * zoom),(int) (image.getHeight() * zoom),Scaler);
 	}
 
 	/**
@@ -59,6 +60,7 @@ public class WorldWindow extends CustomWindow {
 		Float test = (float) (Math.round(zoom * 100.0) / 100.0);
 		if (test > MINZOOM && test < MAXZOOM)
 			this.zoom = test;
+		WindowRepaintTask.RepaintWindow(this);
 	}
 
 	public Float getZoom() {
@@ -88,10 +90,13 @@ public class WorldWindow extends CustomWindow {
 	public void mouseWheelMoved(Integer direction) {
 		setZoom(getZoom() + direction * 0.2f);
 		triggerFullRepaint();
+
+		new WindowRepaintTask(3,this,false);
+		new WindowRepaintTask(5,this,false);
 	}
 
 	public Tile getTile(Point point) {
-		return world.getTile((int) (point.x / (TILEHEIGHTWIDHT * zoom)),(int) (point.y / (TILEHEIGHTWIDHT * zoom)));
+		return world.getTile((int) (point.x / (TILEHEIGHTWIDHT * zoom)),(int) (point.y / (TILEHEIGHTWIDHT * zoom)) - 1);
 	}
 
 }

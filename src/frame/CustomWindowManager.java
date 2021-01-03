@@ -1,11 +1,14 @@
 package frame;
 
+
 import java.util.ArrayList;
 
 import javax.swing.JLayeredPane;
 
 import abstractclasses.CustomWindow;
 import logic.Constants;
+import tasks.WindowRepaintTask;
+
 
 public class CustomWindowManager extends JLayeredPane implements Constants {
 
@@ -20,6 +23,7 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 		windows.add(window);
 		window.setLayer(nextHighestLayer());
 		clean();
+		WindowRepaintTask.RepaintWindow(window);
 	}
 
 	public void removeWindow(CustomWindow newWindow) {
@@ -28,24 +32,23 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 	}
 
 	public void windowToFront(CustomWindow window) {
-		if (isFullscreen(window)) {
-			window.setLayer(nextHighestLayer());
-			clean();
-		}
+		window.setLayer(nextHighestLayer());
+		clean();
+		WindowRepaintTask.RepaintWindow(window);
 	}
 
 	public void setFullscreen(CustomWindow fullscreen) {
 		if (this.fullscreen != null) {
-			this.fullscreen.setBounds(DEFAULTX, DEFAULTY, DEFAULTWITH, DEFAULTHEIGHT);
+			this.fullscreen.setBounds(DEFAULTX,DEFAULTY,DEFAULTWITH,DEFAULTHEIGHT);
 		}
 		this.fullscreen = fullscreen;
 		if (fullscreen != null)
 			fullscreen.setLayer(nextLowestLayer());
 		clean();
 	}
-
-	public Boolean isFullscreen(CustomWindow test) {
-		return fullscreen == null ? false : fullscreen.equals(test);
+	
+	public boolean isFullscreen(CustomWindow window) {
+		return fullscreen == window;
 	}
 
 	private void clean() {
@@ -61,9 +64,9 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 	private void addComponents() {
 		removeAll();
 		for (CustomWindow window : windows) {
-			add(window, window.getLayer());
+			add(window,window.getLayer());
 		}
-		Frame.repaint();
+		Frame.getFrame().repaint();
 	}
 
 	private int nextHighestLayer() {
@@ -83,4 +86,7 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 		}
 		return --layer;
 	}
+
+
+
 }

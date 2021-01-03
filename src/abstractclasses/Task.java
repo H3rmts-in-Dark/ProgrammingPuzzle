@@ -5,16 +5,16 @@ import logic.MainControl;
 
 public abstract class Task implements Constants{
 
-	private Long runTick;
-	private Integer Cycles, tickDifference;
-	private Boolean ended;
+	private long runTick;
+	private int Cycles, tickDifference;
+	private boolean ended;
 
 	/**
 	 * 
 	 * @param tickDifference
 	 * @param cycles           -1 to loop infinite
 	 */
-	public Task(Integer tickDifference, Integer cycles) {
+	public Task(int tickDifference, int cycles) {
 		this.tickDifference = tickDifference;
 		this.Cycles = cycles;
 		this.ended = false;
@@ -35,7 +35,7 @@ public abstract class Task implements Constants{
 		runTick = MainControl.getGameTicker().getTickIn(tickDifference);
 	}
 
-	public Long getRunTick() {
+	public long getRunTick() {
 		return runTick;
 	}
 
@@ -44,7 +44,7 @@ public abstract class Task implements Constants{
 	 * @param tick
 	 * @return true -) remove and onEnd();
 	 */
-	public Boolean tryRun() {
+	public boolean tryRun() {
 		if (MainControl.getGameTicker().getTick() >= runTick) {
 			runCode();
 			if (Cycles > 0)
@@ -58,7 +58,7 @@ public abstract class Task implements Constants{
 		return false;
 	}
 	
-	public Boolean getEnded() {
+	public boolean getEnded() {
 		return ended;
 	}
 
@@ -68,6 +68,9 @@ public abstract class Task implements Constants{
 
 	public abstract void runCode();
 	
+	/**
+	 * not executed when end() was called
+	 */
 	public void onEnd() {
 		
 	}

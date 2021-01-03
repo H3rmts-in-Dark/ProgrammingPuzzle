@@ -9,8 +9,8 @@ import logic.Rotations;
 
 public class Förderband extends Tile {
 
-	public Förderband(Rotations r) {
-		super(FÖRDERBANDHÖHE,true,0,0,r);
+	public Förderband(Rotations rotation) {
+		super(FÖRDERBANDHÖHE,ANIMATED,0,-15,rotation);
 		setDescription("Förderband");
 	}
 

@@ -3,6 +3,7 @@ package world;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +23,9 @@ public class Images implements Constants {
 	}
 
 	public static BufferedImage getImage(String path) {
-		if (path == null)
+		if (path == null) {
 			return getmissingImage();
+		}
 		if (allimages.get(new File(path)) != null)
 			return allimages.get(new File(path));
 		BufferedImage newimage = null;
@@ -31,6 +33,7 @@ public class Images implements Constants {
 			newimage = ImageIO.read(new File(path));
 			allimages.put(new File(path),newimage);
 		} catch (IOException e) {
+			System.out.println("err:" + path);
 			return getmissingImage();
 		}
 		return newimage;
@@ -63,6 +66,15 @@ public class Images implements Constants {
 			default:
 				return "";
 		}
+	}
+
+	public static BufferedImage bufferedImage(Image img) {
+		BufferedImage im = new BufferedImage(img.getWidth(null),img.getHeight(null),BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = im.createGraphics();
+		g.drawImage(img,0,0,null);
+		g.dispose();
+		return im;
+
 	}
 
 }

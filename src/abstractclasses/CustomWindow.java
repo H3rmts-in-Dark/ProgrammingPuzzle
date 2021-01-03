@@ -1,11 +1,13 @@
 package abstractclasses;
 
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -20,11 +22,12 @@ import javax.swing.JComponent;
 import frame.Frame;
 import logic.Constants;
 import logic.Debugger;
-import tasks.RepaintTask;
+import tasks.WindowRepaintTask;
+import world.Images;
 
-public abstract class CustomWindow extends JComponent implements Comparable<CustomWindow>, Constants {
 
-	private Boolean fullyRepaint;
+public abstract class CustomWindow extends JComponent implements Comparable<CustomWindow>,Constants {
+
 	private Integer layer = 0;
 	private String title = "Default";
 	CloseButton close;
@@ -34,31 +37,31 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	Point bottomRight = new Point();
 
 	public CustomWindow(String title) {
-		this(DEFAULTWITH, DEFAULTHEIGHT, title, -1);
+		this(DEFAULTWITH,DEFAULTHEIGHT,title,-1);
 	}
 
-	public CustomWindow(Integer defaultWidht, Integer defaultHeight, String title, Integer fullyrepaintdelay) {
-		this(defaultWidht, defaultHeight, new Point(DEFAULTX, DEFAULTY), title, fullyrepaintdelay);
+	public CustomWindow(Integer defaultWidht,Integer defaultHeight,String title,Integer fullyrepaintdelay) {
+		this(defaultWidht,defaultHeight,new Point(DEFAULTX,DEFAULTY),title,fullyrepaintdelay);
 	}
 
-	public CustomWindow(Integer defaultWidht, Integer defaultHeight, Point defaultPosition, String title,
+	public CustomWindow(Integer defaultWidht,Integer defaultHeight,Point defaultPosition,String title,
 			Integer fullyrepaintdelay) {
 		setLocation(defaultPosition);
-		setSize(Frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht
-				: Frame.getWidth() - (int) defaultPosition.getX(),
+		setSize(
+				Frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht
+						: Frame.getWidth() - (int) defaultPosition.getX(),
 				Frame.getHeight() > defaultHeight + defaultPosition.getY() ? defaultHeight
 						: Frame.getHeight() - (int) defaultPosition.getY());
 		setTitle(title);
 		close = new CloseButton(this);
 		maximise = new MaximiseButton(this);
-		fullyRepaint = true;
 		if (fullyrepaintdelay != -1) {
-			new RepaintTask(fullyrepaintdelay, this);
+			new WindowRepaintTask(fullyrepaintdelay,this,true);
 		}
 		resizeMaximum();
 		Frame.getWindowManager().addWindow(this);
+
 		triggerFullRepaint();
-		repaint();
 	}
 
 	public void setTitle(String title) {
@@ -67,26 +70,25 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 
 	@Override
 	public void paintComponent(Graphics g) {
-		if (fullyRepaint)
-			repaintAll();
-
-		// surrounding image
-		g.drawImage(image, 0, 0, null);
+		g.drawImage(image,0,0,null);
+	}
+	
+	public void triggerFullRepaint() {
+		new Thread() {
+			@Override
+			public void run() {
+				FullRepaint();
+				repaint();
+			}
+		}.start();
 	}
 
-	/**
-	 * Zeichnet das BufferedImage neu, das f�r die Zeichnung auf den Component
-	 * benutzt wird. Diese Methode sollte nicht manuell aufgerufen werden, da sie
-	 * automatisch gestartet wird wenn triggerFullRepaint() aufgerufen wurde.
-	 */
-	private void repaintAll() {
-		fullyRepaint = false;
-
+	private void FullRepaint() {
 		BufferedImage drawimage = null;
 		try {
 			Debugger.startDraw(this);
-			drawimage = draw();
-			Debugger.endDraw(this);
+			drawimage = Images.bufferedImage(draw());
+
 		} catch (NullPointerException e) {
 			drawimage = getErrorImage();
 		} finally {
@@ -94,27 +96,27 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 				drawimage = getErrorImage();
 		}
 
-		drawimage = drawimage.getSubimage(0, 0,
+		drawimage = drawimage.getSubimage(0,0,
 				drawimage.getWidth() > getImageborders().width ? getImageborders().width : drawimage.getWidth(),
 				drawimage.getHeight() > getImageborders().height ? getImageborders().height : drawimage.getHeight());
 
-		image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+		BufferedImage newimage = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
 
-		Graphics2D g2 = image.createGraphics();
+		Graphics2D g2 = newimage.createGraphics();
 
 		// innerimage
-		g2.drawImage(drawimage, getImageborders().x, getImageborders().y, null);
+		g2.drawImage(drawimage,getImageborders().x,getImageborders().y,null);
 
 		// top + middle surrounding
 		g2.setStroke(new BasicStroke(CORNERWIDTH + CORNERWIDTH / 4));
 		g2.setColor(Color.DARK_GRAY);
-		g2.drawRoundRect(SCROLLBARWIDTH, SCROLLBARWIDTH, getWidth() - CORNERWIDTH - SCROLLBARWIDTH,
-				getHeight() - CORNERWIDTH - SCROLLBARWIDTH, ROUNDCURVES, ROUNDCURVES);
-		g2.fillRect(SCROLLBARWIDTH, SCROLLBARWIDTH, getWidth() - 10, TOPBARWIDTH - SCROLLBARWIDTH);
+		g2.drawRoundRect(SCROLLBARWIDTH,SCROLLBARWIDTH,getWidth() - CORNERWIDTH - SCROLLBARWIDTH,
+				getHeight() - CORNERWIDTH - SCROLLBARWIDTH,ROUNDCURVES,ROUNDCURVES);
+		g2.fillRect(SCROLLBARWIDTH,SCROLLBARWIDTH,getWidth() - 10,TOPBARWIDTH - SCROLLBARWIDTH);
 
 		// Zeichnet den Titel des Fensters
 		g2.setColor(Color.BLACK);
-		g2.setFont(new Font("Consolas", Font.BOLD, 25));
+		g2.setFont(new Font("Consolas",Font.BOLD,25));
 		String newtitle = "";
 		for (int i = 0; i < this.title.length() * 14; i += 14) {
 			if (getWidth() - (CORNERWIDTH + CORNERWIDTH / 2) - (getWidth() - close.getX()) > i)
@@ -122,31 +124,26 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 			else
 				break;
 		}
-		g2.drawString(newtitle, CORNERWIDTH + CORNERWIDTH / 2, 25);
+		g2.drawString(newtitle,CORNERWIDTH + CORNERWIDTH / 2,25);
 
 		// surrounding
 		g2.setStroke(new BasicStroke(3));
 		g2.setColor(Color.BLACK);
-		g2.drawRoundRect(2, 2, getWidth() - 4, getHeight() - 4, ROUNDCURVES, ROUNDCURVES);
-		g2.drawRoundRect(SIDEBARWIDTH, TOPBARWIDTH, getWidth() - SIDEBARWIDTH * 2,
-				getHeight() - TOPBARWIDTH - SIDEBARWIDTH, ROUNDCURVES, ROUNDCURVES);
+		g2.drawRoundRect(2,2,getWidth() - 4,getHeight() - 4,ROUNDCURVES,ROUNDCURVES);
+		g2.drawRoundRect(SIDEBARWIDTH,TOPBARWIDTH,getWidth() - SIDEBARWIDTH * 2,getHeight() - TOPBARWIDTH - SIDEBARWIDTH,
+				ROUNDCURVES,ROUNDCURVES);
 
 		g2.dispose();
-	}
-
-	/**
-	 * Wenn diese Methode aufgerufen wurde, wird repaintAll() bei der n�chsten
-	 * Zeichnung automatisch aufgerufen.
-	 */
-	public void triggerFullRepaint() {
-		fullyRepaint = true;
+		
+		image = newimage;
+		Debugger.endDraw(this);
 	}
 
 	/**
 	 * Gibt ein BufferedImage zur�ck, das die Ausma�e des Fensters hat.
 	 */
 	protected BufferedImage getEmptyImage() {
-		return new BufferedImage(getImageborders().width, getImageborders().height, BufferedImage.TYPE_INT_RGB);
+		return new BufferedImage(getImageborders().width,getImageborders().height,BufferedImage.TYPE_INT_RGB);
 	}
 
 	/**
@@ -155,7 +152,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 * @return
 	 */
 	public Rectangle getImageborders() {
-		return new Rectangle(SIDEBARWIDTH, TOPBARWIDTH, getWidth() - SIDEBARWIDTH * 2,
+		return new Rectangle(SIDEBARWIDTH,TOPBARWIDTH,getWidth() - SIDEBARWIDTH * 2,
 				getHeight() - TOPBARWIDTH - SIDEBARWIDTH);
 	}
 
@@ -172,8 +169,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	/**
-	 * Gibt ein Fehlerbild zur�ck, das leicht zu erkennen l�sst, das etwas nicht
-	 * stimmt.
+	 * Gibt ein Fehlerbild zur�ck, das leicht zu erkennen l�sst, das etwas nicht stimmt.
 	 * 
 	 * @return
 	 */
@@ -181,88 +177,84 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = image.createGraphics();
 		g2.setColor(Color.BLUE);
-		g2.fillRect(0, 0, image.getWidth(), image.getHeight());
-		g2.setFont(new Font("Default", Font.BOLD, 20));
+		g2.fillRect(0,0,image.getWidth(),image.getHeight());
+		g2.setFont(new Font("Default",Font.BOLD,20));
 		g2.setColor(Color.BLACK);
-		g2.drawString("Nothing to paint", image.getWidth() / 2 - 60, image.getHeight() / 2);
+		g2.drawString("Nothing to paint",image.getWidth() / 2 - 60,image.getHeight() / 2);
 		g2.dispose();
 		return image;
 	}
 
-	public void drag(MouseEvent e, Point point) {
-		new Thread() {
-			@Override
-			public void run() {
-				if (Frame.getWindowManager().isFullscreen(getThis())) {
-					Point newpos = new Point((int) ((point.getX() / getWidth()) * DEFAULTWITH), point.y);
-					saveBounds(newpos);
-					setSize(DEFAULTWITH, DEFAULTHEIGHT);
-					setLocation(point.x, point.y);
-					Frame.getWindowManager().setFullscreen(null);
-					resizeMaximum();
-					Frame.repaint();
+	public void drag(MouseEvent e,Point point) {
+		if (Frame.getWindowManager().isFullscreen(getThis())) {
+			Point newpos = new Point((int) ((point.getX() / getWidth()) * DEFAULTWITH),point.y);
+			saveBounds(newpos);
+			setSize(DEFAULTWITH,DEFAULTHEIGHT);
+			setLocation(point.x,point.y);
+			Frame.getWindowManager().setFullscreen(null);
+			resizeMaximum();
+			triggerFullRepaint();
 
-					return;
-				}
-				switch (Frame.getFrame().getCursor().getType()) {
-				case Cursor.MOVE_CURSOR:
-					setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,
-							e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
-					break;
-				case Cursor.E_RESIZE_CURSOR:
-					setSize(e.getPoint().x - getX(), getHeight());
-					break;
-				case Cursor.S_RESIZE_CURSOR:
-					setSize(getWidth(), e.getPoint().y - getY());
-					break;
-				case Cursor.N_RESIZE_CURSOR:
-					setLocation(getX(), e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
-					setSize(getWidth(), bottomRight.y - getY());
-					break;
-				case Cursor.W_RESIZE_CURSOR:
-					setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x, getY());
-					setSize(bottomRight.x - getX(), getHeight());
-					break;
-				case Cursor.SE_RESIZE_CURSOR:
-					setSize(e.getPoint().x - getX(), e.getPoint().y - getY());
-					break;
-				case Cursor.SW_RESIZE_CURSOR:
-					setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x, getY());
-					setSize(bottomRight.x - getX(), e.getPoint().y - getY());
-					break;
-				case Cursor.NW_RESIZE_CURSOR:
-					setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,
-							e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
-					setSize(bottomRight.x - getX(), bottomRight.y - getY());
-					break;
-				case Cursor.NE_RESIZE_CURSOR:
-					setLocation(getX(), e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
-					setSize(e.getPoint().x - getX(), bottomRight.y - getY());
-					break;
-				}
-				resizeMaximum();
-				Frame.repaint();
-			}
-		}.start();
+			new WindowRepaintTask(5,this,false);
+			return;
+		}
+		switch (Frame.getFrame().getCursor().getType()) {
+			case Cursor.MOVE_CURSOR:
+				setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,
+						e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
+			break;
+			case Cursor.E_RESIZE_CURSOR:
+				setSize(e.getPoint().x - getX(),getHeight());
+			break;
+			case Cursor.S_RESIZE_CURSOR:
+				setSize(getWidth(),e.getPoint().y - getY());
+			break;
+			case Cursor.N_RESIZE_CURSOR:
+				setLocation(getX(),e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
+				setSize(getWidth(),bottomRight.y - getY());
+			break;
+			case Cursor.W_RESIZE_CURSOR:
+				setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,getY());
+				setSize(bottomRight.x - getX(),getHeight());
+			break;
+			case Cursor.SE_RESIZE_CURSOR:
+				setSize(e.getPoint().x - getX(),e.getPoint().y - getY());
+			break;
+			case Cursor.SW_RESIZE_CURSOR:
+				setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,getY());
+				setSize(bottomRight.x - getX(),e.getPoint().y - getY());
+			break;
+			case Cursor.NW_RESIZE_CURSOR:
+				setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,
+						e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
+				setSize(bottomRight.x - getX(),bottomRight.y - getY());
+			break;
+			case Cursor.NE_RESIZE_CURSOR:
+				setLocation(getX(),e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
+				setSize(e.getPoint().x - getX(),bottomRight.y - getY());
+			break;
+		}
+		resizeMaximum();
+		triggerFullRepaint();
 	}
 
 	public void saveBounds(Point point) {
 		topLeft = point;
-		bottomRight = new Point(getX() + getWidth(), getY() + getHeight());
+		bottomRight = new Point(getX() + getWidth(),getY() + getHeight());
 	}
 
 	void resizeMaximum() {
 		if (getWidth() <= DEFAULTMINWIDTH)
-			setSize(DEFAULTMINWIDTH, getHeight());
+			setSize(DEFAULTMINWIDTH,getHeight());
 		if (getHeight() <= DEFAULTMINHEIGHT)
-			setSize(getWidth(), DEFAULTMINHEIGHT);
+			setSize(getWidth(),DEFAULTMINHEIGHT);
 		if (getWidth() >= DEFAULTMAXWIDTH)
-			setSize(DEFAULTMAXWIDTH, getHeight());
+			setSize(DEFAULTMAXWIDTH,getHeight());
 		if (getHeight() >= DEFAULTMAXHEIGHT)
-			setSize(getWidth(), DEFAULTMAXHEIGHT);
+			setSize(getWidth(),DEFAULTMAXHEIGHT);
 
-		close.setBounds(getWidth() - 27, 8, 20, 20);
-		maximise.setBounds(getWidth() - 57, 8, 20, 20);
+		close.setBounds(getWidth() - 27,8,20,20);
+		maximise.setBounds(getWidth() - 57,8,20,20);
 	}
 
 	/**
@@ -274,8 +266,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	}
 
 	/**
-	 * override to process mousemove events in windowimage leave
-	 * super.Mousemoved(point);
+	 * override to process mousemove events in windowimage leave super.Mousemoved(point);
 	 * 
 	 * @param point
 	 */
@@ -314,7 +305,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		}
 	}
 
-	public void processMouseWheelMovedEvent(Point point, MouseWheelEvent e) {
+	public void processMouseWheelMovedEvent(Point point,MouseWheelEvent e) {
 		if (point.getX() >= getImageborders().getX() // test if in picture
 				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
 				&& point.getY() >= getImageborders().getY()
@@ -330,9 +321,9 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 				&& mousePoint.getY() >= getImageborders().getY()
 				&& mousePoint.getY() <= getImageborders().getHeight() + getImageborders().getY())) {
 			new Thread() {
+
 				@Override
 				public void run() {
-					System.out.println(maximise.getModel().isRollover());
 					// edges
 					if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
 							&& mousePoint.getY() < getHeight() - CORNERWIDTH && mousePoint.getY() > CORNERWIDTH)
@@ -368,8 +359,8 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
 							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - SCROLLBARWIDTH)
 						Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom left
-					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= CORNERWIDTH
-							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - CORNERWIDTH)
+					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= CORNERWIDTH && mousePoint.getY() <= getHeight()
+							&& mousePoint.getY() >= getHeight() - CORNERWIDTH)
 						Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom bottom
 					else if (maximise.getModel().isRollover())
 						Frame.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -382,6 +373,7 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 					else
 						Frame.getFrame().setCursor(Cursor.getDefaultCursor());
 				}
+
 			}.start();
 		} else {
 			Frame.getFrame().setCursor(Cursor.getDefaultCursor());
@@ -393,19 +385,16 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 * 
 	 * @return must return a buffered image
 	 */
-	public abstract BufferedImage draw();
+	public abstract Image draw();
 
 	@Override
 	public int compareTo(CustomWindow o) {
 		return (int) Math.signum(this.getLayer() - o.getLayer());
 	}
-	
-	@Override
-	public String getName() {
-		return getClass().getSimpleName();
-	}
 
 }
+
+
 
 class CloseButton extends JButton implements ActionListener {
 
@@ -413,7 +402,7 @@ class CloseButton extends JButton implements ActionListener {
 
 	public CloseButton(CustomWindow window) {
 		this.window = window;
-		setBounds(window.getWidth() - 27, 8, 20, 20);
+		setBounds(window.getWidth() - 27,8,20,20);
 		addActionListener(this);
 		setFocusPainted(false);
 		setRolloverEnabled(false);
@@ -424,8 +413,8 @@ class CloseButton extends JButton implements ActionListener {
 	public void paint(Graphics g) {
 		((Graphics2D) g).setStroke(new BasicStroke(3));
 		g.setColor(Color.BLACK);
-		g.drawLine(4, 3, getWidth() - 4, getHeight() - 4);
-		g.drawLine(getWidth() - 4, 3, 4, getHeight() - 4);
+		g.drawLine(4,3,getWidth() - 4,getHeight() - 4);
+		g.drawLine(getWidth() - 4,3,4,getHeight() - 4);
 	}
 
 	@Override
@@ -435,13 +424,15 @@ class CloseButton extends JButton implements ActionListener {
 
 }
 
-class MaximiseButton extends JButton implements ActionListener, Constants {
+
+
+class MaximiseButton extends JButton implements ActionListener,Constants {
 
 	final CustomWindow window;
 
 	public MaximiseButton(CustomWindow window) {
 		this.window = window;
-		setBounds(window.getWidth() - 57, 8, 20, 20);
+		setBounds(window.getWidth() - 57,8,20,20);
 		addActionListener(this);
 		setFocusPainted(false);
 		setRolloverEnabled(false);
@@ -452,16 +443,16 @@ class MaximiseButton extends JButton implements ActionListener, Constants {
 	public void paint(Graphics g) {
 		((Graphics2D) g).setStroke(new BasicStroke(3));
 		g.setColor(Color.BLACK);
-		g.drawRect(2, 2, getWidth() - 4, getHeight() - 6);
+		g.drawRect(2,2,getWidth() - 4,getHeight() - 6);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!Frame.getWindowManager().isFullscreen(window)) {
-			window.setBounds(0, 0, Frame.getWindowManager().getWidth(), Frame.getWindowManager().getHeight());
+			window.setBounds(0,0,Frame.getWindowManager().getWidth(),Frame.getWindowManager().getHeight());
 			Frame.getWindowManager().setFullscreen(window);
 		} else {
-			window.setBounds(DEFAULTX, DEFAULTY, DEFAULTWITH, DEFAULTHEIGHT);
+			window.setBounds(DEFAULTX,DEFAULTY,DEFAULTWITH,DEFAULTHEIGHT);
 			Frame.getWindowManager().setFullscreen(null);
 		}
 		window.resizeMaximum();
