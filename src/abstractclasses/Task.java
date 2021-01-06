@@ -14,25 +14,16 @@ public abstract class Task implements Constants{
 	 * @param tickDifference
 	 * @param cycles           -1 to loop infinite
 	 */
-	public Task(int tickDifference, int cycles) {
+	protected Task(int tickDifference, int cycles) {
 		this.tickDifference = tickDifference;
 		this.Cycles = cycles;
 		this.ended = false;
 		MainControl.getGameTicker().addTask(this);
 		updateTickDifference();
 	}
-	
-	/**
-	 * repated 1 time
-	 * 
-	 * @param tickDifference
-	 */
-	protected Task(Integer tickDifference) {
-		this(tickDifference, 0);
-	}
 
 	public void updateTickDifference() {
-		runTick = MainControl.getGameTicker().getTickIn(tickDifference);
+		runTick = MainControl.getGameTicker().getTick() + tickDifference;
 	}
 
 	public long getRunTick() {
@@ -44,8 +35,8 @@ public abstract class Task implements Constants{
 	 * @param tick
 	 * @return true -) remove and onEnd();
 	 */
-	public boolean tryRun() {
-		if (MainControl.getGameTicker().getTick() >= runTick) {
+	public boolean tryRun(long tick) {
+		if (tick >= runTick) {
 			runCode();
 			if (Cycles > 0)
 				Cycles--;
@@ -73,10 +64,6 @@ public abstract class Task implements Constants{
 	 */
 	public void onEnd() {
 		
-	}
-	
-	public String getName() {
-		return getClass().getSimpleName();
 	}
 	
 	@Override

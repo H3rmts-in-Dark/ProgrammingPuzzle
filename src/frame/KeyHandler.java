@@ -49,7 +49,7 @@ public class KeyHandler extends KeyAdapter {
 		} else if (command.equals("world")) {
 			MainControl.createWorld();
 		} else if (command.equals("move")) {
-			//new MoveEntityTask(5,MainControl.getWorld().getEntitys().get(0));
+			new MoveEntityTask(5,MainControl.getWorld().getEntitys().get(0));
 		}
 	}
 

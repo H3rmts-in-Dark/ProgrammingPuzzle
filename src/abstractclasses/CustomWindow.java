@@ -72,14 +72,15 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	public void paintComponent(Graphics g) {
 		g.drawImage(image,0,0,null);
 	}
-	
+
 	public void triggerFullRepaint() {
 		new Thread() {
+
 			@Override
 			public void run() {
 				FullRepaint();
-				repaint();
 			}
+
 		}.start();
 	}
 
@@ -134,9 +135,10 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 				ROUNDCURVES,ROUNDCURVES);
 
 		g2.dispose();
-		
+
 		image = newimage;
 		Debugger.endDraw(this);
+		repaint();
 	}
 
 	/**

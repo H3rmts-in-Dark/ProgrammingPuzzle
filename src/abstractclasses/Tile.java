@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,32 +29,46 @@ public abstract class Tile implements Constants {
 	private int relativedrawX;
 	private int relativedrawY;
 
+	private Point position;
+	protected Rotations rotation;
+	protected World world;
+
+	private int ticksperimagechange;
+
 	protected Image drawimage;
 
-	protected HashMap<Rotations,HashMap<Animations,ArrayList<String>>> animations = new HashMap<>();
-	protected HashMap<Layers,HashMap<Animations,ArrayList<String>>> pictures = new HashMap<>();
+	public HashMap<Rotations,HashMap<Animations,ArrayList<String>>> animations = new HashMap<>();
+	public HashMap<Layers,HashMap<Animations,ArrayList<String>>> pictures = new HashMap<>();
 
 	protected HashMap<Layers,Animations> actualanimation = new HashMap<>();
 	protected HashMap<Layers,Integer> actualanimationcounter = new HashMap<>();
 	protected HashMap<Layers,ChangeImageTask> tasks = new HashMap<>();
 
-	protected Rotations rotation;
-
-	protected World world;
-
-	private Point position;
-
-	protected Tile(Integer height,Boolean animated,int relativedrawX,int relativedrawY,Rotations rotation) {
+	protected Tile(Integer height,Boolean animated,int relativedrawX,int relativedrawY,Rotations rotation,
+			int ticksperimagechange) {
 		this.height = height;
 		this.description = "default description";
 		this.world = null;
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
 		this.rotation = rotation;
+		this.ticksperimagechange = ticksperimagechange;
 
 		loadAnimations();
 		if (animated)
 			triggerAnimation(Animations.defaultanimation);
+	}
+
+	protected Tile(Integer height,Rotations rotation) {
+		this.height = height;
+		this.description = "default description";
+		this.world = null;
+		this.relativedrawX = 0;
+		this.relativedrawY = 0;
+		this.rotation = rotation;
+		this.ticksperimagechange = DEFAULTTPIC;
+
+		loadAnimations();
 	}
 
 	public abstract void loadAnimations();
@@ -131,32 +144,28 @@ public abstract class Tile implements Constants {
 	public void onSteppedUpon(Entity entity) {
 	}
 
-	public String getName() {
-		return getClass().getSimpleName();
-	}
-
 	public void draw(Graphics2D g2) {
 		g2.drawImage(drawimage,(int) position.getX() * TILEHEIGHTWIDHT,(int) position.getY() * TILEHEIGHTWIDHT,null);
 	}
-	
+
 	public void triggerimageupdate() {
 		new Thread() {
+
 			@Override
 			public void run() {
 				updateimage();
 			}
+
 		}.start();
 	}
 
 	private void updateimage() {
 		Graphics g;
-		try {
-			g = drawimage.getGraphics();
-		} catch (NullPointerException e) {
-			drawimage = new BufferedImage(DEFAULTIMAGEWIDHTHEIGHT,DEFAULTIMAGEWIDHTHEIGHT * 2,
-					BufferedImage.TYPE_4BYTE_ABGR);
-			g = drawimage.getGraphics();
-		}
+
+		BufferedImage image = new BufferedImage(DEFAULTIMAGEWIDHTHEIGHT,DEFAULTIMAGEWIDHTHEIGHT * 2,
+				BufferedImage.TYPE_4BYTE_ABGR);
+		g = image.getGraphics();
+
 		try {
 			g.drawImage(Images.getImage(pictures.get(Layers.Floor).get(Animations.noanimation).get(0)),0,
 					DEFAULTIMAGEWIDHTHEIGHT,null);
@@ -182,33 +191,8 @@ public abstract class Tile implements Constants {
 					.get(actualanimationcounter.get(Layers.Effects))),0,DEFAULTIMAGEWIDHTHEIGHT,null);
 		} catch (NullPointerException e) {
 		}
-	}
-
-	public static void loadAnimation(Rotations rotation,Animations animation,Tile tile,boolean obj) {
-		var add = new ArrayList<String>();
-		for (File file : new File("rsc/" + (obj ? "objekt" : "entity") + " pictures/" + tile.getName() + "/"
-				+ Rotations.toString(rotation) + animation).listFiles()) {
-			add.add(file.getPath());
-		}
-		if (!tile.animations.containsKey(rotation)) {
-			var addMap = new HashMap<Animations,ArrayList<String>>();
-			tile.animations.put(rotation,addMap);
-		}
-		tile.animations.get(rotation).put(animation,add);
-	}
-
-	public static void loadPicture(Layers layer,Animations animation,Tile tile,String name) {
-		var add = new ArrayList<String>();
-		for (File file : new File("rsc/" + Layers.toString(layer) + name + "/" + (layer == Layers.Floor ? "" : animation))
-				.listFiles()) {
-			add.add(file.getPath());
-		}
-		if (!tile.pictures.containsKey(layer)) {
-			var addMap = new HashMap<Animations,ArrayList<String>>();
-			tile.pictures.put(layer,addMap);
-		}
-
-		tile.pictures.get(layer).put(animation,add);
+		
+		drawimage = image;
 	}
 
 	public void nextimage(Layers layer) {
@@ -224,10 +208,18 @@ public abstract class Tile implements Constants {
 		} catch (NullPointerException e) {
 		}
 		if (layer == Layers.Objects) {
-			tasks.put(layer,new ChangeImageTask(5,this,animations.get(rotation).get(animation).size() - 1,Layers.Objects));
+			tasks.put(layer,new ChangeImageTask(ticksperimagechange,this,
+					animations.get(rotation).get(animation).size() - 1,Layers.Objects));
 		} else {
-			tasks.put(layer,new ChangeImageTask(5,this,pictures.get(layer).get(animation).size() - 1,layer));
+			tasks.put(layer,
+					new ChangeImageTask(ticksperimagechange,this,pictures.get(layer).get(animation).size() - 1,layer));
 		}
 	}
-
+	
+	
+	public void delete() {
+		for (ChangeImageTask task : tasks.values()) {
+			task.end();
+		}
+	}
 }

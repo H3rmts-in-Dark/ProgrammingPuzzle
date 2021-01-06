@@ -1,11 +1,13 @@
 package start;
 
-import frame.DebuggingWindow;
+
 import frame.Frame;
 import logic.Debugger;
 import logic.MainControl;
 
+
 public class start {
+
 	/**
 	 * Die Tats�chliche main Methode
 	 * 
@@ -20,6 +22,6 @@ public class start {
 		Frame.setVisible();
 
 		MainControl.createWorld();
-		//new DebuggingWindow();
 	}
+
 }

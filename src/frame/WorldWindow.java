@@ -7,18 +7,22 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import abstractclasses.CustomWindow;
+import abstractclasses.Entity;
+import abstractclasses.Task;
 import abstractclasses.Tile;
 import logic.Animations;
 import tasks.WindowRepaintTask;
 import tiles.Computer;
-import tiles.Förderband;
+import world.Images;
 import world.World;
 
 
 public class WorldWindow extends CustomWindow {
 
-	private Float zoom;
+	private float zoom;
 	private World world;
+
+	private BufferedImage drawimage;
 
 	/**
 	 * calles by World
@@ -26,31 +30,63 @@ public class WorldWindow extends CustomWindow {
 	 * @param world this
 	 */
 	public WorldWindow(World world) {
-		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2,(world.getHeight()+1) * TILEHEIGHTWIDHT + TOPBARWIDTH,
-				"World",-1);
+		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2,
+				(world.getHeight() + 1) * TILEHEIGHTWIDHT + TOPBARWIDTH,"World",-1);
 		this.world = world;
 		zoom = 1f;
+
+		drawimage = new BufferedImage(world.getWidth() * TILEHEIGHTWIDHT * 5,world.getHeight() * TILEHEIGHTWIDHT * 5,
+				BufferedImage.TYPE_INT_ARGB);
+		
+		new Task(30, -1) {
+			
+			@Override
+			public void runCode() {
+				renewImage(null);
+			}
+			
+		};
 	}
 
 	@Override
 	public Image draw() {
-		BufferedImage image = new BufferedImage(world.getWidth() * TILEHEIGHTWIDHT * 5,
-				world.getHeight() * TILEHEIGHTWIDHT * 5,BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = image.createGraphics();
+		return drawimage;
+		
+	}
 
-		for (int x = 0; x < world.getWidth(); x++) {
-			for (int y = 0; y < world.getHeight(); y++) {
-				world.getTile(x,y).draw(g2);
+	public void renewImage(Object tile_entity) {
+		if (tile_entity instanceof Tile) {
+			Tile tile = (Tile) tile_entity;
+			BufferedImage newim = drawimage;
+			Graphics2D g2 = newim.createGraphics();
+			for (int y = tile.getPosition().x; y < world.getHeight() - 1; y++) {
+				world.getTile(tile.getPosition().x,y).draw(g2);
 			}
-		}
-		/*
-		 * for (Entity entity : world.getEntitys()) { if (((int) (entity.getDrawX(0) * zoom)) <
-		 * getImageborders().getWidth() && ((int) (entity.getDrawY(0) * zoom)) <
-		 * getImageborders().getHeight()) { entity.draw(g2,zoom); } }
-		 */
-		g2.dispose();
+			g2.dispose();
+			drawimage = newim;
+		} else if (tile_entity instanceof Entity) {
+			// TODO
+		} else {
+			BufferedImage image = new BufferedImage(world.getWidth() * TILEHEIGHTWIDHT,
+					(world.getHeight() + 3) * TILEHEIGHTWIDHT,BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2 = image.createGraphics();
 
-		return image.getScaledInstance((int) (image.getWidth() * zoom),(int) (image.getHeight() * zoom),Scaler);
+			for (int x = 0; x < world.getWidth(); x++) {
+				for (int y = 0; y < world.getHeight(); y++) {
+					world.getTile(x,y).draw(g2);
+				}
+			}
+
+			for (Entity entity : world.getEntitys()) {
+				entity.draw(g2);
+			}
+
+			g2.dispose();
+
+			drawimage = Images.bufferedImage(
+					image.getScaledInstance((int) (image.getWidth() * zoom),(int) (image.getHeight() * zoom),Scaler));
+		}
+		triggerFullRepaint();
 	}
 
 	/**

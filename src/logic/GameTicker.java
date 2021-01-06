@@ -8,7 +8,7 @@ import abstractclasses.Task;
 
 public class GameTicker extends Thread implements Constants {
 
-	private Long currentTick = (long) 0;
+	private long currentTick = 0;
 	private ArrayList<Task> taskList = new ArrayList<>();
 	private ArrayList<Task> addQueue = new ArrayList<>();
 	private ArrayList<Task> removeQueue = new ArrayList<>();
@@ -26,7 +26,7 @@ public class GameTicker extends Thread implements Constants {
 			Debugger.starttick();
 
 			for (Task task : taskList) {
-				if (task.tryRun()) {
+				if (task.tryRun(currentTick)) {
 					task.onEnd();
 					removeQueue.add(task);
 				}
@@ -57,10 +57,6 @@ public class GameTicker extends Thread implements Constants {
 		return currentTick;
 	}
 
-	public Long getTickIn(Integer time) {
-		return currentTick + time;
-	}
-
 	public ArrayList<Task> getTaskList() {
 		return taskList;
 	}
@@ -70,7 +66,7 @@ public class GameTicker extends Thread implements Constants {
 	}
 
 	public void reset() {
-		currentTick = (long) 0;
+		currentTick = 0;
 		for (Task task : taskList) {
 			task.updateTickDifference();
 		}
@@ -85,7 +81,6 @@ public class GameTicker extends Thread implements Constants {
 		for (Task task : taskList) {
 			System.out.println(task.toString());
 		}
-		System.out.print("\n");
 	}
 
 }

@@ -82,11 +82,11 @@ public class Debugger implements Constants {
 
 						for (Task task : tasks) {
 							try {
-								if (taskTypes.containsKey(task.getName())) {
-									taskTypes.replace(task.getName(),taskTypes.get(task.getName()) + 1);
-								} else {
-									taskTypes.put(task.getName(),1);
-								}
+								if (taskTypes.containsKey(task.getClass().getSimpleName())) {
+									taskTypes.replace(task.getClass().getSimpleName(),taskTypes.get(task.getClass().getSimpleName()) + 1);
+								} else 
+									taskTypes.put(task.getClass().getSimpleName(),1);
+								
 							} catch (NullPointerException e) {
 							}
 						}

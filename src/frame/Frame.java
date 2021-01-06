@@ -13,7 +13,6 @@ import javax.swing.WindowConstants;
 
 import abstractclasses.CustomWindow;
 import logic.Constants;
-import tasks.WindowRepaintTask;
 
 
 public class Frame implements Constants {
@@ -42,7 +41,7 @@ public class Frame implements Constants {
 		Windowmanager.setVisible(false);
 
 		frame.getContentPane().add(Windowmanager);
-		
+
 		new CustomFrameMouseAdapter(frame);
 		Windowmanager.setVisible(true);
 
@@ -68,14 +67,15 @@ public class Frame implements Constants {
 	public static void setVisible() {
 		frame.setVisible(true);
 	}
-/*
-	public static void repaint() {
-		if (lastRepaint + (1000 / FPS) < System.currentTimeMillis()) {
-			frame.repaint();
-			lastRepaint = System.currentTimeMillis();
-		}
-	}
-*/
+
+	/*
+	 * public static void setState() { manager.setVisible(true); GraphicsDevice gd =
+	 * frame.getGraphicsConfiguration().getDevice(); frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
+	 * // frame.setSize(gd.getDisplayMode().getWidth(), // gd.getDisplayMode().getHeight());
+	 * // manager.setSize(gd.getDisplayMode().getWidth(), // gd.getDisplayMode().getHeight());
+	 * // test(); }
+	 */
+
 }
 
 

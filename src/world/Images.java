@@ -12,7 +12,6 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 import logic.Constants;
-import logic.Layers;
 
 
 public class Images implements Constants {
@@ -52,20 +51,6 @@ public class Images implements Constants {
 		g2.drawRect(0,0,im.getWidth(),im.getHeight());
 		g2.dispose();
 		return im;
-	}
-
-	public static String loadLayerPicture(String ObjektName,Layers layer) {
-		switch (layer) {
-			case Floor:
-				return "rsc/floor pictures/" + ObjektName + ".png";
-			case Cable:
-				return "rsc/cable pictures/" + ObjektName + ".png";
-			case Effects:
-				return "rsc/effects pictures/" + ObjektName + ".png";
-			// $CASES-OMITTED$
-			default:
-				return "";
-		}
 	}
 
 	public static BufferedImage bufferedImage(Image img) {

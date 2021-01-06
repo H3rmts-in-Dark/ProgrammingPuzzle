@@ -19,7 +19,6 @@ public class WindowRepaintTask extends Task {
 	@Override
 	public void runCode() {
 		window.triggerFullRepaint();
-		window.repaint();
 	}
 	
 	@Override

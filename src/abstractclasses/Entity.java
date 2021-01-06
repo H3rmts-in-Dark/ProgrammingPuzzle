@@ -1,42 +1,54 @@
 
 package abstractclasses;
 
+
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
+import logic.Animations;
 import logic.Constants;
+import logic.Layers;
 import logic.Rotations;
-import tasks.MoveEntityTask;
+import tasks.ChangeImageTask;
+import world.Images;
 import world.World;
 
+
 /**
- * Die Grundklasse aller Entities. Um als ein Entity klassifiziert zu werden,
- * muss das Objekt / Lebewesen sich bewegen k�nnen.
+ * Die Grundklasse aller Entities. Um als ein Entity klassifiziert zu werden, muss das
+ * Objekt / Lebewesen sich bewegen k�nnen.
  */
 
 public abstract class Entity implements Constants {
 
-	private Rotations rotation;
+	public Rotations rotation;
 	private Boolean interactable;
-	private Integer height;
+	private int height;
 	private String description;
 	private Point pixelposition;
 
-	private Integer relativedrawX;
-	private Integer relativedrawY;
-
-	private Animation actualAnimation;
-	private HashMap<String, Animation> animations;
+	private int relativedrawX;
+	private int relativedrawY;
 
 	private World world;
 
-	protected Entity(Boolean interactable, Point position, Integer relativedrawX, Integer relativedrawY, Rotations r) {
+	protected Image drawimage;
+
+	public HashMap<Rotations,HashMap<Animations,ArrayList<String>>> animations = new HashMap<>();
+
+	protected Animations actualanimation = null;
+	protected int actualanimationcounter = 0;
+	protected ChangeImageTask tasks = null;
+
+	protected Entity(Boolean interactable,Point position,int relativedrawX,int relativedrawY,Rotations rotation) {
 		this.interactable = interactable;
-		this.rotation = r;
-		this.pixelposition = new Point(position.x * TILEHEIGHTWIDHT, position.y * TILEHEIGHTWIDHT);
+		this.rotation = rotation;
+		this.pixelposition = new Point(position.x * TILEHEIGHTWIDHT,position.y * TILEHEIGHTWIDHT);
 		this.description = "default description";
 		this.world = null;
 		this.height = FLOORHEIGHT;
@@ -44,9 +56,8 @@ public abstract class Entity implements Constants {
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
 
-		animations = new HashMap<>();
 		loadAnimation();
-		triggerAnimation(DEFAULTANIMATION);
+
 	}
 
 	public abstract void loadAnimation();
@@ -58,51 +69,15 @@ public abstract class Entity implements Constants {
 	 */
 	public void setWorld(World world) {
 		this.world = world;
-		height = UNPASSABLE;// getTilePosition(0, 0).getHeight();
+		height = UNPASSABLE;
 	}
 
 	public Boolean getInteractable() {
 		return interactable;
 	}
 
-	public BufferedImage getImage() {
-		return actualAnimation.getActualImage();
-	}
-
-	public void addAnimation(Entry<String, Animation> data) {
-		animations.put(data.getKey(), data.getValue());
-	}
-
-	public void triggerAnimation(String animation) {
-		triggerAnimation(getanimation(animation));
-	}
-
-	private void triggerAnimation(Animation animation) {
-		if (actualAnimation != null) {
-			actualAnimation.stopAnimation();
-		}
-		animation.startAnimation();
-		actualAnimation = animation;
-	}
-
-	public Animation getanimation(String identifier) {
-		return animations.get(identifier);
-	}
-	
-	public Tile getTilePosition(Integer xoffset, Integer yoffset) {
-		return world.getTile(getPosition().x - xoffset, getPosition().y - yoffset);
-	}
-
 	public Point getPixelposition() {
 		return pixelposition;
-	}
-
-	public Integer getDrawX(Integer relativedrawX) {
-		return (int) getPixelposition().getX() + relativedrawX;
-	}
-
-	public Integer getDrawY(Integer relativedrawY) {
-		return (int) getPixelposition().getY() + relativedrawY;
 	}
 
 	public Integer getRelativedrawX() {
@@ -114,7 +89,7 @@ public abstract class Entity implements Constants {
 	}
 
 	public Point getPosition() {
-		return new Point(pixelposition.x / TILEHEIGHTWIDHT, pixelposition.x / TILEHEIGHTWIDHT);
+		return new Point(pixelposition.x / TILEHEIGHTWIDHT,pixelposition.x / TILEHEIGHTWIDHT);
 	}
 
 	public Integer getHeight() {
@@ -137,53 +112,54 @@ public abstract class Entity implements Constants {
 		this.description = description;
 	}
 
-	public void move() {
-		if (getTileInFront().getHeight() <= getHeight())
-			new MoveEntityTask(2, this);
-	}
-
 	public void changePixelpositionY(int y) {
-		System.out.println("pixel positionY" + y);
 		pixelposition.y = y;
 	}
-	
-	public void changePixelpositionX(int x) {
-		System.out.println("pixel positionX" + x);
-		pixelposition.x = x;
-	}
 
-	/**
-	 * Gibt das Tile vor dem Entity zur�ck (in die Richtung, in die es schaut).
-	 * 
-	 * @return
-	 */
-	public Tile getTileInFront() {
-		switch (rotation) {
-		case up:
-			return getTilePosition(0, -1);
-		case right:
-			return getTilePosition(1, 0);
-		case down:
-			return getTilePosition(0, 1);
-		case left:
-			return getTilePosition(-1, 0);
-		default:
-			return null;
-		}
+	public void changePixelpositionX(int x) {
+		pixelposition.x = x;
 	}
 
 	public abstract void onInteract(Entity entity);
 
-	public String getName() {
-		return this.getClass().getName().replace("tiles.", "");
+	public void draw(Graphics2D g2) {
+		g2.drawImage(drawimage,pixelposition.x,pixelposition.y,null);
 	}
 
-	public void draw(Graphics2D g2, Float zoom) {
-		g2.drawImage(
-				getImage().getScaledInstance((int) (TILEHEIGHTWIDHT * zoom),
-						(int) (TILEHEIGHTWIDHT * zoom), Scaler),
-				(int) (getDrawX(getRelativedrawX()) * zoom),
-				(int) (getDrawY(getRelativedrawY()) * zoom), null);
+	public void triggerimageupdate() {
+		new Thread() {
+
+			@Override
+			public void run() {
+				updateimage();
+			}
+
+		}.start();
+	}
+
+	private void updateimage() {
+		BufferedImage image = new BufferedImage(DEFAULTIMAGEWIDHTHEIGHT,DEFAULTIMAGEWIDHTHEIGHT * 2,
+				BufferedImage.TYPE_4BYTE_ABGR);
+
+		image.getGraphics().drawImage(
+				Images.getImage(animations.get(rotation).get(actualanimation).get(actualanimationcounter)),relativedrawX,
+				relativedrawY + DEFAULTIMAGEWIDHTHEIGHT,null);
+
+		drawimage = image;
+	}
+
+	public void nextimage(Layers layer) {
+		actualanimationcounter++;
+	}
+
+	public void triggerAnimation(Animations animation) {
+		actualanimation = animation;
+		actualanimationcounter = 0;
+		try {
+			tasks.end();
+		} catch (NullPointerException e) {
+		}
+		tasks = new ChangeImageTask(5,this,animations.get(rotation).get(animation).size() - 1);
 	}
 
 }

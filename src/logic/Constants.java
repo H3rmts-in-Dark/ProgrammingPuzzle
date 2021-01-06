@@ -97,6 +97,8 @@ public interface Constants {
 	public static final Boolean NOTANIMATED = false;
 	
 	public static final Integer DEFAULTIMAGEWIDHTHEIGHT = 64;
+	
+	public static final Integer DEFAULTTPIC = 5; //ticksperimagechange
 
 //
 // -----------------------------------------------------------
