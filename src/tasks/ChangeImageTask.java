@@ -30,11 +30,11 @@ public class ChangeImageTask extends Task {
 		if (tile != null) {
 			tile.nextimage(layer);
 			tile.triggerimageupdate();
-			tile.getWorld().getWindow().renewImage(tile);
+			UpadateWorldTask.UpdateWorld(tile.getWorld().getWindow(),tile);
 		} else {
 			entity.nextimage(layer);
 			entity.triggerimageupdate();
-			entity.getWorld().getWindow().renewImage(entity);
+			//TODO
 		}
 	}
 

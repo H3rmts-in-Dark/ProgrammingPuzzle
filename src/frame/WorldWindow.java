@@ -54,8 +54,6 @@ public class WorldWindow extends CustomWindow {
 			for (int y = tile.getPosition().y; y < world.getHeight(); y++) {
 				Tile temp = world.getTile(tile.getPosition().x,y);
 			//	System.out.println("refreshing: " + temp.getPosition());
-				if (temp.getHeight() == FLOORHEIGHT) 
-					break;
 				g2.drawImage(temp.getDrawimage(),(int) (temp.getPosition().getX() * TILEHEIGHTWIDHT),
 						y * TILEHEIGHTWIDHT,null);
 
@@ -67,7 +65,7 @@ public class WorldWindow extends CustomWindow {
 							0,0,null);
 		} else if (tile_entity instanceof Entity) {
 			// TODO
-		} else {
+		} else { 
 			BufferedImage image = new BufferedImage(world.getWidth() * TILEHEIGHTWIDHT,
 					(world.getHeight() + 3) * TILEHEIGHTWIDHT,BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g2 = image.createGraphics();
@@ -86,8 +84,8 @@ public class WorldWindow extends CustomWindow {
 
 			drawimage = Images.bufferedImage(
 					image.getScaledInstance((int) (image.getWidth() * zoom),(int) (image.getHeight() * zoom),Scaler));
-		}
-		triggerFullRepaint();
+		 }
+		triggerFullRepaint(); 
 	}
 
 	/**
