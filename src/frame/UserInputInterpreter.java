@@ -8,11 +8,11 @@ import logic.MainControl;
 import tasks.MoveEntityTask;
 
 
-public class KeyHandler extends KeyAdapter {
+public class UserInputInterpreter extends KeyAdapter {
 
 	private String commandString;
 
-	public KeyHandler() {
+	public UserInputInterpreter() {
 		commandString = "";
 	}
 

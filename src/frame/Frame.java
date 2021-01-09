@@ -30,7 +30,7 @@ public class Frame implements Constants {
 		frame.setFocusable(true);
 		frame.setLayout(null);
 		frame.setResizable(false);
-		frame.addKeyListener(new KeyHandler());
+		frame.addKeyListener(new UserInputInterpreter());
 
 		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
