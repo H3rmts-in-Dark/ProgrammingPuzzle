@@ -144,8 +144,8 @@ public abstract class Tile implements Constants {
 	public void onSteppedUpon(Entity entity) {
 	}
 
-	public void draw(Graphics2D g2) {
-		g2.drawImage(drawimage,(int) position.getX() * TILEHEIGHTWIDHT,(int) position.getY() * TILEHEIGHTWIDHT,null);
+	public Image getDrawimage() {
+		return drawimage;
 	}
 
 	public void triggerimageupdate() {

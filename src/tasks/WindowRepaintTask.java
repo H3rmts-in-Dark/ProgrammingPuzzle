@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import abstractclasses.CustomWindow;
 import abstractclasses.Task;
+import frame.WorldWindow;
 
 public class WindowRepaintTask extends Task {
 
@@ -19,6 +20,8 @@ public class WindowRepaintTask extends Task {
 	@Override
 	public void runCode() {
 		window.triggerFullRepaint();
+		if (window instanceof WorldWindow) 
+			((WorldWindow) window).renewImage(null);
 	}
 	
 	@Override

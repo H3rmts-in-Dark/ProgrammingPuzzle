@@ -13,6 +13,7 @@ import logic.Animations;
 import logic.Constants;
 import logic.Layers;
 import logic.Rotations;
+import tiles.Computer;
 import tiles.Default;
 
 
@@ -30,9 +31,11 @@ public class World implements Constants {
 	public World(Integer width,Integer height) {
 		world = new Tile[width][height];
 		entitylist = new ArrayList<>();
-		window = new WorldWindow(this);
 
 		fillempty();
+
+		window = new WorldWindow(this);
+
 	}
 
 	public void setTile(Integer x,Integer y,Tile tile) {

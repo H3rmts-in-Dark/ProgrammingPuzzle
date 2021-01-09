@@ -26,10 +26,8 @@ public class MainControl {
 
 	public static void createWorld() {
 		world = new World(8, 8);
-		world.setTile(1, 1, new Computer());
-		world.setTile(4, 2, new Computer());
-		world.setTile(1, 3, new Computer());
-		world.setTile(1, 4, new Computer());
+
+		world.setTile(2, 1, new Computer());
 		world.setTile(0, 2, new Förderband(Rotations.right));
 		world.setTile(1, 2, new Förderband(Rotations.right));
 		world.setTile(2, 2, new Förderband(Rotations.right));

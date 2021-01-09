@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 import abstractclasses.CustomWindow;
 import abstractclasses.Entity;
-import abstractclasses.Task;
 import abstractclasses.Tile;
 import logic.Animations;
 import tasks.WindowRepaintTask;
@@ -31,39 +30,41 @@ public class WorldWindow extends CustomWindow {
 	 */
 	public WorldWindow(World world) {
 		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2,
-				(world.getHeight() + 1) * TILEHEIGHTWIDHT + TOPBARWIDTH,"World",-1);
+				(world.getHeight() + 1) * TILEHEIGHTWIDHT + TOPBARWIDTH,"World",30);
 		this.world = world;
 		zoom = 1f;
 
 		drawimage = new BufferedImage(world.getWidth() * TILEHEIGHTWIDHT * 5,world.getHeight() * TILEHEIGHTWIDHT * 5,
 				BufferedImage.TYPE_INT_ARGB);
-		
-		new Task(30, -1) {
-			
-			@Override
-			public void runCode() {
-				renewImage(null);
-			}
-			
-		};
 	}
 
 	@Override
 	public Image draw() {
 		return drawimage;
-		
+
 	}
 
 	public void renewImage(Object tile_entity) {
 		if (tile_entity instanceof Tile) {
 			Tile tile = (Tile) tile_entity;
-			BufferedImage newim = drawimage;
+		//	System.out.println(tile.getClass().getSimpleName() + "| " + tile.getPosition());
+			BufferedImage newim = new BufferedImage(world.getWidth() * TILEHEIGHTWIDHT,
+					(world.getHeight() + 3) * TILEHEIGHTWIDHT,BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g2 = newim.createGraphics();
-			for (int y = tile.getPosition().x; y < world.getHeight() - 1; y++) {
-				world.getTile(tile.getPosition().x,y).draw(g2);
+			for (int y = tile.getPosition().y; y < world.getHeight(); y++) {
+				Tile temp = world.getTile(tile.getPosition().x,y);
+			//	System.out.println("refreshing: " + temp.getPosition());
+				if (temp.getHeight() == FLOORHEIGHT) 
+					break;
+				g2.drawImage(temp.getDrawimage(),(int) (temp.getPosition().getX() * TILEHEIGHTWIDHT),
+						y * TILEHEIGHTWIDHT,null);
+
 			}
 			g2.dispose();
-			drawimage = newim;
+			drawimage.createGraphics()
+					.drawImage(Images.bufferedImage(
+							newim.getScaledInstance((int) (newim.getWidth() * zoom),(int) (newim.getHeight() * zoom),Scaler)),
+							0,0,null);
 		} else if (tile_entity instanceof Entity) {
 			// TODO
 		} else {
@@ -73,7 +74,7 @@ public class WorldWindow extends CustomWindow {
 
 			for (int x = 0; x < world.getWidth(); x++) {
 				for (int y = 0; y < world.getHeight(); y++) {
-					world.getTile(x,y).draw(g2);
+					g2.drawImage(world.getTile(x,y).getDrawimage(),x * TILEHEIGHTWIDHT,y * TILEHEIGHTWIDHT,null);
 				}
 			}
 
