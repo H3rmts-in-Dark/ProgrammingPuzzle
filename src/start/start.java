@@ -1,9 +1,12 @@
 package start;
 
 
+import frame.DebuggingWindow;
 import frame.Frame;
 import logic.Debugger;
 import logic.MainControl;
+import tasks.ChangeImageTask;
+import tasks.MoveEntityTask;
 
 
 public class start {
@@ -16,12 +19,14 @@ public class start {
 	public static void main(String[] args) {
 		MainControl.initialize();
 		Frame.init();
-		Debugger.initialize();
 
 		MainControl.start();
 		Frame.setVisible();
 
 		MainControl.createWorld();
+		
+		//new DebuggingWindow();
+		
 	}
 
 }

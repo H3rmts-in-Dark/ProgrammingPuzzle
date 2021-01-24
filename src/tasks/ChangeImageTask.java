@@ -26,7 +26,7 @@ public class ChangeImageTask extends Task {
 	}
 
 	@Override
-	public void runCode() {
+	public void runCode() { 
 		if (tile != null) {
 			tile.nextimage(layer);
 			tile.triggerimageupdate();

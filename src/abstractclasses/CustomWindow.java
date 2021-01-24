@@ -1,144 +1,207 @@
 package abstractclasses;
 
 
-import java.awt.BasicStroke;
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
+import javax.accessibility.AccessibleContext;
 
 import frame.Frame;
 import logic.Constants;
 import logic.Debugger;
-import tasks.WindowRepaintTask;
 import world.Images;
 
 
-public abstract class CustomWindow extends JComponent implements Comparable<CustomWindow>,Constants {
+public abstract class CustomWindow extends Canvas implements Comparable<CustomWindow>,Constants {
 
-	private Integer layer = 0;
+	private int layer = 0;
 	private String title = "Default";
-	CloseButton close;
-	MaximiseButton maximise;
-	private BufferedImage image;
-	Point topLeft = new Point();
+
+	Rectangle close;
+	Rectangle maximise;
+
+	Point mousePoint = new Point();
+	Point reversemousePoint = new Point();
 	Point bottomRight = new Point();
 
+	Point newposition = new Point();
+	Dimension newsize = new Dimension();
+
+	Mousestate mousestate;
+
+	enum Mousestate {
+		DEFAULT_CURSOR,MOVE_CURSOR,E_RESIZE_CURSOR,S_RESIZE_CURSOR,N_RESIZE_CURSOR,W_RESIZE_CURSOR,SE_RESIZE_CURSOR,
+		SW_RESIZE_CURSOR,NW_RESIZE_CURSOR,NE_RESIZE_CURSOR,CLOSE,MAXIMAISE
+	}
+
 	public CustomWindow(String title) {
-		this(DEFAULTWITH,DEFAULTHEIGHT,title,-1);
+		this(DEFAULTWITH,DEFAULTHEIGHT,title);
 	}
 
-	public CustomWindow(Integer defaultWidht,Integer defaultHeight,String title,Integer fullyrepaintdelay) {
-		this(defaultWidht,defaultHeight,new Point(DEFAULTX,DEFAULTY),title,fullyrepaintdelay);
+	public CustomWindow(int defaultWidht,int defaultHeight,String title) {
+		this(defaultWidht,defaultHeight,new Point(DEFAULTX,DEFAULTY),title);
 	}
 
-	public CustomWindow(Integer defaultWidht,Integer defaultHeight,Point defaultPosition,String title,
-			Integer fullyrepaintdelay) {
-		setLocation(defaultPosition);
-		setSize(
+	public CustomWindow(int defaultWidht,int defaultHeight,Point defaultPosition,String title) {
+		setnewLocation(defaultPosition.x,defaultPosition.y);
+		setnewSize(
 				Frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht
 						: Frame.getWidth() - (int) defaultPosition.getX(),
 				Frame.getHeight() > defaultHeight + defaultPosition.getY() ? defaultHeight
 						: Frame.getHeight() - (int) defaultPosition.getY());
-		setTitle(title);
-		close = new CloseButton(this);
-		maximise = new MaximiseButton(this);
-		if (fullyrepaintdelay != -1) {
-			new WindowRepaintTask(fullyrepaintdelay,this,true);
-		}
-		resizeMaximum();
+		setTitle(title + new Random().nextInt(999));
+		// close = new CloseButton(this);
+		// maximise = new MaximiseButton(this);
+		// resizeMaximum();
+
+		close = new Rectangle(getWidth() - 27,8,20,20);
+		maximise = new Rectangle(getWidth() - 57,8,20,20);
+
 		Frame.getWindowManager().addWindow(this);
 
-		triggerFullRepaint();
+		addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				Frame.getWindowManager().windowToFront(getThis());
+				saveBounds(e.getPoint());
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				processMousePressedEvent(e);
+				press(e);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				Frame.getFrame().setCursor(Cursor.getDefaultCursor());
+			}
+
+		});
+
+		addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				changeCursor(e);
+				processMouseMovedEvent(e);
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				processMouseMovedEvent(e);
+			//	changeCursor(e);
+				drag(e);
+			}
+
+		});
+
+		addMouseWheelListener(new MouseWheelListener() {
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				processMouseWheelMovedEvent(e);
+			}
+
+		});
+		setIgnoreRepaint(true);
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-	@Override
-	public void paintComponent(Graphics g) {
-		g.drawImage(image,0,0,null);
+	public String getTitle() {
+		return title;
+	}
+	
+	public CustomWindow getThis() {
+		return this;
 	}
 
-	public void triggerFullRepaint() {
-		new Thread() {
+	@Override
+	public void update(Graphics g) {
+	}
 
-			@Override
-			public void run() {
-				FullRepaint();
+	public void Render() {
+		Debugger.startDraw(this);
+		BufferStrategy bs = super.getBufferStrategy();
+
+		setSize(newsize);
+		setLocation(newposition);
+
+		do {
+			Graphics g;
+			try {
+				if (bs == null) {
+					this.createBufferStrategy(3);
+					return;
+				}
+				g = bs.getDrawGraphics();
+			} catch (IllegalStateException | NullPointerException e) {
+				return;
 			}
 
-		}.start();
-	}
+			BufferedImage drawimage;
 
-	private void FullRepaint() {
-		BufferedImage drawimage = null;
-		try {
-			Debugger.startDraw(this);
-			drawimage = Images.bufferedImage(draw());
-
-		} catch (NullPointerException e) {
-			drawimage = getErrorImage();
-		} finally {
-			if (drawimage == null)
+			try {
+				drawimage = getImage();
+			} catch (Exception e) {
+				e.printStackTrace();
 				drawimage = getErrorImage();
+			}
+			
+			g.setColor(Color.black);
+			g.fillRect(0,0,getWidth(),getHeight());
+
+			g.drawImage(drawimage,getImageborders().x,getImageborders().y,null);
+
+			g.drawImage(Images.getImage("rsc/Gui/top left.png"),0,0,18,30,null);
+			g.drawImage(Images.getImage("rsc/Gui/top.png"),18,0,getWidth() - 34,30,null);
+			g.drawImage(Images.getImage("rsc/Gui/top right.png"),getWidth() - 18,0,18,30,null);
+			g.drawImage(Images.getImage("rsc/Gui/side.png"),0,30,18,getHeight() - 48,null);
+			g.drawImage(Images.getImage("rsc/Gui/side.png"),getWidth() - 18,30,18,getHeight() - 48,null);
+			g.drawImage(Images.getImage("rsc/Gui/bottom left.png"),0,getHeight() - 18,18,18,null);
+			g.drawImage(Images.getImage("rsc/Gui/bottom.png"),18,getHeight() - 18,getWidth(),18,null);
+			g.drawImage(Images.getImage("rsc/Gui/bottom right.png"),getWidth() - 18,getHeight() - 18,18,18,null);
+
+			// Zeichnet den Titel des Fensters
+			g.setColor(Color.BLACK);
+			g.setFont(new Font("Consolas",Font.BOLD,18));
+			String newtitle = "";
+			for (int i = 0; i < title.length() * 14; i += 14) {
+				if (getWidth() - CORNERWIDTH > i)
+					newtitle += title.charAt(i / 14);
+				else
+					break;
+			}
+			g.drawString(newtitle,(int) (SIDEBARWIDTH * 0.7),20);
+
+			g.dispose();
+
+		} while (bs.contentsRestored());
+		try {
+			bs.show();
+		} catch (IllegalStateException e) {
 		}
 
-		drawimage = drawimage.getSubimage(0,0,
-				drawimage.getWidth() > getImageborders().width ? getImageborders().width : drawimage.getWidth(),
-				drawimage.getHeight() > getImageborders().height ? getImageborders().height : drawimage.getHeight());
-
-		BufferedImage newimage = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
-
-		Graphics2D g2 = newimage.createGraphics();
-
-		// innerimage
-		g2.drawImage(drawimage,getImageborders().x,getImageborders().y,null);
-
-		// top + middle surrounding
-		g2.setStroke(new BasicStroke(CORNERWIDTH + CORNERWIDTH / 4));
-		g2.setColor(Color.DARK_GRAY);
-		g2.drawRoundRect(SCROLLBARWIDTH,SCROLLBARWIDTH,getWidth() - CORNERWIDTH - SCROLLBARWIDTH,
-				getHeight() - CORNERWIDTH - SCROLLBARWIDTH,ROUNDCURVES,ROUNDCURVES);
-		g2.fillRect(SCROLLBARWIDTH,SCROLLBARWIDTH,getWidth() - 10,TOPBARWIDTH - SCROLLBARWIDTH);
-
-		// Zeichnet den Titel des Fensters
-		g2.setColor(Color.BLACK);
-		g2.setFont(new Font("Consolas",Font.BOLD,25));
-		String newtitle = "";
-		for (int i = 0; i < this.title.length() * 14; i += 14) {
-			if (getWidth() - (CORNERWIDTH + CORNERWIDTH / 2) - (getWidth() - close.getX()) > i)
-				newtitle += this.title.charAt(i / 14);
-			else
-				break;
-		}
-		g2.drawString(newtitle,CORNERWIDTH + CORNERWIDTH / 2,25);
-
-		// surrounding
-		g2.setStroke(new BasicStroke(3));
-		g2.setColor(Color.BLACK);
-		g2.drawRoundRect(2,2,getWidth() - 4,getHeight() - 4,ROUNDCURVES,ROUNDCURVES);
-		g2.drawRoundRect(SIDEBARWIDTH,TOPBARWIDTH,getWidth() - SIDEBARWIDTH * 2,getHeight() - TOPBARWIDTH - SIDEBARWIDTH,
-				ROUNDCURVES,ROUNDCURVES);
-
-		g2.dispose();
-
-		image = newimage;
 		Debugger.endDraw(this);
-		repaint();
 	}
 
 	/**
@@ -158,16 +221,20 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 				getHeight() - TOPBARWIDTH - SIDEBARWIDTH);
 	}
 
-	public Integer getLayer() {
+	public int getLayer() {
 		return layer;
 	}
 
-	public CustomWindow getThis() {
-		return this;
+	public void setLayer(int layer) {
+		this.layer = layer;
 	}
 
-	public void setLayer(Integer layer) {
-		this.layer = layer;
+	public void setnewLocation(int x,int y) {
+		this.newposition = new Point(x,y);
+	}
+
+	public void setnewSize(int w,int h) {
+		this.newsize = new Dimension(w,h);
 	}
 
 	/**
@@ -187,80 +254,94 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 		return image;
 	}
 
-	public void drag(MouseEvent e,Point point) {
-		if (Frame.getWindowManager().isFullscreen(getThis())) {
-			Point newpos = new Point((int) ((point.getX() / getWidth()) * DEFAULTWITH),point.y);
-			saveBounds(newpos);
-			setSize(DEFAULTWITH,DEFAULTHEIGHT);
-			setLocation(point.x,point.y);
-			Frame.getWindowManager().setFullscreen(null);
-			resizeMaximum();
-			triggerFullRepaint();
+	private static int checkWidht(int check) {
+		return Math.min(Math.max(check,DEFAULTMINWIDTH),DEFAULTMAXWIDTH);
+	}
 
-			new WindowRepaintTask(5,this,false);
-			return;
-		}
-		switch (Frame.getFrame().getCursor().getType()) {
-			case Cursor.MOVE_CURSOR:
-				setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,
-						e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
+	private static int checkHeight(int check) {
+		return Math.min(Math.max(check,DEFAULTMINHEIGHT),DEFAULTMAXHEIGHT);
+	}
+
+	@SuppressWarnings("incomplete-switch")
+	public void press(MouseEvent e) {
+		switch (mousestate) {
+			case MAXIMAISE:
+				if (!Frame.getWindowManager().isFullscreen(this)) {
+					setBounds(0,0,Frame.getWindowManager().getWidth(),Frame.getWindowManager().getHeight());
+					Frame.getWindowManager().setFullscreen(this);
+				} else {
+					setBounds(DEFAULTX,DEFAULTY,DEFAULTWITH,DEFAULTHEIGHT);
+					Frame.getWindowManager().setFullscreen(null);
+				}
 			break;
-			case Cursor.E_RESIZE_CURSOR:
-				setSize(e.getPoint().x - getX(),getHeight());
-			break;
-			case Cursor.S_RESIZE_CURSOR:
-				setSize(getWidth(),e.getPoint().y - getY());
-			break;
-			case Cursor.N_RESIZE_CURSOR:
-				setLocation(getX(),e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
-				setSize(getWidth(),bottomRight.y - getY());
-			break;
-			case Cursor.W_RESIZE_CURSOR:
-				setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,getY());
-				setSize(bottomRight.x - getX(),getHeight());
-			break;
-			case Cursor.SE_RESIZE_CURSOR:
-				setSize(e.getPoint().x - getX(),e.getPoint().y - getY());
-			break;
-			case Cursor.SW_RESIZE_CURSOR:
-				setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,getY());
-				setSize(bottomRight.x - getX(),e.getPoint().y - getY());
-			break;
-			case Cursor.NW_RESIZE_CURSOR:
-				setLocation(e.getLocationOnScreen().x - Frame.getFrame().getX() - topLeft.x,
-						e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
-				setSize(bottomRight.x - getX(),bottomRight.y - getY());
-			break;
-			case Cursor.NE_RESIZE_CURSOR:
-				setLocation(getX(),e.getLocationOnScreen().y - Frame.getFrame().getY() - topLeft.y);
-				setSize(e.getPoint().x - getX(),bottomRight.y - getY());
+			case CLOSE:
+				Frame.getWindowManager().removeWindow(this);
 			break;
 		}
-		resizeMaximum();
-		triggerFullRepaint();
+	}
+
+	@SuppressWarnings("incomplete-switch")
+	public void drag(MouseEvent e) {
+		switch (mousestate) {
+			case MOVE_CURSOR:
+				setnewLocation(e.getLocationOnScreen().x - mousePoint.x,e.getLocationOnScreen().y - mousePoint.y);
+			break;
+			case E_RESIZE_CURSOR:
+				setnewSize(checkWidht(e.getLocationOnScreen().x - getX() + reversemousePoint.x),getHeight());
+			break;
+			case S_RESIZE_CURSOR:
+				setnewSize(getWidth(),checkHeight(e.getLocationOnScreen().y - getY() + reversemousePoint.y));
+			break;
+			case N_RESIZE_CURSOR:
+				setnewLocation(getX(),e.getLocationOnScreen().y - mousePoint.y);
+				setnewSize(getWidth(),checkHeight(bottomRight.y - getY()));
+			break;
+			case W_RESIZE_CURSOR:
+				setnewLocation(e.getLocationOnScreen().x - mousePoint.x,getY());
+				setnewSize(checkWidht(bottomRight.x - getX()),getHeight());
+			break;
+			case SE_RESIZE_CURSOR:
+				setnewSize(checkWidht(e.getLocationOnScreen().x - getX() + reversemousePoint.x),
+						checkHeight(e.getLocationOnScreen().y - getY() + reversemousePoint.y));
+			break;
+			case SW_RESIZE_CURSOR:
+				setnewLocation(e.getLocationOnScreen().x - mousePoint.x,getY());
+				setnewSize(checkWidht(bottomRight.x - getX()),
+						checkHeight(e.getLocationOnScreen().y - getY() + reversemousePoint.y));
+			break;
+			case NW_RESIZE_CURSOR:
+				setnewLocation(e.getLocationOnScreen().x - mousePoint.x,e.getLocationOnScreen().y - mousePoint.y);
+				setnewSize(checkWidht(bottomRight.x - getX()),checkHeight(bottomRight.y - getY()));
+			break;
+			case NE_RESIZE_CURSOR:
+				setnewLocation(getX(),e.getLocationOnScreen().y - mousePoint.y);
+				setnewSize(checkWidht(e.getLocationOnScreen().x - getX() + reversemousePoint.x),
+						checkHeight(bottomRight.y - getY()));
+			break;
+			case DEFAULT_CURSOR:
+			break;
+
+		}
+
 	}
 
 	public void saveBounds(Point point) {
-		topLeft = point;
+		mousePoint = point;
+		reversemousePoint = new Point(getWidth() - point.x,getHeight() - point.y);
 		bottomRight = new Point(getX() + getWidth(),getY() + getHeight());
 	}
 
-	void resizeMaximum() {
-		if (getWidth() <= DEFAULTMINWIDTH)
-			setSize(DEFAULTMINWIDTH,getHeight());
-		if (getHeight() <= DEFAULTMINHEIGHT)
-			setSize(getWidth(),DEFAULTMINHEIGHT);
-		if (getWidth() >= DEFAULTMAXWIDTH)
-			setSize(DEFAULTMAXWIDTH,getHeight());
-		if (getHeight() >= DEFAULTMAXHEIGHT)
-			setSize(getWidth(),DEFAULTMAXHEIGHT);
-
-		close.setBounds(getWidth() - 27,8,20,20);
-		maximise.setBounds(getWidth() - 57,8,20,20);
-	}
-
-	/**
-	 * override to process click events in windowimage
+	/*
+	 * void resizeMaximum() { if (getWidth() <= DEFAULTMINWIDTH)
+	 * setSize(DEFAULTMINWIDTH,getHeight()); if (getHeight() <= DEFAULTMINHEIGHT)
+	 * setSize(getWidth(),DEFAULTMINHEIGHT); if (getWidth() >= DEFAULTMAXWIDTH)
+	 * setSize(DEFAULTMAXWIDTH,getHeight()); if (getHeight() >= DEFAULTMAXHEIGHT)
+	 * setSize(getWidth(),DEFAULTMAXHEIGHT);
+	 * 
+	 * close.setBounds(getWidth() - 27,8,20,20); maximise.setBounds(getWidth() - 57,8,20,20);
+	 * }
+	 * 
+	 * /** override to process click events in windowimage
 	 * 
 	 * @param point
 	 */
@@ -280,106 +361,123 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 * 
 	 * @param direction
 	 */
-	public void mouseWheelMoved(Integer direction) {
+	public void mouseWheelMoved(int direction) {
 	}
 
-	public void processMousePressedEvent(Point point) {
-		saveBounds(point);
-		Frame.getWindowManager().windowToFront(this);
-		if (point.getX() >= getImageborders().getX()
-				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
-				&& point.getY() >= getImageborders().getY()
-				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
+	public void processMousePressedEvent(MouseEvent e) {
+		if (e.getPoint().getX() >= getImageborders().getX()
+				&& e.getPoint().getX() <= getImageborders().getWidth() + getImageborders().getX()
+				&& e.getPoint().getY() >= getImageborders().getY()
+				&& e.getPoint().getY() <= getImageborders().getHeight() + getImageborders().getY()) {
 
-			mousePressed(new Point((int) (point.getX() - getImageborders().getX()),
-					(int) (point.getY() - getImageborders().getY())));
+			mousePressed(new Point((int) (e.getPoint().getX() - getImageborders().getX()),
+					(int) (e.getPoint().getY() - getImageborders().getY())));
 		}
 	}
 
-	public void processMouseMovedEvent(Point point) {
-		if (point.getX() >= getImageborders().getX() // test if in picture
-				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
-				&& point.getY() >= getImageborders().getY()
-				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
+	public void processMouseMovedEvent(MouseEvent e) {
+		if (e.getPoint().getX() >= getImageborders().getX() // test if in picture
+				&& e.getPoint().getX() <= getImageborders().getWidth() + getImageborders().getX()
+				&& e.getPoint().getY() >= getImageborders().getY()
+				&& e.getPoint().getY() <= getImageborders().getHeight() + getImageborders().getY()) {
 
-			mouseMoved(new Point((int) (point.getX() - getImageborders().getX()),
-					(int) (point.getY() - getImageborders().getY())));
+			mouseMoved(new Point((int) (e.getPoint().getX() - getImageborders().getX()),
+					(int) (e.getPoint().getY() - getImageborders().getY())));
 		}
 	}
 
-	public void processMouseWheelMovedEvent(Point point,MouseWheelEvent e) {
-		if (point.getX() >= getImageborders().getX() // test if in picture
-				&& point.getX() <= getImageborders().getWidth() + getImageborders().getX()
-				&& point.getY() >= getImageborders().getY()
-				&& point.getY() <= getImageborders().getHeight() + getImageborders().getY()) {
+	public void processMouseWheelMovedEvent(MouseWheelEvent e) {
+		if (e.getPoint().getX() >= getImageborders().getX() // test if in picture
+				&& e.getPoint().getX() <= getImageborders().getWidth() + getImageborders().getX()
+				&& e.getPoint().getY() >= getImageborders().getY()
+				&& e.getPoint().getY() <= getImageborders().getHeight() + getImageborders().getY()) {
 
 			mouseWheelMoved(e.getWheelRotation());
 		}
 	}
 
-	public void changeCursor(Point mousePoint) {
-		if (!(mousePoint.getX() >= getImageborders().getX() // test if not in picture
-				&& mousePoint.getX() <= getImageborders().getWidth() + getImageborders().getX()
-				&& mousePoint.getY() >= getImageborders().getY()
-				&& mousePoint.getY() <= getImageborders().getHeight() + getImageborders().getY())) {
-			new Thread() {
-
-				@Override
-				public void run() {
-					// edges
-					if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
-							&& mousePoint.getY() < getHeight() - CORNERWIDTH && mousePoint.getY() > CORNERWIDTH)
-						Frame.getFrame().setCursor(new Cursor(Cursor.W_RESIZE_CURSOR)); // left
-					else if (mousePoint.getX() >= getWidth() - SCROLLBARWIDTH && mousePoint.getX() <= getWidth()
-							&& mousePoint.getY() < getHeight() - CORNERWIDTH && mousePoint.getY() > CORNERWIDTH)
-						Frame.getFrame().setCursor(new Cursor(Cursor.E_RESIZE_CURSOR)); // right
-					else if (mousePoint.getX() > CORNERWIDTH && mousePoint.getX() < getWidth() - CORNERWIDTH
-							&& mousePoint.getY() <= SCROLLBARWIDTH && mousePoint.getY() >= 0)
-						Frame.getFrame().setCursor(new Cursor(Cursor.N_RESIZE_CURSOR)); // top
-					else if (mousePoint.getX() > CORNERWIDTH && mousePoint.getX() < getWidth() - CORNERWIDTH
-							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - SCROLLBARWIDTH)
-						Frame.getFrame().setCursor(new Cursor(Cursor.S_RESIZE_CURSOR)); // bottom
-					// corners
-					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
-							&& mousePoint.getY() <= CORNERWIDTH && mousePoint.getY() >= 0)
-						Frame.getFrame().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top left
-					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= CORNERWIDTH
-							&& mousePoint.getY() <= SCROLLBARWIDTH && mousePoint.getY() >= 0)
-						Frame.getFrame().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top top
-					else if (mousePoint.getX() >= getWidth() - CORNERWIDTH && mousePoint.getX() <= getWidth()
-							&& mousePoint.getY() <= SCROLLBARWIDTH && mousePoint.getY() >= 0)
-						Frame.getFrame().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top top
-					else if (mousePoint.getX() >= getWidth() - SCROLLBARWIDTH && mousePoint.getX() <= getWidth()
-							&& mousePoint.getY() <= CORNERWIDTH && mousePoint.getY() >= 0)
-						Frame.getFrame().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top right
-					else if (mousePoint.getX() >= getWidth() - CORNERWIDTH && mousePoint.getX() <= getWidth()
-							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - SCROLLBARWIDTH)
-						Frame.getFrame().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom bottom
-					else if (mousePoint.getX() >= getWidth() - SCROLLBARWIDTH && mousePoint.getX() <= getWidth()
-							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - CORNERWIDTH)
-						Frame.getFrame().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom right
-					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= SCROLLBARWIDTH
-							&& mousePoint.getY() <= getHeight() && mousePoint.getY() >= getHeight() - SCROLLBARWIDTH)
-						Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom left
-					else if (mousePoint.getX() >= 0 && mousePoint.getX() <= CORNERWIDTH && mousePoint.getY() <= getHeight()
-							&& mousePoint.getY() >= getHeight() - CORNERWIDTH)
-						Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom bottom
-					else if (maximise.getModel().isRollover())
-						Frame.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));
-					else if (close.getModel().isRollover())
-						Frame.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR));
-					// move
-					else if (mousePoint.getX() > SCROLLBARWIDTH && mousePoint.getX() < getWidth() - SCROLLBARWIDTH
-							&& mousePoint.getY() < TOPBARWIDTH - SCROLLBARWIDTH && mousePoint.getY() > SCROLLBARWIDTH)
-						Frame.getFrame().setCursor(new Cursor(Cursor.MOVE_CURSOR)); // move
-					else
-						Frame.getFrame().setCursor(Cursor.getDefaultCursor());
-				}
-
-			}.start();
+	public void changeCursor(MouseEvent e) {
+		if (!(e.getPoint().getX() >= getImageborders().getX() // test if not in picture
+				&& e.getPoint().getX() <= getImageborders().getWidth() + getImageborders().getX()
+				&& e.getPoint().getY() >= getImageborders().getY()
+				&& e.getPoint().getY() <= getImageborders().getHeight() + getImageborders().getY())) {
+			// edges
+			if (e.getPoint().getX() >= 0 && e.getPoint().getX() <= RESIZEWIDTHHEIGHT_INTEGER
+					&& e.getPoint().getY() < getHeight() - CORNERWIDTH && e.getPoint().getY() > CORNERWIDTH) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.W_RESIZE_CURSOR)); // left
+				mousestate = Mousestate.W_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() >= getWidth() - RESIZEWIDTHHEIGHT_INTEGER && e.getPoint().getX() <= getWidth()
+					&& e.getPoint().getY() < getHeight() - CORNERWIDTH && e.getPoint().getY() > CORNERWIDTH) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.E_RESIZE_CURSOR)); // right
+				mousestate = Mousestate.E_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() > CORNERWIDTH && e.getPoint().getX() < getWidth() - CORNERWIDTH
+					&& e.getPoint().getY() <= RESIZEWIDTHHEIGHT_INTEGER && e.getPoint().getY() >= 0) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.N_RESIZE_CURSOR)); // top
+				mousestate = Mousestate.N_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() > CORNERWIDTH && e.getPoint().getX() < getWidth() - CORNERWIDTH
+					&& e.getPoint().getY() <= getHeight()
+					&& e.getPoint().getY() >= getHeight() - RESIZEWIDTHHEIGHT_INTEGER) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.S_RESIZE_CURSOR)); // bottom
+				mousestate = Mousestate.S_RESIZE_CURSOR;
+			}
+			// corners
+			else if (e.getPoint().getX() >= 0 && e.getPoint().getX() <= RESIZEWIDTHHEIGHT_INTEGER
+					&& e.getPoint().getY() <= CORNERWIDTH && e.getPoint().getY() >= 0) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top left
+				mousestate = Mousestate.NW_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() >= 0 && e.getPoint().getX() <= CORNERWIDTH
+					&& e.getPoint().getY() <= RESIZEWIDTHHEIGHT_INTEGER && e.getPoint().getY() >= 0) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR)); // left top top
+				mousestate = Mousestate.NW_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() >= getWidth() - CORNERWIDTH && e.getPoint().getX() <= getWidth()
+					&& e.getPoint().getY() <= RESIZEWIDTHHEIGHT_INTEGER && e.getPoint().getY() >= 0) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top top
+				mousestate = Mousestate.NE_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() >= getWidth() - RESIZEWIDTHHEIGHT_INTEGER && e.getPoint().getX() <= getWidth()
+					&& e.getPoint().getY() <= CORNERWIDTH && e.getPoint().getY() >= 0) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR)); // right top right
+				mousestate = Mousestate.NE_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() >= getWidth() - CORNERWIDTH && e.getPoint().getX() <= getWidth()
+					&& e.getPoint().getY() <= getHeight()
+					&& e.getPoint().getY() >= getHeight() - RESIZEWIDTHHEIGHT_INTEGER) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom bottom
+				mousestate = Mousestate.SE_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() >= getWidth() - RESIZEWIDTHHEIGHT_INTEGER && e.getPoint().getX() <= getWidth()
+					&& e.getPoint().getY() <= getHeight() && e.getPoint().getY() >= getHeight() - CORNERWIDTH) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR)); // right bottom right
+				mousestate = Mousestate.SE_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() >= 0 && e.getPoint().getX() <= RESIZEWIDTHHEIGHT_INTEGER
+					&& e.getPoint().getY() <= getHeight()
+					&& e.getPoint().getY() >= getHeight() - RESIZEWIDTHHEIGHT_INTEGER) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom left
+				mousestate = Mousestate.SW_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() >= 0 && e.getPoint().getX() <= CORNERWIDTH && e.getPoint().getY() <= getHeight()
+					&& e.getPoint().getY() >= getHeight() - CORNERWIDTH) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR)); // left bottom bottom
+				mousestate = Mousestate.SW_RESIZE_CURSOR;
+			} else if (e.getPoint().getX() >= getWidth() - 27 && e.getPoint().getX() <= getWidth() - 7
+					&& e.getPoint().getY() <= 28 && e.getPoint().getY() >= 8) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR)); // close
+				mousestate = Mousestate.CLOSE;
+			} else if (e.getPoint().getX() >= getWidth() - 57 && e.getPoint().getX() <= getWidth() - 37
+					&& e.getPoint().getY() <= 28 && e.getPoint().getY() >= 8) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.HAND_CURSOR)); // maxima
+				mousestate = Mousestate.MAXIMAISE;
+			} else if (e.getPoint().getX() > RESIZEWIDTHHEIGHT_INTEGER
+					&& e.getPoint().getX() < getWidth() - RESIZEWIDTHHEIGHT_INTEGER
+					&& e.getPoint().getY() < TOPBARWIDTH - RESIZEWIDTHHEIGHT_INTEGER
+					&& e.getPoint().getY() > RESIZEWIDTHHEIGHT_INTEGER) {
+				Frame.getFrame().setCursor(new Cursor(Cursor.MOVE_CURSOR)); // move
+				mousestate = Mousestate.MOVE_CURSOR;
+			} else {
+				Frame.getFrame().setCursor(Cursor.getDefaultCursor());
+				mousestate = Mousestate.DEFAULT_CURSOR;
+			}
 		} else {
 			Frame.getFrame().setCursor(Cursor.getDefaultCursor());
+			mousestate = Mousestate.DEFAULT_CURSOR;
 		}
+
 	}
 
 	/**
@@ -387,78 +485,11 @@ public abstract class CustomWindow extends JComponent implements Comparable<Cust
 	 * 
 	 * @return must return a buffered image
 	 */
-	public abstract Image draw();
+	public abstract BufferedImage getImage();
 
 	@Override
 	public int compareTo(CustomWindow o) {
-		return (int) Math.signum(this.getLayer() - o.getLayer());
-	}
-
-}
-
-
-
-class CloseButton extends JButton implements ActionListener {
-
-	final CustomWindow window;
-
-	public CloseButton(CustomWindow window) {
-		this.window = window;
-		setBounds(window.getWidth() - 27,8,20,20);
-		addActionListener(this);
-		setFocusPainted(false);
-		setRolloverEnabled(false);
-		window.add(this);
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		((Graphics2D) g).setStroke(new BasicStroke(3));
-		g.setColor(Color.BLACK);
-		g.drawLine(4,3,getWidth() - 4,getHeight() - 4);
-		g.drawLine(getWidth() - 4,3,4,getHeight() - 4);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		Frame.getWindowManager().removeWindow(window);
-	}
-
-}
-
-
-
-class MaximiseButton extends JButton implements ActionListener,Constants {
-
-	final CustomWindow window;
-
-	public MaximiseButton(CustomWindow window) {
-		this.window = window;
-		setBounds(window.getWidth() - 57,8,20,20);
-		addActionListener(this);
-		setFocusPainted(false);
-		setRolloverEnabled(false);
-		window.add(this);
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		((Graphics2D) g).setStroke(new BasicStroke(3));
-		g.setColor(Color.BLACK);
-		g.drawRect(2,2,getWidth() - 4,getHeight() - 6);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (!Frame.getWindowManager().isFullscreen(window)) {
-			window.setBounds(0,0,Frame.getWindowManager().getWidth(),Frame.getWindowManager().getHeight());
-			Frame.getWindowManager().setFullscreen(window);
-		} else {
-			window.setBounds(DEFAULTX,DEFAULTY,DEFAULTWITH,DEFAULTHEIGHT);
-			Frame.getWindowManager().setFullscreen(null);
-		}
-		window.resizeMaximum();
-		window.triggerFullRepaint();
+		return (int) Math.signum(o.getLayer()- this.getLayer());
 	}
 
 }

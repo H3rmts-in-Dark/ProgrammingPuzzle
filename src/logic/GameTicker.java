@@ -4,6 +4,7 @@ package logic;
 import java.util.ArrayList;
 
 import abstractclasses.Task;
+import frame.Frame;
 
 
 public class GameTicker extends Thread implements Constants {
@@ -13,52 +14,99 @@ public class GameTicker extends Thread implements Constants {
 	private ArrayList<Task> addQueue = new ArrayList<>();
 	private ArrayList<Task> removeQueue = new ArrayList<>();
 
+	boolean running;
+
 	public GameTicker() {
+		running = false;
+	}
+
+	@Override
+	public synchronized void start() {
+		running = true;
+		super.start();
 	}
 
 	@Override
 	public void run() {
-		while (true) {
-			Long lastTicktime = System.currentTimeMillis();
-			taskList.addAll(addQueue);
-			addQueue.clear();
+		long lastTime = System.nanoTime();
+		long reporttimer = System.currentTimeMillis();
+		
+		double totick = 0;
+		double tickdelay = 1000000000 / TPS;
+		double torepaint = 0;
+		double repaintdelay = 1000000000 / FPS;
 
-			Debugger.starttick();
+		int frames = 0;
+		int ticks = 0;
 
-			for (Task task : taskList) {
-				if (task.tryRun(currentTick)) {
-					task.onEnd();
-					removeQueue.add(task);
-				}
-				if (task.getEnded()) {
-					removeQueue.add(task);
-				}
+		while (running) {
+			long now = System.nanoTime();
+			totick += (now - lastTime) / tickdelay;
+			torepaint += (now - lastTime) / repaintdelay;
+			lastTime = now;
+			while (totick >= 1) {
+				tick();
+				totick--;
+				ticks++;
+			}
+			while (torepaint >= 1) {
+				render();
+				torepaint--;
+				frames++;
 			}
 
-			taskList.removeAll(removeQueue);
-			removeQueue.clear();
+			if (System.currentTimeMillis() - reporttimer > 1000) {
+				reporttimer += 1000;
+				Debugger.setFps(frames);
+				Debugger.setTps(ticks);
+				frames = 0;
+				ticks = 0;
+			}
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+			}
 
-			Debugger.tick();
-			currentTick++;
+		}
+	}
 
-			// Wartet, bis der n�chste Tick beginnt.
-			while ((System.currentTimeMillis() - lastTicktime) < (1000 / TPS)) {
-				try {
-					Thread.sleep(0,1);
-				} catch (InterruptedException e) {
-					System.out.println(e.getMessage());
-					Thread.currentThread().interrupt();
-				}
+	private static void render() {
+		Debugger.startrender();
+		for (int i = 0; i < Frame.getWindowManager().getWindows().size(); i++) {
+			Frame.getWindowManager().getWindows().get(i).Render();
+		}
+		Debugger.endrender();
+	}
+
+	private void tick() {
+		Debugger.starttick();
+		taskList.addAll(addQueue);
+		addQueue.clear();
+		for (Task task : taskList) {
+			if (task.tryRun(currentTick)) {
+				task.onEnd();
+				removeQueue.add(task);
+			}
+			if (task.getEnded()) {
+				removeQueue.add(task);
 			}
 		}
+
+		taskList.removeAll(removeQueue);
+		removeQueue.clear();
+		
+		Debugger.update();
+		Debugger.endtick();
+		currentTick++;
 	}
 
 	public Long getTick() {
 		return currentTick;
 	}
 
+	@SuppressWarnings("unchecked")
 	public ArrayList<Task> getTaskList() {
-		return taskList;
+		return (ArrayList<Task>) taskList.clone();
 	}
 
 	public void clear() {

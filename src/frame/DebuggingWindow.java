@@ -20,43 +20,47 @@ import logic.MainControl;
 
 public class DebuggingWindow extends CustomWindow {
 
-	String tpsav = "",executiontimepeak = "",tasks = "",cpu = "",gametick = "";
+	String tps = "",fps = "",executiontime = "",rendertime = "",gametick = "",tasksize = "";
 	Set<Entry<String,Integer>> tasktypes;
 	Set<Entry<String,String>> windows;
 
-	OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+	//OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
 	public DebuggingWindow() {
-		super(300,500,new Point(20,20),"Debugging",(int) (TPS * 0.4));
+		super(300,500,new Point(20,20),"Debugging");
 	}
 
 	private void loadValues() {
-		tpsav = Double.toString(Debugger.getTPS());
-		executiontimepeak = Double.toString(Debugger.getExecutionTimePeek());
+		tps = Double.toString(Debugger.getTPS());
+		fps = Double.toString(Debugger.getFps());
+		executiontime = Double.toString(Debugger.getExecutionTime());
+		rendertime = Double.toString(Debugger.getRenderTime());
 		windows = Debugger.getWindows();
-		tasks = Integer.toString(Debugger.getTaskSize());
+		tasksize = Integer.toString(Debugger.getTaskSize());
 		tasktypes = Debugger.getTasktypes();
 		gametick = Long.toString(MainControl.getGameTicker().getTick());
 		// cpu = Double.toString(Math.round((os.getProcessCpuLoad() * 100) * 100.0) / 100.0);
 	}
-
+	
 	@Override
-	public BufferedImage draw() {
+	public BufferedImage getImage() {
+		
+		loadValues();
+		
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = image.createGraphics();
-		loadValues();
 		g2.setColor(Color.GRAY);
 		g2.fillRect(0,0,getWidth(),getHeight());
 
 		g2.setFont(new Font("Arial",Font.BOLD,16));
 		g2.setColor(Color.BLACK);
 
-		Integer x = 0;
+		//Integer x = 0;
 
 		g2.setColor(Color.BLACK);
 		g2.setStroke(new BasicStroke(2));
 		
-		g2.drawRect(x += 10,10,20,20);
+		//g2.drawRect(x += 10,10,20,20);
 		/*
 		 * g2.drawLine(x + 4, 13, x + 16, 13); g2.drawLine(x + 4, 27, x + 16, 27); g2.drawLine(x +
 		 * 4, 14, x + 8, 20); g2.drawLine(x + 16, 14, x + 12, 20); g2.drawLine(x + 8, 20, x + 4,
@@ -97,21 +101,17 @@ public class DebuggingWindow extends CustomWindow {
 
 		*/
 		
-		Integer height = 35;
+		Integer height = 5;  //35
 
-		g2.drawString("TPS:" + tpsav + " / " + TPS,10,height += 25);
-		g2.drawString("TPSDelay:" + Integer.toString(1000 / TPS) + "ms",10,height += 25);
-
-		height += 5;
-		
-		g2.drawString("ExecutiontimePeak:" + executiontimepeak + "ms",10,height += 25);
-		
-		
-		height += 5;
-		g2.drawString("CPU:" + cpu + "%",10,height += 25); 
+		g2.drawString("TPS:" + tps + " ps / " + TPS + " ps",10,height += 25);
+		g2.drawString("FPS:" + fps + " ps / " + FPS + " ps",10,height += 25);
 
 		height += 5;
-		g2.drawString("Tasks:" + tasks,10,height += 25);
+		g2.drawString("Executiontime:" + executiontime + "ms",10,height += 25);
+		g2.drawString("Rendertime:" + rendertime + "ms",10,height += 25);
+		
+		height += 5;
+		g2.drawString("Tasks:" + tasktypes.size(),10,height += 25);
 		for (Entry<String,Integer> entry : tasktypes) {
 			g2.drawString(entry.getKey() + ":" + entry.getValue(),10,height += 25);
 		}

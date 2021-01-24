@@ -10,7 +10,6 @@ import abstractclasses.CustomWindow;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
 import logic.Animations;
-import tasks.WindowRepaintTask;
 import tiles.Computer;
 import world.Images;
 import world.World;
@@ -30,18 +29,18 @@ public class WorldWindow extends CustomWindow {
 	 */
 	public WorldWindow(World world) {
 		super(world.getWidth() * TILEHEIGHTWIDHT + SIDEBARWIDTH * 2,
-				(world.getHeight() + 1) * TILEHEIGHTWIDHT + TOPBARWIDTH,"World",30);
+				(world.getHeight() + 1) * TILEHEIGHTWIDHT + TOPBARWIDTH,"World");
 		this.world = world;
 		zoom = 1f;
 
 		drawimage = new BufferedImage(world.getWidth() * TILEHEIGHTWIDHT * 5,world.getHeight() * TILEHEIGHTWIDHT * 5,
 				BufferedImage.TYPE_INT_ARGB);
+		renewImage(null);
 	}
 
 	@Override
-	public Image draw() {
+	public BufferedImage getImage() {
 		return drawimage;
-
 	}
 
 	public void renewImage(Object tile_entity) {
@@ -72,7 +71,10 @@ public class WorldWindow extends CustomWindow {
 
 			for (int x = 0; x < world.getWidth(); x++) {
 				for (int y = 0; y < world.getHeight(); y++) {
-					g2.drawImage(world.getTile(x,y).getDrawimage(),x * TILEHEIGHTWIDHT,y * TILEHEIGHTWIDHT,null);
+					if (x * DEFAULTIMAGEWIDHTHEIGHT * zoom < getWidth() && y * DEFAULTIMAGEWIDHTHEIGHT * zoom < getHeight())
+						g2.drawImage(world.getTile(x,y).getDrawimage(),x * TILEHEIGHTWIDHT,y * TILEHEIGHTWIDHT,null);
+					else 
+						return;
 				}
 			}
 
@@ -85,7 +87,6 @@ public class WorldWindow extends CustomWindow {
 			drawimage = Images.bufferedImage(
 					image.getScaledInstance((int) (image.getWidth() * zoom),(int) (image.getHeight() * zoom),Scaler));
 		 }
-		triggerFullRepaint(); 
 	}
 
 	/**
@@ -95,7 +96,6 @@ public class WorldWindow extends CustomWindow {
 		Float test = (float) (Math.round(zoom * 100.0) / 100.0);
 		if (test > MINZOOM && test < MAXZOOM)
 			this.zoom = test;
-		WindowRepaintTask.RepaintWindow(this);
 	}
 
 	public Float getZoom() {
@@ -120,14 +120,10 @@ public class WorldWindow extends CustomWindow {
 		}
 
 	}
-
+	
 	@Override
-	public void mouseWheelMoved(Integer direction) {
+	public void mouseWheelMoved(int direction) {
 		setZoom(getZoom() + direction * 0.2f);
-		triggerFullRepaint();
-
-		new WindowRepaintTask(3,this,false);
-		new WindowRepaintTask(5,this,false);
 	}
 
 	public Tile getTile(Point point) {

@@ -16,26 +16,22 @@ import logic.Constants;
 
 public class Images implements Constants {
 
-	private static HashMap<File,BufferedImage> allimages = new HashMap<>();
+	private static HashMap<String,BufferedImage> allimages = new HashMap<>();
 
 	private Images() {
 	}
 
 	public static BufferedImage getImage(String path) {
-		if (path == null) {
-			return getmissingImage();
-		}
-		if (allimages.get(new File(path)) != null)
-			return allimages.get(new File(path));
-		BufferedImage newimage = null;
+		if (allimages.get(path) != null)
+			return allimages.get(path);
 		try {
-			newimage = ImageIO.read(new File(path));
-			allimages.put(new File(path),newimage);
+			BufferedImage newimage = ImageIO.read(new File(path));
+			allimages.put(path,newimage);
+			return newimage;
 		} catch (IOException e) {
 			System.out.println("err:" + path);
 			return getmissingImage();
 		}
-		return newimage;
 	}
 
 	private static BufferedImage getmissingImage() {

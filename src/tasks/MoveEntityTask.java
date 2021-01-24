@@ -16,7 +16,7 @@ public class MoveEntityTask extends Task {
 
 	@SuppressWarnings("incomplete-switch")
 	@Override
-	public void runCode() {
+	public void runCode() { /*
 		System.out.println("switch");
 		switch (entity.getRotation()) {
 			case down:
@@ -33,12 +33,12 @@ public class MoveEntityTask extends Task {
 			break;
 				// $CASES-OMITTED$
 		}
-		WindowRepaintTask.RepaintWindow(entity.getWorld().getWindow());
+		WindowRepaintTask.RepaintWindow(entity.getWorld().getWindow());*/
 	}
 
 	@Override
-	public void onEnd() {
-		entity.getWorld().getTile(entity.getPosition().y,entity.getPosition().y).onSteppedUpon(entity);
+	public void onEnd() { 
+		//entity.getWorld().getTile(entity.getPosition().y,entity.getPosition().y).onSteppedUpon(entity);
 	}
 
 }

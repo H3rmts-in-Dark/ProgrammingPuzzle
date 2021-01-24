@@ -16,97 +16,28 @@ public class Debugger implements Constants {
 
 	static long starttime = 0;
 
-	static ArrayList<Long> ticks = new ArrayList<>();
-	static ArrayList<Long> removeRepaints = new ArrayList<>();
-	static ArrayList<Long> removeTicks = new ArrayList<>();
-	static ArrayList<Long> addRepaints = new ArrayList<>();
-	static ArrayList<Long> addTicks = new ArrayList<>();
-
 	static HashMap<String,Integer> taskTypes = new HashMap<>();
-	static long startTasks = 0,endTasks = 0,startDraw = 0,setstartTasks = 0,executionpeek = 0;
-	static int taskSize = 0,tps = 0;
+	static long startTasks = 0,startRender = 0,executiontime = 0,rendertime = 0;
+	static int taskSize = 0,tps = 0,fps = 0;
 	static HashMap<CustomWindow,Window> windows = new HashMap<>();
 
 	private Debugger() {
 	}
 
-	public static void initialize() {
-		controlThread = new Thread() {
+	public static void update() {
 
-			long nextcontroll = System.currentTimeMillis();
+		ArrayList<Task> tasks = MainControl.getGameTicker().getTaskList();
+		
+		taskSize = tasks.size();
+		taskTypes.clear();
 
-			@Override
-			public void run() {
-				while (true) {
-					while ((System.currentTimeMillis() < nextcontroll)) {
-						try {
-							Thread.sleep(1);
-						} catch (InterruptedException e) {
-							Thread.currentThread().interrupt();
-						}
-					}
-
-					nextcontroll = System.currentTimeMillis() + (1000 / RPS);
-
-					try {
-						if (ticks.get(0) + 1000 <= System.currentTimeMillis()) {
-							tps = ticks.size();
-							ticks.clear();
-							executionpeek = 0;
-						}
-					} catch (IndexOutOfBoundsException | NullPointerException e) {
-					}
-
-					ticks.removeAll(removeTicks);
-
-					removeRepaints.clear();
-					removeTicks.clear();
-
-					ticks.addAll(addTicks);
-
-					addRepaints.clear();
-					addTicks.clear();
-
-					taskSize = MainControl.getGameTicker().getTaskList().size();
-
-					Integer tasksize = 0;
-					for (Entry<String,Integer> entry : taskTypes.entrySet()) {
-						tasksize += entry.getValue();
-					}
-
-					if (tasksize != taskSize) {
-						taskTypes.clear();
-
-						@SuppressWarnings("unchecked")
-						ArrayList<Task> tasks = (ArrayList<Task>) MainControl.getGameTicker().getTaskList().clone();
-
-						for (Task task : tasks) {
-							try {
-								if (taskTypes.containsKey(task.getClass().getSimpleName())) {
-									taskTypes.replace(task.getClass().getSimpleName(),taskTypes.get(task.getClass().getSimpleName()) + 1);
-								} else 
-									taskTypes.put(task.getClass().getSimpleName(),1);
-								
-							} catch (NullPointerException e) {
-							}
-						}
-					}
-				}
-			}
-
-		};
-		controlThread.start();
-	}
-
-	public static void starttick() {
-		setstartTasks = System.nanoTime();
-	}
-
-	public static void tick() {
-		addTicks.add(System.currentTimeMillis());
-		endTasks = System.nanoTime();
-		startTasks = setstartTasks;   // (
-		executionpeek = (executionpeek < (endTasks - startTasks) / 1000000 ) ? ((endTasks - startTasks) / 1000000) : executionpeek;
+		for (Task task : tasks) {
+			String name = task.getClass().getSimpleName();
+			if (taskTypes.containsKey(name))
+				taskTypes.replace(name,taskTypes.get(name) + 1);
+			else
+				taskTypes.put(name,1);
+		}
 	}
 
 	public static void startDraw(CustomWindow wind) {
@@ -118,17 +49,49 @@ public class Debugger implements Constants {
 	public static void endDraw(CustomWindow wind) {
 		windows.get(wind).enddraw();
 	}
-
-	public static void repaint() {
-		addRepaints.add(System.currentTimeMillis());
+	
+	public static void removeWindow(CustomWindow wind) {
+		windows.remove(wind);
+	}
+	
+	public static void starttick() {
+		startTasks = System.currentTimeMillis();
+	}
+	
+	public static void endtick() {
+		executiontime = System.currentTimeMillis() - startTasks;
+	}
+	
+	public static void startrender() {
+		startRender = System.currentTimeMillis();
+	}
+	
+	public static void endrender() {
+		rendertime = System.currentTimeMillis() - startRender;
 	}
 
 	public static int getTPS() {
 		return tps;
 	}
 
-	public static long getExecutionTimePeek() {
-		return executionpeek;
+	public static int getFps() {
+		return fps;
+	}
+
+	public static void setTps(int tps) {
+		Debugger.tps = tps;
+	}
+
+	public static void setFps(int fps) {
+		Debugger.fps = fps;
+	}
+
+	public static long getExecutionTime() {
+		return executiontime;
+	}
+	
+	public static long getRenderTime() {
+		return rendertime;
 	}
 
 	public static int getTaskSize() {
@@ -142,7 +105,7 @@ public class Debugger implements Constants {
 	public static Set<Entry<String,String>> getWindows() {
 		var returnmap = new HashMap<String,String>();
 		for (Entry<CustomWindow,Window> entry : windows.entrySet()) {
-			returnmap.put(entry.getKey().getClass().getSimpleName(),entry.getValue().getDrawtime());
+			returnmap.put(entry.getValue().getTitle(),entry.getValue().getDrawtime());
 		}
 		return returnmap.entrySet();
 	}
@@ -156,9 +119,10 @@ class Window {
 	private long startdraw = 0;
 	private long setstart = 0;
 	private long enddraw = 0;
-
+	private String title = "";
+	
 	public Window(CustomWindow win) {
-
+		title = win.getTitle();
 	}
 
 	void startdraw() {
@@ -172,6 +136,10 @@ class Window {
 
 	public String getDrawtime() {
 		return Long.toString(enddraw - startdraw);
+	}
+	
+	public String getTitle() {
+		return title;
 	}
 
 }

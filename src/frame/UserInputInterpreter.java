@@ -28,13 +28,13 @@ public class UserInputInterpreter extends KeyAdapter {
 		} else if (e.getKeyCode() == 8 || e.getKeyCode() == 127) {
 			try {
 				commandString = commandString.substring(0,commandString.length() - 1);
-				System.out.println(commandString);
+				//System.out.println(commandString);
 			} catch (StringIndexOutOfBoundsException e2) {
 			}
 		} else if (e.getKeyCode() != KeyEvent.VK_SHIFT) {
 			char c = e.getKeyChar();
 			commandString += c;
-			System.out.println(commandString);
+			//System.out.println(commandString);
 		}
 	}
 

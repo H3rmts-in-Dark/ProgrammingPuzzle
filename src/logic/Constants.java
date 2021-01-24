@@ -10,17 +10,16 @@ public interface Constants {
 
 	public static final Integer FRAMEWIDTH = 1000;
 	public static final Integer FRAMEHEIGHT = 800;
-	public static final Integer movedelay = 100, dragdelay = 100;
 
 // 
 // -----------------------------------------------------------
 // --------------------Customwindow---------------------------
 
-	public static final Integer SCROLLBARWIDTH = 4;
-	public static final Integer CORNERWIDTH = 6;
-	public static final Integer TOPBARWIDTH = 36;
-	public static final Integer SIDEBARWIDTH = 8;
-	public static final Integer ROUNDCURVES = 7;
+	public static final Integer RESIZEWIDTHHEIGHT_INTEGER = 10;
+	public static final Integer CORNERWIDTH = 9;
+	public static final Integer TOPBARWIDTH = 35;
+	public static final Integer SIDEBARWIDTH = 18;
+	
 	public static final Integer DEFAULTX = 40;
 	public static final Integer DEFAULTY = 40;
 	public static final Integer DEFAULTWITH = 200;
@@ -87,7 +86,12 @@ public interface Constants {
 	/**
 	 * Ticks Per Second
 	 */
-	public static final Integer TPS = 60;
+	public static final Integer TPS =  60;
+	
+	/**
+	 * Frames Per Second
+	 */
+	public static final Integer FPS = 30;
 
 //
 // -----------------------------------------------------------

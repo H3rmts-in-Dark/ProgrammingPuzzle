@@ -14,12 +14,12 @@ public class DescriptionWindow extends CustomWindow {
 	private Tile tile;
 
 	public DescriptionWindow(Tile tile, Point point) {
-		super(200, 300, point, "Description of " + tile.getClass().getSimpleName(),-1);
+		super(200, 300, point, "Description of " + tile.getClass().getSimpleName());
 		this.tile = tile;
 	}
 
 	@Override
-	public BufferedImage draw() {
+	public BufferedImage getImage() {
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = image.createGraphics();
 		g2.setFont(new Font("Default", Font.BOLD, 20));
