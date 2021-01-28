@@ -6,35 +6,28 @@ public interface Constants {
 
 // 
 // -----------------------------------------------------------
-// ---------------------Frame---------------------------------
-
-	public static final Integer FRAMEWIDTH = 1000;
-	public static final Integer FRAMEHEIGHT = 800;
-
-// 
-// -----------------------------------------------------------
 // --------------------Customwindow---------------------------
 
 	public static final Integer RESIZEWIDTHHEIGHT_INTEGER = 10;
-	public static final Integer CORNERWIDTH = 9;
-	public static final Integer TOPBARWIDTH = 35;
+	public static final Integer CORNERWIDTH = 18;
+	public static final Integer TOPBARWIDTH = 30;
 	public static final Integer SIDEBARWIDTH = 18;
 	
 	public static final Integer DEFAULTX = 40;
 	public static final Integer DEFAULTY = 40;
 	public static final Integer DEFAULTWITH = 200;
 	public static final Integer DEFAULTHEIGHT = 100;
-	public static final Integer DEFAULTMINWIDTH = (CORNERWIDTH + 2) * 2 + 20;
-	public static final Integer DEFAULTMINHEIGHT = TOPBARWIDTH + (CORNERWIDTH + 2) + 20;
-	public static final Integer DEFAULTMAXWIDTH = FRAMEWIDTH;
-	public static final Integer DEFAULTMAXHEIGHT = FRAMEHEIGHT;
+	public static final Integer DEFAULTMINWIDTH = CORNERWIDTH * 2 + 60;
+	public static final Integer DEFAULTMINHEIGHT = TOPBARWIDTH + CORNERWIDTH + 60;
 
 // 
 // -----------------------------------------------------------
 // --------------------Worldwindow----------------------------
 
-	public static final Float MAXZOOM = 4f;
-	public static final Float MINZOOM = 0.2f;
+	public static final Float MAXZOOM = 3.6f;
+	public static final Float MINZOOM = 0.4f;
+	
+	public static final String CROSS_COLOR = "blue";
 
 	/**
 	 * SCALE_FAST: Ist nicht so schön, benötigt aber weniger RAM und dauert lönger
@@ -47,37 +40,8 @@ public interface Constants {
 	 * Einstürze auf. Beim Verschieben des Fensters gibt es starke Verzögerungen.
 	 * 
 	 */
-	public static final Integer Scaler = Image.SCALE_FAST; // Scale Einstellung, Erklärung darüber.
+	public static final Integer Scaler = Image.SCALE_SMOOTH; // Scale Einstellung, Erklärung darüber.
 
-// 
-// -----------------------------------------------------------
-// --------------------World----------------------------------
-
-	public static final Integer TILEHEIGHTWIDHT = 64;
-
-//
-// -----------------------------------------------------------
-// -------------------------Layer-----------------------------
-
-	/**
-	 * H�he des tiefsten Layers.
-	 */
-	public static final Integer FLOORHEIGHT = 0;
-
-	/**
-	 * Der h�chstm�gliche Wert eines Layers.
-	 */
-	public static final Integer UNPASSABLE = TILEHEIGHTWIDHT;
-
-	/**
-	 * kann auf ein f�rederband fallen
-	 */
-	public static final Integer ABLAGE = TILEHEIGHTWIDHT / 2;
-
-	/**
-	 * F�rderband
-	 */
-	public static final Integer FÖRDERBANDHÖHE = TILEHEIGHTWIDHT / 3;
 
 //
 // -----------------------------------------------------------
@@ -102,7 +66,7 @@ public interface Constants {
 	
 	public static final Integer DEFAULTIMAGEWIDHTHEIGHT = 64;
 	
-	public static final Integer DEFAULTTPIC = 5; //ticksperimagechange
+	public static final Integer DEFAULTIMAGECHANGETICKDELAY = 5; //ticksperimagechange
 
 //
 // -----------------------------------------------------------

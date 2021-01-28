@@ -1,6 +1,7 @@
 package tasks;
 
 
+import Enums.Rotations;
 import abstractclasses.Entity;
 import abstractclasses.Task;
 
@@ -8,37 +9,17 @@ import abstractclasses.Task;
 public class MoveEntityTask extends Task {
 
 	private Entity entity;
+	private Rotations direction;
 
-	public MoveEntityTask(Integer tickDifference,Entity entity) {
-		super(tickDifference,TILEHEIGHTWIDHT);
+	public MoveEntityTask(Integer tickDifference,Entity entity,Rotations direction) {
+		super(tickDifference,DEFAULTIMAGEWIDHTHEIGHT);
 		this.entity = entity;
-	}
-
-	@SuppressWarnings("incomplete-switch")
-	@Override
-	public void runCode() { /*
-		System.out.println("switch");
-		switch (entity.getRotation()) {
-			case down:
-				entity.changePixelpositionY(1);
-			break;
-			case left:
-				entity.changePixelpositionX(-1);
-			break;
-			case right:
-				entity.changePixelpositionX(1);
-			break;
-			case up:
-				entity.changePixelpositionY(-1);
-			break;
-				// $CASES-OMITTED$
-		}
-		WindowRepaintTask.RepaintWindow(entity.getWorld().getWindow());*/
+		this.direction = direction;
 	}
 
 	@Override
-	public void onEnd() { 
-		//entity.getWorld().getTile(entity.getPosition().y,entity.getPosition().y).onSteppedUpon(entity);
+	public void runCode() {
+		entity.move(direction);
 	}
 
 }

@@ -1,9 +1,10 @@
 package logic;
 
+import Enums.Rotations;
+import entitys.Box;
 import tiles.Computer;
 import tiles.Förderband;
 import world.World;
-import tasks.*;
 
 public class MainControl {
 
@@ -27,14 +28,19 @@ public class MainControl {
 
 	public static void createWorld() {
 		world = new World(8, 8);
-		world.getWindow().renewImage(null);
-/*
-		world.setTile(2, 1, new Computer());
+
+		world.setTile(1, 1, new Computer());
+		world.setTile(1, 2, new Computer());
+		world.setTile(1, 3, new Computer());
+		world.setTile(1, 4, new Computer());
+		
 		world.setTile(0, 2, new Förderband(Rotations.right));
 		world.setTile(1, 2, new Förderband(Rotations.right));
 		world.setTile(2, 2, new Förderband(Rotations.right));
 		world.setTile(3, 4, new Förderband(Rotations.right));
-*/		
+		
+		world.addEntity(new Box(3,3));
+	
 	}
 
 	public static World getWorld() {

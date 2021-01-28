@@ -1,18 +1,15 @@
 package start;
 
 
-import frame.DebuggingWindow;
 import frame.Frame;
-import logic.Debugger;
+import logic.DebuggingWindow;
 import logic.MainControl;
-import tasks.ChangeImageTask;
-import tasks.MoveEntityTask;
 
 
 public class start {
 
 	/**
-	 * Die Tats�chliche main Methode
+	 * Die Tatsächliche main Methode
 	 * 
 	 * @param args
 	 */
@@ -24,9 +21,9 @@ public class start {
 		Frame.setVisible();
 
 		MainControl.createWorld();
-		
-		//new DebuggingWindow();
-		
+
+		new DebuggingWindow();
+
 	}
 
 }

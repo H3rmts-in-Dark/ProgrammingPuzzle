@@ -30,7 +30,7 @@ public class GameTicker extends Thread implements Constants {
 	public void run() {
 		long lastTime = System.nanoTime();
 		long reporttimer = System.currentTimeMillis();
-		
+
 		double totick = 0;
 		double tickdelay = 1000000000 / TPS;
 		double torepaint = 0;
@@ -72,8 +72,13 @@ public class GameTicker extends Thread implements Constants {
 
 	private static void render() {
 		Debugger.startrender();
-		for (int i = 0; i < Frame.getWindowManager().getWindows().size(); i++) {
-			Frame.getWindowManager().getWindows().get(i).Render();
+		try {
+			for (int i = 0; i < Frame.getWindowManager().getWindows().size(); i++) {
+				Frame.getWindowManager().getWindows().get(i).Render();
+			}
+		} catch (NullPointerException e) {
+			// if anything destroys the rendering (deleting window during render) keep gameticker
+			// running
 		}
 		Debugger.endrender();
 	}
@@ -92,10 +97,11 @@ public class GameTicker extends Thread implements Constants {
 			}
 		}
 
+		Debugger.update();
+
 		taskList.removeAll(removeQueue);
 		removeQueue.clear();
-		
-		Debugger.update();
+
 		Debugger.endtick();
 		currentTick++;
 	}

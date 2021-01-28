@@ -1,18 +1,20 @@
 package tiles;
 
 
+import java.util.LinkedHashMap;
+
+import Enums.Animations;
+import Enums.Heights;
+import Enums.Rotations;
 import abstractclasses.Tile;
-import logic.Animations;
 import logic.Layers;
-import logic.Rotations;
 import world.World;
 
 
 public class Förderband extends Tile {
 
 	public Förderband(Rotations rotation) {
-		super(FÖRDERBANDHÖHE,ANIMATED,0,-15,rotation,4);
-		setDescription("Förderband");
+		super(Heights.TRANSPORT,ANIMATED,0,-15,rotation,4);
 	}
 
 	@Override
@@ -22,6 +24,10 @@ public class Förderband extends Tile {
 		World.loadAnimation(Rotations.right,Animations.defaultanimation,this);
 		World.loadAnimation(Rotations.down,Animations.defaultanimation,this);
 		World.loadAnimation(Rotations.up,Animations.defaultanimation,this);
+	}
+
+	@Override
+	public void getdata(LinkedHashMap<String,String> List) {
 	}
 
 }

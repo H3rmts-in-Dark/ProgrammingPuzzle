@@ -1,6 +1,8 @@
 package frame;
 
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
@@ -18,7 +20,8 @@ public class Frame implements Constants {
 	public static void init() {
 		frame = new JFrame("ProgrammingPuzzle");
 		frame.setVisible(false);
-		frame.setSize(FRAMEWIDTH,FRAMEHEIGHT);
+		frame.setLocation(0,0);
+		frame.setSize(getMaxDimension());
 		frame.setFocusable(true);
 		frame.setLayout(null);
 		frame.setResizable(false);
@@ -26,10 +29,9 @@ public class Frame implements Constants {
 
 		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		// frame.setLocationRelativeTo(null);
-
+		
 		Windowmanager = new CustomWindowManager();
-		Windowmanager.setBounds(0,0,FRAMEWIDTH,FRAMEHEIGHT);
+		Windowmanager.setBounds(0,0,frame.getWidth(),frame.getHeight());
 		Windowmanager.setVisible(false);
 
 		frame.getContentPane().add(Windowmanager);
@@ -45,6 +47,10 @@ public class Frame implements Constants {
 	public static JFrame getFrame() {
 		return frame;
 	}
+	
+	public static Dimension getMaxDimension() {
+		return new Dimension(800,800);// frame.getGraphicsConfiguration().getBounds().getSize();
+	}
 
 	public static int getWidth() {
 		return frame.getWidth();
@@ -57,13 +63,5 @@ public class Frame implements Constants {
 	public static void setVisible() {
 		frame.setVisible(true);
 	}
-
-	/*
-	 * public static void setState() { manager.setVisible(true); GraphicsDevice gd =
-	 * frame.getGraphicsConfiguration().getDevice(); frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
-	 * // frame.setSize(gd.getDisplayMode().getWidth(), // gd.getDisplayMode().getHeight());
-	 * // manager.setSize(gd.getDisplayMode().getWidth(), // gd.getDisplayMode().getHeight());
-	 * // test(); }
-	 */
 
 }

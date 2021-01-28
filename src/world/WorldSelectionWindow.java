@@ -1,4 +1,4 @@
-package frame;
+package world;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -13,7 +13,7 @@ public class WorldSelectionWindow extends CustomWindow {
 	}
 
 	@Override
-	public BufferedImage draw() {
+	public BufferedImage getImage() {
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = image.createGraphics();
 		g2.setColor(Color.GRAY);

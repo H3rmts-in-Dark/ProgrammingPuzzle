@@ -1,10 +1,10 @@
 package tasks;
 
 
+import Enums.Animations;
 import abstractclasses.Entity;
 import abstractclasses.Task;
 import abstractclasses.Tile;
-import logic.Animations;
 import logic.Layers;
 
 
@@ -29,12 +29,8 @@ public class ChangeImageTask extends Task {
 	public void runCode() { 
 		if (tile != null) {
 			tile.nextimage(layer);
-			tile.triggerimageupdate();
-			UpadateWorldTask.UpdateWorld(tile.getWorld().getWindow(),tile);
 		} else {
-			entity.nextimage(layer);
-			entity.triggerimageupdate();
-			//TODO
+			entity.nextimage();
 		}
 	}
 

@@ -1,19 +1,21 @@
 package tiles;
 
 
+import java.util.LinkedHashMap;
+
+import Enums.Animations;
+import Enums.Heights;
+import Enums.Rotations;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
-import logic.Animations;
 import logic.Layers;
-import logic.Rotations;
 import world.World;
 
 
 public class Computer extends Tile {
 
 	public Computer() {
-		super(UNPASSABLE,ANIMATED,-5,-20,Rotations.norotation,DEFAULTTPIC);
-		setDescription("Computer tile that gives you" + "\n" + "some information when interacted with");
+		super(Heights.UNPASSABLE,ANIMATED,-5,-20);
 	}
 
 	@Override
@@ -26,6 +28,11 @@ public class Computer extends Tile {
 	@Override
 	public void onInteract(Entity entity) {
 		System.out.println("interacted with computer " + toString() + "\n" + "USELESS INFORMATION");
+	}
+
+	@Override
+	public void getdata(LinkedHashMap<String,String> list) {
+		list.put("","computer wow");
 	}
 
 }

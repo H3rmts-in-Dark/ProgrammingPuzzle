@@ -1,11 +1,11 @@
-package logic;
+package Enums;
 
 
 public enum Rotations {
 
 	norotation,up,down,left,right;
 
-	public static String toString(Rotations r) {
+	public static String toPath(Rotations r) {
 		switch (r) {
 			case down:
 				return "unten/";

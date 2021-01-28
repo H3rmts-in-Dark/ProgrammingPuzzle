@@ -1,4 +1,4 @@
-package frame;
+package logic;
 
 
 import java.awt.BasicStroke;
@@ -7,15 +7,12 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.lang.management.ManagementFactory;
 import java.util.Map.Entry;
+import java.util.HashMap;
 import java.util.Set;
 
-import com.sun.management.OperatingSystemMXBean;
-
 import abstractclasses.CustomWindow;
-import logic.Debugger;
-import logic.MainControl;
+import abstractclasses.Task;
 
 
 public class DebuggingWindow extends CustomWindow {
@@ -24,12 +21,27 @@ public class DebuggingWindow extends CustomWindow {
 	Set<Entry<String,Integer>> tasktypes;
 	Set<Entry<String,String>> windows;
 
-	//OperatingSystemMXBean os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+	// OperatingSystemMXBean os = (OperatingSystemMXBean)
+	// ManagementFactory.getOperatingSystemMXBean();
 
 	public DebuggingWindow() {
-		super(300,500,new Point(20,20),"Debugging");
+		super(300,400,new Point(20,20),"Debugging");
+		new Task(15,-1) {
+
+			@Override
+			public void runCode() {
+				loadValues();
+			}
+
+			@Override
+			public String getname() {
+				return "DebuggingWindowRefresh";
+			}
+
+		};
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadValues() {
 		tps = Double.toString(Debugger.getTPS());
 		fps = Double.toString(Debugger.getFps());
@@ -37,16 +49,14 @@ public class DebuggingWindow extends CustomWindow {
 		rendertime = Double.toString(Debugger.getRenderTime());
 		windows = Debugger.getWindows();
 		tasksize = Integer.toString(Debugger.getTaskSize());
-		tasktypes = Debugger.getTasktypes();
+		tasktypes = ((HashMap<String,Integer>) Debugger.getTasktypes().clone()).entrySet();
 		gametick = Long.toString(MainControl.getGameTicker().getTick());
 		// cpu = Double.toString(Math.round((os.getProcessCpuLoad() * 100) * 100.0) / 100.0);
 	}
-	
+
 	@Override
 	public BufferedImage getImage() {
-		
-		loadValues();
-		
+
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = image.createGraphics();
 		g2.setColor(Color.GRAY);
@@ -55,18 +65,58 @@ public class DebuggingWindow extends CustomWindow {
 		g2.setFont(new Font("Arial",Font.BOLD,16));
 		g2.setColor(Color.BLACK);
 
-		//Integer x = 0;
+		drawButtons(g2);
+
+		Integer height = 35; // 35
+
+		g2.drawString("TPS:" + tps + " ps / " + TPS + " ps",10,height += 25);
+		g2.drawString("FPS:" + fps + " ps / " + FPS + " ps",10,height += 25);
+
+		height += 5;
+		g2.drawString("Executiontime:" + executiontime + "ms",10,height += 25);
+		g2.drawString("Rendertime:" + rendertime + "ms",10,height += 25);
+
+		height += 5;
+		if (tasktypes != null) {
+			g2.drawString("Tasks:" + tasktypes.size(),10,height += 25);
+
+			for (Entry<String,Integer> entry : tasktypes) {
+				g2.drawString(entry.getKey() + ":" + entry.getValue(),10,height += 25);
+			}
+		} else {
+			g2.drawString("Tasks:0",10,height += 25);
+		}
+
+		height += 5;
+		g2.drawString("Gametick:" + gametick,10,height += 25);
+
+		height += 5;
+		g2.drawString("Drawtimes:",10,height += 25);
+		if (windows != null) {
+			for (Entry<String,String> entry : windows) {
+				g2.drawString(entry.getKey() + ":" + entry.getValue(),10,height += 25);
+			}
+		}
+
+		g2.dispose();
+		return image;
+	}
+
+	private static void drawButtons(Graphics2D g2) {
+		Integer x = 0;
 
 		g2.setColor(Color.BLACK);
 		g2.setStroke(new BasicStroke(2));
-		
-		//g2.drawRect(x += 10,10,20,20);
-		/*
-		 * g2.drawLine(x + 4, 13, x + 16, 13); g2.drawLine(x + 4, 27, x + 16, 27); g2.drawLine(x +
-		 * 4, 14, x + 8, 20); g2.drawLine(x + 16, 14, x + 12, 20); g2.drawLine(x + 8, 20, x + 4,
-		 * 26); g2.drawLine(x + 12, 20, x + 16, 26);
-		 */
-		/*
+
+		g2.drawRect(x += 10,10,20,20);
+
+		g2.drawLine(x + 4,13,x + 16,13);
+		g2.drawLine(x + 4,27,x + 16,27);
+		g2.drawLine(x + 4,14,x + 8,20);
+		g2.drawLine(x + 16,14,x + 12,20);
+		g2.drawLine(x + 8,20,x + 4,26);
+		g2.drawLine(x + 12,20,x + 16,26);
+
 		g2.setColor(Color.RED);
 		g2.drawLine(x += 30,10,x + 20,30);
 		g2.drawLine(x + 20,10,x,30);
@@ -98,40 +148,13 @@ public class DebuggingWindow extends CustomWindow {
 		g2.drawLine(x + 10,23,x + 14,23);
 		g2.drawLine(x + 4,25,x + 10,25);
 		g2.drawLine(x + 12,25,x + 14,25);
-
-		*/
-		
-		Integer height = 5;  //35
-
-		g2.drawString("TPS:" + tps + " ps / " + TPS + " ps",10,height += 25);
-		g2.drawString("FPS:" + fps + " ps / " + FPS + " ps",10,height += 25);
-
-		height += 5;
-		g2.drawString("Executiontime:" + executiontime + "ms",10,height += 25);
-		g2.drawString("Rendertime:" + rendertime + "ms",10,height += 25);
-		
-		height += 5;
-		g2.drawString("Tasks:" + tasktypes.size(),10,height += 25);
-		for (Entry<String,Integer> entry : tasktypes) {
-			g2.drawString(entry.getKey() + ":" + entry.getValue(),10,height += 25);
-		}
-		
-		height += 5;
-		g2.drawString("Gametick:" + gametick,10,height += 25);
-
-		height += 5;
-		g2.drawString("Drawtimes:",10,height += 25);
-		for (Entry<String,String> entry : windows) {
-			g2.drawString(entry.getKey() + ":" + entry.getValue(),10,height += 25);
-		}
-
-		g2.dispose();
-		return image;
 	}
 
 	@Override
 	public void mousePressed(Point point) {
-		if (point.x > 40 && point.x < 60 && point.y > 10 && point.y < 30) {
+		if (point.x > 10 && point.x < 30 && point.y > 10 && point.y < 30) {
+			MainControl.getGameTicker().reset();
+		} else if (point.x > 40 && point.x < 60 && point.y > 10 && point.y < 30) {
 			MainControl.getGameTicker().reset();
 		} else if (point.x > 70 && point.x < 90 && point.y > 10 && point.y < 30) {
 			MainControl.getGameTicker().sysoutTasks();

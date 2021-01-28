@@ -1,10 +1,11 @@
-package logic;
+package Enums;
 
+import logic.Layers;
 
 public enum Animations {
 
 	noanimation,defaultanimation,interactanimation,offanimation,onanimation;
-	
+
 	public static Layers getLayer(Animations a) {
 		switch (a) {
 			case defaultanimation:
@@ -20,5 +21,5 @@ public enum Animations {
 		}
 		return null;
 	}
-	
+
 }

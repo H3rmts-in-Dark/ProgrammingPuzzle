@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -30,21 +31,21 @@ public class Images implements Constants {
 			return newimage;
 		} catch (IOException e) {
 			System.out.println("err:" + path);
-			return getmissingImage();
+			BufferedImage newimage = getmissingImage();
+			allimages.put(path,newimage);
+			return newimage;
 		}
 	}
 
 	private static BufferedImage getmissingImage() {
-		BufferedImage im = new BufferedImage(TILEHEIGHTWIDHT,TILEHEIGHTWIDHT,BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage im = new BufferedImage(DEFAULTIMAGEWIDHTHEIGHT,DEFAULTIMAGEWIDHTHEIGHT,BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D g2 = (Graphics2D) im.getGraphics();
 		g2.setColor(Color.PINK);
-		g2.fillRect(0,0,im.getWidth() / 2,im.getHeight() / 2);
-		g2.fillRect(im.getWidth() / 2,im.getHeight() / 2,im.getWidth() / 2,im.getHeight() / 2);
-		g2.setColor(Color.GREEN);
-		g2.fillRect(im.getWidth() / 2,0,im.getWidth() / 2,im.getHeight() / 2);
-		g2.fillRect(0,im.getHeight() / 2,im.getWidth() / 2,im.getHeight() / 2);
-		g2.setColor(Color.BLUE);
-		g2.drawRect(0,0,im.getWidth(),im.getHeight());
+		for (int i = 0;i < DEFAULTIMAGEWIDHTHEIGHT;i++)
+			for (int j = 0; j < DEFAULTIMAGEWIDHTHEIGHT; j++) {
+				g2.setColor(new Color(new Random().nextInt(255),new Random().nextInt(255),new Random().nextInt(255)));
+				g2.drawRect(i,j,1,1);
+			}
 		g2.dispose();
 		return im;
 	}
@@ -56,6 +57,10 @@ public class Images implements Constants {
 		g.dispose();
 		return im;
 
+	}
+	
+	public static void clear() {
+		allimages.clear();
 	}
 
 }

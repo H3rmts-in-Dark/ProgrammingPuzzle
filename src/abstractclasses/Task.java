@@ -1,20 +1,22 @@
 package abstractclasses;
 
+
 import logic.Constants;
 import logic.MainControl;
 
-public abstract class Task implements Constants{
+
+public abstract class Task implements Constants {
 
 	private long runTick;
-	private int Cycles, tickDifference;
+	private int Cycles,tickDifference;
 	private boolean ended;
 
 	/**
 	 * 
 	 * @param tickDifference
-	 * @param cycles           -1 to loop infinite
+	 * @param cycles         -1 to loop infinite
 	 */
-	protected Task(int tickDifference, int cycles) {
+	protected Task(int tickDifference,int cycles) {
 		this.tickDifference = tickDifference;
 		this.Cycles = cycles;
 		this.ended = false;
@@ -48,7 +50,7 @@ public abstract class Task implements Constants{
 		}
 		return false;
 	}
-	
+
 	public boolean getEnded() {
 		return ended;
 	}
@@ -58,16 +60,22 @@ public abstract class Task implements Constants{
 	}
 
 	public abstract void runCode();
-	
+
 	/**
 	 * not executed when end() was called
 	 */
 	public void onEnd() {
-		
+
 	}
-	
+
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " runtick:" + runTick + " Cycles:" + Cycles + " tickDifference:" + tickDifference;
+		return getClass().getSimpleName() + " runtick:" + runTick + " Cycles:" + Cycles + " tickDifference:"
+				+ tickDifference;
 	}
+
+	public String getname() {
+		return getClass().getSimpleName();
+	}
+
 }

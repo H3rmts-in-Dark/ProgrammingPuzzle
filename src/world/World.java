@@ -6,14 +6,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Enums.Animations;
+import Enums.Rotations;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
-import frame.WorldWindow;
-import logic.Animations;
 import logic.Constants;
 import logic.Layers;
-import logic.Rotations;
-import tiles.Computer;
 import tiles.Default;
 
 
@@ -35,16 +33,15 @@ public class World implements Constants {
 		fillempty();
 
 		window = new WorldWindow(this);
-
 	}
 
-	public void setTile(Integer x,Integer y,Tile tile) {
+	public void setTile(int x,int y,Tile tile) {
 		try {
 			world[x][y].delete();
 		} catch (NullPointerException e) {
 		}
 		world[x][y] = tile;
-		tile.setWorld(this);
+		tile.setPosition(new Point(x,y));
 	}
 
 	public Tile getTile(int x,int y) {
@@ -55,20 +52,8 @@ public class World implements Constants {
 		return window;
 	}
 
-	public Point getTilePoint(Tile tile) {
-		for (Integer x = 0; x < getWidth(); x++) {
-			for (Integer y = 0; y < getHeight(); y++) {
-				if (world[x][y] == tile) {
-					return new Point(x,y);
-				}
-			}
-		}
-		return new Point(-1,-1);
-	}
-
 	public void addEntity(Entity entity) {
 		entitylist.add(entity);
-		entity.setWorld(this);
 	}
 
 	public void removeEntity(Entity entity) {
@@ -76,10 +61,9 @@ public class World implements Constants {
 	}
 
 	public Entity getEntityAt(Tile tile) {
-		for (Entity entity : entitylist) {
+		for (Entity entity : entitylist)
 			if (entity.getPosition().equals(tile.getPosition()))
 				return entity;
-		}
 		return null;
 	}
 
@@ -91,35 +75,28 @@ public class World implements Constants {
 		return world[0].length;
 	}
 
-	public Integer getEntitylistLength() {
-		return entitylist.size();
+	public ArrayList<Entity> getEntitylist() {
+		return entitylist;
 	}
 
 	private void fillempty() {
-		for (int x = 0; x < getWidth(); x++) {
-			for (int y = 0; y < getHeight(); y++) {
+		for (int x = 0; x < getWidth(); x++)
+			for (int y = 0; y < getHeight(); y++)
 				setTile(x,y,new Default());
-			}
-		}
-	}
-
-	public Boolean isEmty() {
-		if (getWidth() > 0 && getHeight() > 0) {
-			return false;
-		}
-		return true;
-	}
-
-	public ArrayList<Entity> getEntitys() {
-		return entitylist;
 	}
 
 	public static void loadAnimation(Rotations rotation,Animations animation,Tile tile) {
 		var add = new ArrayList<String>();
-		for (File file : new File(
-				"rsc/objekt pictures/" + tile.getClass().getSimpleName() + "/" + Rotations.toString(rotation) + animation)
-						.listFiles()) {
-			add.add(file.getPath());
+		try {
+			for (File file : new File(
+					"rsc/objekt pictures/" + tile.getClass().getSimpleName() + "/" + Rotations.toPath(rotation) + animation)
+							.listFiles()) {
+				add.add(file.getPath());
+			}
+		} catch (NullPointerException e) {
+			System.err.println("rsc/objekt pictures/" + tile.getClass().getSimpleName() + "/" + Rotations.toPath(rotation)
+					+ animation + "  did not list any files ");
+			return;
 		}
 		if (!tile.animations.containsKey(rotation)) {
 			var addMap = new HashMap<Animations,ArrayList<String>>();
@@ -130,11 +107,17 @@ public class World implements Constants {
 
 	public static void loadAnimation(Rotations rotation,Animations animation,Entity entity) {
 		var add = new ArrayList<String>();
-		for (File file : new File(
-				"rsc/entity pictures/" + entity.getClass().getSimpleName() + "/" + Rotations.toString(rotation) + animation)
-						.listFiles()) {
-			add.add(file.getPath());
+		try {
+			for (File file : new File("rsc/entity pictures/" + entity.getClass().getSimpleName() + "/"
+					+ Rotations.toPath(rotation) + animation).listFiles()) {
+				add.add(file.getPath());
+			}
+		} catch (NullPointerException e) {
+			System.err.println("rsc/entity pictures/" + entity.getClass().getSimpleName() + "/"
+					+ Rotations.toPath(rotation) + animation + "  did not list any files ");
+			return;
 		}
+
 		if (!entity.animations.containsKey(rotation)) {
 			var addMap = new HashMap<Animations,ArrayList<String>>();
 			entity.animations.put(rotation,addMap);
@@ -144,9 +127,15 @@ public class World implements Constants {
 
 	public static void loadPicture(Layers layer,Animations animation,Tile tile,String name) {
 		var add = new ArrayList<String>();
-		for (File file : new File("rsc/" + Layers.toString(layer) + name + "/" + (layer == Layers.Floor ? "" : animation))
-				.listFiles()) {
-			add.add(file.getPath());
+		try {
+			for (File file : new File(
+					"rsc/" + Layers.toString(layer) + name + "/" + (layer == Layers.Floor ? "" : animation)).listFiles()) {
+				add.add(file.getPath());
+			}
+		} catch (NullPointerException e) {
+			System.err.println("rsc/" + Layers.toString(layer) + name + "/" + (layer == Layers.Floor ? "" : animation)
+					+ "  did not list any files ");
+			return;
 		}
 		if (!tile.pictures.containsKey(layer)) {
 			var addMap = new HashMap<Animations,ArrayList<String>>();

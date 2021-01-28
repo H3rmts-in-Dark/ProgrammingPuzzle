@@ -20,19 +20,18 @@ public enum Layers {
 	 */
 	Effects;
 
-	public static String toString(Layers l) {
-		switch (l) {
+	@SuppressWarnings("incomplete-switch")
+	public static String toString(Layers layer) {
+		switch (layer) {
 			case Cable:
 				return "cable pictures/";
 			case Effects:
 				return "effect pictures/";
 			case Floor:
 				return "floor pictures/";
-			// $CASES-OMITTED$
 			default:
-			break;
+				return "";
 		}
-		return "";
 	}
 
 }

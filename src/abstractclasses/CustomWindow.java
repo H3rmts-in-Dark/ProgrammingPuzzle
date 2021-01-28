@@ -19,9 +19,8 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import javax.accessibility.AccessibleContext;
-
 import frame.Frame;
+import frame.UserInputInterpreter;
 import logic.Constants;
 import logic.Debugger;
 import world.Images;
@@ -29,11 +28,11 @@ import world.Images;
 
 public abstract class CustomWindow extends Canvas implements Comparable<CustomWindow>,Constants {
 
-	private int layer = 0;
+	private int layer = -1;
 	private String title = "Default";
 
-	Rectangle close;
-	Rectangle maximise;
+	Rectangle close = new Rectangle();
+	Rectangle maximise = new Rectangle();
 
 	Point mousePoint = new Point();
 	Point reversemousePoint = new Point();
@@ -64,15 +63,14 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 						: Frame.getWidth() - (int) defaultPosition.getX(),
 				Frame.getHeight() > defaultHeight + defaultPosition.getY() ? defaultHeight
 						: Frame.getHeight() - (int) defaultPosition.getY());
-		setTitle(title + new Random().nextInt(999));
-		// close = new CloseButton(this);
-		// maximise = new MaximiseButton(this);
-		// resizeMaximum();
+		setTitle(title + "  " + new Random().nextInt(999));
 
 		close = new Rectangle(getWidth() - 27,8,20,20);
 		maximise = new Rectangle(getWidth() - 57,8,20,20);
 
 		Frame.getWindowManager().addWindow(this);
+
+		addKeyListener(new UserInputInterpreter());
 
 		addMouseListener(new MouseAdapter() {
 
@@ -106,7 +104,6 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				processMouseMovedEvent(e);
-			//	changeCursor(e);
 				drag(e);
 			}
 
@@ -130,21 +127,20 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 	public String getTitle() {
 		return title;
 	}
-	
+
 	public CustomWindow getThis() {
 		return this;
-	}
-
-	@Override
-	public void update(Graphics g) {
 	}
 
 	public void Render() {
 		Debugger.startDraw(this);
 		BufferStrategy bs = super.getBufferStrategy();
 
-		setSize(newsize);
-		setLocation(newposition);
+		// setSize(newsize);
+		// setLocation(newposition);
+
+		close.setBounds(getWidth() - 27,8,14,14);
+		maximise.setBounds(getWidth() - 47,8,14,14);
 
 		do {
 			Graphics g;
@@ -166,28 +162,31 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 				e.printStackTrace();
 				drawimage = getErrorImage();
 			}
-			
+
 			g.setColor(Color.black);
 			g.fillRect(0,0,getWidth(),getHeight());
 
 			g.drawImage(drawimage,getImageborders().x,getImageborders().y,null);
 
-			g.drawImage(Images.getImage("rsc/Gui/top left.png"),0,0,18,30,null);
-			g.drawImage(Images.getImage("rsc/Gui/top.png"),18,0,getWidth() - 34,30,null);
-			g.drawImage(Images.getImage("rsc/Gui/top right.png"),getWidth() - 18,0,18,30,null);
-			g.drawImage(Images.getImage("rsc/Gui/side.png"),0,30,18,getHeight() - 48,null);
-			g.drawImage(Images.getImage("rsc/Gui/side.png"),getWidth() - 18,30,18,getHeight() - 48,null);
-			g.drawImage(Images.getImage("rsc/Gui/bottom left.png"),0,getHeight() - 18,18,18,null);
-			g.drawImage(Images.getImage("rsc/Gui/bottom.png"),18,getHeight() - 18,getWidth(),18,null);
-			g.drawImage(Images.getImage("rsc/Gui/bottom right.png"),getWidth() - 18,getHeight() - 18,18,18,null);
+			g.drawImage(Images.getImage("rsc/Gui/Window/top left.png"),0,0,18,30,null);
+			g.drawImage(Images.getImage("rsc/Gui/Window/top.png"),18,0,getWidth() - 34,30,null);
+			g.drawImage(Images.getImage("rsc/Gui/Window/top right.png"),getWidth() - 18,0,null);
+			g.drawImage(Images.getImage("rsc/Gui/Window/side.png"),0,30,18,getHeight() - 48,null);
+			g.drawImage(Images.getImage("rsc/Gui/Window/side.png"),getWidth() - 18,30,18,getHeight() - 48,null);
+			g.drawImage(Images.getImage("rsc/Gui/Window/bottom left.png"),0,getHeight() - 18,18,18,null);
+			g.drawImage(Images.getImage("rsc/Gui/Window/bottom.png"),18,getHeight() - 18,getWidth(),18,null);
+			g.drawImage(Images.getImage("rsc/Gui/Window/bottom right.png"),getWidth() - 18,getHeight() - 18,null);
+
+			g.drawImage(Images.getImage("rsc/Gui/Window/maximise.png"),maximise.x,maximise.y,null);
+			g.drawImage(Images.getImage("rsc/Gui/Window/close.png"),close.x,close.y,null);
 
 			// Zeichnet den Titel des Fensters
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("Consolas",Font.BOLD,18));
 			String newtitle = "";
-			for (int i = 0; i < title.length() * 14; i += 14) {
-				if (getWidth() - CORNERWIDTH > i)
-					newtitle += title.charAt(i / 14);
+			for (int i = 0; i < title.length() * 10; i += 10) {
+				if (i + (SIDEBARWIDTH * 0.7) < maximise.x - maximise.width)
+					newtitle += title.charAt(i / 10);
 				else
 					break;
 			}
@@ -230,11 +229,13 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 	}
 
 	public void setnewLocation(int x,int y) {
-		this.newposition = new Point(x,y);
+		// this.newposition = new Point(x,y);
+		setLocation(x,y);
 	}
 
 	public void setnewSize(int w,int h) {
-		this.newsize = new Dimension(w,h);
+		// this.newsize = new Dimension(w,h);
+		setSize(w,h);
 	}
 
 	/**
@@ -255,24 +256,19 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 	}
 
 	private static int checkWidht(int check) {
-		return Math.min(Math.max(check,DEFAULTMINWIDTH),DEFAULTMAXWIDTH);
+		return Math.min(Math.max(check,DEFAULTMINWIDTH),Frame.getMaxDimension().width);
 	}
 
 	private static int checkHeight(int check) {
-		return Math.min(Math.max(check,DEFAULTMINHEIGHT),DEFAULTMAXHEIGHT);
+		return Math.min(Math.max(check,DEFAULTMINHEIGHT),Frame.getMaxDimension().height);
 	}
 
 	@SuppressWarnings("incomplete-switch")
 	public void press(MouseEvent e) {
 		switch (mousestate) {
 			case MAXIMAISE:
-				if (!Frame.getWindowManager().isFullscreen(this)) {
-					setBounds(0,0,Frame.getWindowManager().getWidth(),Frame.getWindowManager().getHeight());
-					Frame.getWindowManager().setFullscreen(this);
-				} else {
-					setBounds(DEFAULTX,DEFAULTY,DEFAULTWITH,DEFAULTHEIGHT);
-					Frame.getWindowManager().setFullscreen(null);
-				}
+				setnewLocation(0,0);
+				setnewSize(Frame.getMaxDimension().width,Frame.getMaxDimension().height);
 			break;
 			case CLOSE:
 				Frame.getWindowManager().removeWindow(this);
@@ -320,9 +316,8 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 			break;
 			case DEFAULT_CURSOR:
 			break;
-
 		}
-
+		Render();
 	}
 
 	public void saveBounds(Point point) {
@@ -331,17 +326,8 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 		bottomRight = new Point(getX() + getWidth(),getY() + getHeight());
 	}
 
-	/*
-	 * void resizeMaximum() { if (getWidth() <= DEFAULTMINWIDTH)
-	 * setSize(DEFAULTMINWIDTH,getHeight()); if (getHeight() <= DEFAULTMINHEIGHT)
-	 * setSize(getWidth(),DEFAULTMINHEIGHT); if (getWidth() >= DEFAULTMAXWIDTH)
-	 * setSize(DEFAULTMAXWIDTH,getHeight()); if (getHeight() >= DEFAULTMAXHEIGHT)
-	 * setSize(getWidth(),DEFAULTMAXHEIGHT);
-	 * 
-	 * close.setBounds(getWidth() - 27,8,20,20); maximise.setBounds(getWidth() - 57,8,20,20);
-	 * }
-	 * 
-	 * /** override to process click events in windowimage
+	/**
+	 * override to process click events in windowimage
 	 * 
 	 * @param point
 	 */
@@ -489,7 +475,7 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 
 	@Override
 	public int compareTo(CustomWindow o) {
-		return (int) Math.signum(o.getLayer()- this.getLayer());
+		return (int) Math.signum(this.getLayer() - o.getLayer());
 	}
 
 }

@@ -1,5 +1,9 @@
-/frame/
-/abstractclasses/
 /start/
 /logic/
+/abstractclasses/
+/frame/
+/tasks/
 /world/
+/tiles/
+/Enums/
+/entitys/

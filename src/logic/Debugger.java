@@ -27,12 +27,12 @@ public class Debugger implements Constants {
 	public static void update() {
 
 		ArrayList<Task> tasks = MainControl.getGameTicker().getTaskList();
-		
+
 		taskSize = tasks.size();
 		taskTypes.clear();
 
 		for (Task task : tasks) {
-			String name = task.getClass().getSimpleName();
+			String name = task.getname();
 			if (taskTypes.containsKey(name))
 				taskTypes.replace(name,taskTypes.get(name) + 1);
 			else
@@ -49,23 +49,23 @@ public class Debugger implements Constants {
 	public static void endDraw(CustomWindow wind) {
 		windows.get(wind).enddraw();
 	}
-	
+
 	public static void removeWindow(CustomWindow wind) {
 		windows.remove(wind);
 	}
-	
+
 	public static void starttick() {
 		startTasks = System.currentTimeMillis();
 	}
-	
+
 	public static void endtick() {
 		executiontime = System.currentTimeMillis() - startTasks;
 	}
-	
+
 	public static void startrender() {
 		startRender = System.currentTimeMillis();
 	}
-	
+
 	public static void endrender() {
 		rendertime = System.currentTimeMillis() - startRender;
 	}
@@ -89,7 +89,7 @@ public class Debugger implements Constants {
 	public static long getExecutionTime() {
 		return executiontime;
 	}
-	
+
 	public static long getRenderTime() {
 		return rendertime;
 	}
@@ -98,8 +98,8 @@ public class Debugger implements Constants {
 		return taskSize;
 	}
 
-	public static Set<Entry<String,Integer>> getTasktypes() {
-		return taskTypes.entrySet();
+	public static HashMap<String,Integer> getTasktypes() {
+		return taskTypes;
 	}
 
 	public static Set<Entry<String,String>> getWindows() {
@@ -120,7 +120,7 @@ class Window {
 	private long setstart = 0;
 	private long enddraw = 0;
 	private String title = "";
-	
+
 	public Window(CustomWindow win) {
 		title = win.getTitle();
 	}
@@ -137,7 +137,7 @@ class Window {
 	public String getDrawtime() {
 		return Long.toString(enddraw - startdraw);
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}

@@ -73,8 +73,8 @@ if VERBOSE and not MINIMALISTIC:print(f"\npath:{dir}\n")    # print pathstring
 
 for index,entry in enumerate(sorted(files,key=customsort)):
     end = "." + entry.split('.')[len(entry.split('.'))-1]    # get the filetype
-    if not MINIMALISTIC:print(dir + "/" + entry + " renamed to " + dir + "/" + str(index) + end)    
-    os.rename(dir + "/" + entry,dir + "/" + str(index) + end)    # rename the actual file
+    if not MINIMALISTIC:print(dir + "/" + entry + " renamed to " + dir + "/" + str(index).zfill(3) + end)    
+    os.rename(dir + "/" + entry,dir + "/" + str(index).zfill(3) + end)    # rename the actual file
 
 print("\nfinished  press enter to close or r + enter to restart ",end="")
 i = input()
