@@ -13,8 +13,10 @@ import Enums.Heights;
 import Enums.Rotations;
 import logic.Constants;
 import logic.Layers;
-import tasks.ChangeImageTask;
+import tasks.ChangeEntityImageTask;
+import tasks.MoveEntityTask;
 import world.Images;
+import world.World;
 
 
 /**
@@ -37,7 +39,11 @@ public abstract class Entity implements Constants {
 
 	protected Animations actualanimation = null;
 	protected int actualanimationcounter = 0;
-	protected ChangeImageTask task = null;
+	protected ChangeEntityImageTask task = null;
+
+	protected MoveEntityTask movetask = null;
+
+	private World world;
 
 	protected Entity(Point position) {
 		this(position,0,0);
@@ -58,7 +64,7 @@ public abstract class Entity implements Constants {
 
 		loadAnimations();
 		if (animated) {
-			triggerAnimation(Animations.defaultanimation);
+			triggerAnimation(Animations.deactivatedanimation);
 		}
 	}
 
@@ -68,6 +74,10 @@ public abstract class Entity implements Constants {
 
 	public void setPixelPosition(Point position) {
 		this.pixelposition = position;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
 	}
 
 	public void setHeight(Heights height) {
@@ -98,6 +108,10 @@ public abstract class Entity implements Constants {
 		return relativedrawY;
 	}
 
+	public World getWorld() {
+		return world;
+	}
+
 	public void nextimage(Layers layer) {
 		actualanimationcounter++;
 	}
@@ -123,6 +137,11 @@ public abstract class Entity implements Constants {
 
 	public void nextimage() {
 		actualanimationcounter++;
+	}
+
+	public void startmove(int ticksperimagechange,Rotations rotation) {
+		if (movetask == null || movetask.getEnded())
+			movetask = new MoveEntityTask(ticksperimagechange,this,rotation);
 	}
 
 	public void move(Rotations direction) {
@@ -151,7 +170,8 @@ public abstract class Entity implements Constants {
 			task.end();
 		} catch (NullPointerException e) {
 		}
-		task = new ChangeImageTask(ticksperimagechange,this,animations.get(rotation).get(animation).size() - 1);
+		task = new ChangeEntityImageTask(ticksperimagechange,this,animations.get(rotation).get(animation).size() - 1,
+				animation);
 	}
 
 	public void delete() {

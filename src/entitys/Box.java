@@ -18,7 +18,7 @@ public class Box extends Entity {
 
 	@Override
 	public void loadAnimations() {
-		World.loadAnimation(Rotations.norotation,Animations.defaultanimation,this);
+		World.loadAnimation(Rotations.norotation,Animations.deactivatedanimation,this);
 	}
 
 	@Override

@@ -10,10 +10,12 @@ import java.util.LinkedHashMap;
 import Enums.Animations;
 import Enums.Heights;
 import Enums.Rotations;
+import Enums.Signalcolors;
 import logic.Constants;
 import logic.Layers;
-import tasks.ChangeImageTask;
+import tasks.ChangeTileImageTask;
 import world.Images;
+import world.World;
 
 
 /**
@@ -27,36 +29,41 @@ public abstract class Tile implements Constants {
 	private int relativedrawY;
 
 	private Point position;
-	protected Rotations rotation;
+	private Rotations rotation;
+
+	private Signalcolors color;
+	private boolean activated;
 
 	private int ticksperimagechange;
 
-	public HashMap<Rotations,HashMap<Animations,ArrayList<String>>> animations = new HashMap<>();
-	public HashMap<Layers,HashMap<Animations,ArrayList<String>>> pictures = new HashMap<>();
+	private HashMap<Rotations,HashMap<Animations,ArrayList<String>>> animations = new HashMap<>();
+	private HashMap<Layers,HashMap<Animations,ArrayList<String>>> pictures = new HashMap<>();
 
 	protected HashMap<Layers,Animations> actualanimation = new HashMap<>();
 	protected HashMap<Layers,Integer> actualanimationcounter = new HashMap<>();
-	protected HashMap<Layers,ChangeImageTask> tasks = new HashMap<>();
+	protected HashMap<Layers,ChangeTileImageTask> tasks = new HashMap<>();
+
+	private World world;
 
 	protected Tile(Heights height) {
-		this(height,false,0,0);
+		this(height,false,0,0,Signalcolors.nocolor);
 	}
 
-	protected Tile(Heights height,Boolean animated,int relativedrawX,int relativedrawY) {
-		this(height,animated,relativedrawX,relativedrawY,Rotations.norotation,DEFAULTIMAGECHANGETICKDELAY);
+	protected Tile(Heights height,Boolean animated,int relativedrawX,int relativedrawY,Signalcolors signalcolor) {
+		this(height,animated,relativedrawX,relativedrawY,Rotations.norotation,DEFAULTIMAGECHANGETICKDELAY,signalcolor);
 	}
 
 	protected Tile(Heights height,Boolean animated,int relativedrawX,int relativedrawY,Rotations rotation,
-			int ticksperimagechange) {
+			int ticksperimagechange,Signalcolors signalcolor) {
 		this.height = height;
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
 		this.rotation = rotation;
 		this.ticksperimagechange = ticksperimagechange;
-
+		this.color = signalcolor;
 		loadAnimations();
 		if (animated) {
-			triggerAnimation(Animations.defaultanimation);
+			triggerAnimation(Animations.deactivatedanimation);
 		}
 	}
 
@@ -70,6 +77,10 @@ public abstract class Tile implements Constants {
 
 	public void setPosition(Point position) {
 		this.position = position;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
 	}
 
 	public Point getPosition() {
@@ -87,7 +98,7 @@ public abstract class Tile implements Constants {
 	public BufferedImage getFloorImage() {
 		try {
 			return Images.getImage(pictures.get(Layers.Floor).get(Animations.noanimation).get(0));
-		} catch (NullPointerException e) {
+		} catch (NullPointerException | IndexOutOfBoundsException e) {
 			return null;
 		}
 	}
@@ -96,7 +107,7 @@ public abstract class Tile implements Constants {
 		try {
 			return Images.getImage(pictures.get(Layers.Cable).get(actualanimation.get(Layers.Cable))
 					.get(actualanimationcounter.get(Layers.Cable)));
-		} catch (NullPointerException e) {
+		} catch (NullPointerException | IndexOutOfBoundsException e) {
 		}
 		return null;
 	}
@@ -105,7 +116,7 @@ public abstract class Tile implements Constants {
 		try {
 			return Images.getImage(animations.get(rotation).get(actualanimation.get(Layers.Objects))
 					.get(actualanimationcounter.get(Layers.Objects)));
-		} catch (NullPointerException e) {
+		} catch (NullPointerException | IndexOutOfBoundsException e) {
 		}
 		return null;
 	}
@@ -114,7 +125,7 @@ public abstract class Tile implements Constants {
 		try {
 			return Images.getImage(pictures.get(Layers.Effects).get(actualanimation.get(Layers.Effects))
 					.get(actualanimationcounter.get(Layers.Effects)));
-		} catch (NullPointerException e) {
+		} catch (NullPointerException | IndexOutOfBoundsException e) {
 		}
 		return null;
 	}
@@ -127,35 +138,96 @@ public abstract class Tile implements Constants {
 		return height;
 	}
 
+	public Signalcolors getColor() {
+		return color;
+	}
+
+	public HashMap<Layers,HashMap<Animations,ArrayList<String>>> getPictures() {
+		return pictures;
+	}
+
+	public HashMap<Rotations,HashMap<Animations,ArrayList<String>>> getAnimations() {
+		return animations;
+	}
+
+	public HashMap<Layers,Integer> getActualanimationcounter() {
+		return actualanimationcounter;
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public int getTicksperimagechange() {
+		return ticksperimagechange;
+	}
+
 	public void onInteract(Entity entity) {
 	}
 
 	public void onSteppedUpon(Entity entity) {
 	}
 
+	public void onEntityLeft(Entity entity) {
+	}
+
+	public void onSignal(Tile caller,boolean activate) {
+	}
+
+	public void onSignalRelayer(Tile caller,boolean activate) {
+		if (activate == activated)
+			return;
+		activated = activate;
+		if (activate)
+			this.triggerAnimation(Animations.activatedanimation);
+		else
+			this.triggerAnimation(Animations.deactivatedanimation);
+		if (color != Signalcolors.nocolor) {
+			if (getPosition().x > 0)
+				if (world.getTile(getPosition().x - 1,getPosition().y).getColor() == color)
+					world.getTile(getPosition().x - 1,getPosition().y).onSignalRelayer(this,activate);
+			if (getPosition().y > 0)
+				if (world.getTile(getPosition().x,getPosition().y - 1).getColor() == color)
+					world.getTile(getPosition().x,getPosition().y - 1).onSignalRelayer(this,activate);
+			if (getPosition().x < world.getWidth() - 1)
+				if (world.getTile(getPosition().x + 1,getPosition().y).getColor() == color)
+					world.getTile(getPosition().x + 1,getPosition().y).onSignalRelayer(this,activate);
+			if (getPosition().y < world.getHeight() - 1)
+				if (world.getTile(getPosition().x,getPosition().y + 1).getColor() == color)
+					world.getTile(getPosition().x,getPosition().y + 1).onSignalRelayer(this,activate);
+		}
+		onSignal(caller,activate);
+	}
+
+	public boolean getActivated() {
+		return activated;
+	}
+
 	public void nextimage(Layers layer) {
-		actualanimationcounter.replace(layer,actualanimationcounter.get(layer) + 1);
+		getActualanimationcounter().replace(layer,getActualanimationcounter().get(layer) + 1);
 	}
 
 	public void triggerAnimation(Animations animation) {
 		Layers layer = Animations.getLayer(animation);
 		actualanimation.put(layer,animation);
-		actualanimationcounter.put(layer,0);
 		try {
 			tasks.get(layer).end();
 		} catch (NullPointerException e) {
 		}
+		actualanimationcounter.put(layer,0);
 		if (layer == Layers.Objects) {
-			tasks.put(layer,new ChangeImageTask(ticksperimagechange,this,
-					animations.get(rotation).get(animation).size() - 1,Layers.Objects));
+			int size = getAnimations().get(rotation).get(animation).size() - 1;
+			if (size > 2)
+				tasks.put(layer,new ChangeTileImageTask(ticksperimagechange,this,size,animation));
 		} else {
-			tasks.put(layer,
-					new ChangeImageTask(ticksperimagechange,this,pictures.get(layer).get(animation).size() - 1,layer));
+			int size = getPictures().get(layer).get(animation).size() - 1;
+			if (size > 2)
+				tasks.put(layer,new ChangeTileImageTask(ticksperimagechange,this,size,animation));
 		}
 	}
 
 	public void delete() {
-		for (ChangeImageTask task : tasks.values()) {
+		for (Task task : tasks.values()) {
 			task.end();
 		}
 	}

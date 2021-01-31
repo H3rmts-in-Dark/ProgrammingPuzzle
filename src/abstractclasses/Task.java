@@ -39,13 +39,15 @@ public abstract class Task implements Constants {
 	 */
 	public boolean tryRun(long tick) {
 		if (tick >= runTick) {
-			runCode();
+			if (!runCode())
+				Cycles++;
 			if (Cycles > 0)
 				Cycles--;
 			if (Cycles == -1 || Cycles > 0) {
 				updateTickDifference();
 				return false;
 			}
+			ended = true;
 			return true;
 		}
 		return false;
@@ -59,7 +61,7 @@ public abstract class Task implements Constants {
 		ended = true;
 	}
 
-	public abstract void runCode();
+	public abstract boolean runCode();
 
 	/**
 	 * not executed when end() was called

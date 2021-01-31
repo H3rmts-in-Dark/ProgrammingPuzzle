@@ -1,6 +1,8 @@
 package Enums;
 
+
 import logic.Constants;
+
 
 public enum Heights implements Constants {
 
@@ -13,10 +15,6 @@ public enum Heights implements Constants {
 	 */
 	UNPASSABLE,
 	/**
-	 * kann auf ein förederband fallen
-	 */
-	STORAGE,
-	/**
 	 * Förderband
 	 */
 	TRANSPORT;
@@ -25,10 +23,8 @@ public enum Heights implements Constants {
 		switch (height) {
 			case FLOORHEIGHT:
 				return 0;
-			case STORAGE:
-				return DEFAULTIMAGEWIDHTHEIGHT / 2;
 			case TRANSPORT:
-				return DEFAULTIMAGEWIDHTHEIGHT / 3;
+				return (int) (DEFAULTIMAGEWIDHTHEIGHT / 1.9);
 			case UNPASSABLE:
 				return DEFAULTIMAGEWIDHTHEIGHT;
 		}

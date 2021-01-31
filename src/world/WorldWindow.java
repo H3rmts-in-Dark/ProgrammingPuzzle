@@ -5,11 +5,12 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-import Enums.Animations;
+import Enums.Heights;
 import abstractclasses.CustomWindow;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
 import tiles.Computer;
+import tiles.Schalter;
 
 
 public class WorldWindow extends CustomWindow {
@@ -76,8 +77,10 @@ public class WorldWindow extends CustomWindow {
 			}
 
 		for (Entity entity : world.getEntitylist()) {
-			g2.drawImage(entity.getImage(),entity.getPixelPosition().x + entity.getRelativedrawX(),
-					entity.getPixelPosition().y + entity.getRelativedrawY(),null);
+			g2.drawImage(
+					entity.getImage(),entity.getPixelPosition().x + entity.getRelativedrawX(),entity.getPixelPosition().y
+							+ DEFAULTIMAGEWIDHTHEIGHT + entity.getRelativedrawY() - Heights.getheight(entity.getHeight()),
+					null);
 		}
 		for (int x = 0; x < widh; x++)
 			for (int y = 0; y < heig; y++)
@@ -113,12 +116,15 @@ public class WorldWindow extends CustomWindow {
 	@Override
 	public void mousePressed(Point point) {
 		Tile tile = getTile(point);
-		if (tile instanceof Computer) {
-			tile.triggerAnimation(Animations.interactanimation);
-		} else {
-			new DescriptionWindow(tile,new Point(point.x + getX(),point.y + getY()));
+		if (tile instanceof Schalter)
+			tile.onInteract(null);
+		else if (tile instanceof Computer)
+			tile.onInteract(null);
+		else {
+			new DescriptionTileWindow(tile,new Point(point.x + getX(),point.y + getY()));
+			if (world.getEntityAt(tile) != null)
+				new DescriptionEntityWindow(world.getEntityAt(tile),new Point(point.x + getX(),point.y + getY()));
 		}
-
 	}
 
 	@Override

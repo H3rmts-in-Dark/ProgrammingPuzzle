@@ -52,7 +52,7 @@ public class UserInputInterpreter extends KeyAdapter {
 		} else if (command.equals("world")) {
 			MainControl.createWorld();
 		} else if (command.equals("move")) {
-			new MoveEntityTask(2,MainControl.getWorld().getEntitylist().get(0),Rotations.left);
+			new MoveEntityTask(2,MainControl.getWorld().getEntitylist().get(0),Rotations.right);
 		}
 	}
 

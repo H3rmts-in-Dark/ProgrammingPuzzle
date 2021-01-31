@@ -29,8 +29,9 @@ public class DebuggingWindow extends CustomWindow {
 		new Task(15,-1) {
 
 			@Override
-			public void runCode() {
+			public boolean runCode() {
 				loadValues();
+				return true;
 			}
 
 			@Override

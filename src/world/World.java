@@ -41,6 +41,7 @@ public class World implements Constants {
 		} catch (NullPointerException e) {
 		}
 		world[x][y] = tile;
+		tile.setWorld(this);
 		tile.setPosition(new Point(x,y));
 	}
 
@@ -54,6 +55,8 @@ public class World implements Constants {
 
 	public void addEntity(Entity entity) {
 		entitylist.add(entity);
+		entity.setHeight(getTile(entity.getPosition().x,entity.getPosition().y).getHeight());
+		entity.setWorld(this);
 	}
 
 	public void removeEntity(Entity entity) {
@@ -65,6 +68,14 @@ public class World implements Constants {
 			if (entity.getPosition().equals(tile.getPosition()))
 				return entity;
 		return null;
+	}
+
+	public ArrayList<Entity> getEntitysAt(Tile tile) {
+		var list = new ArrayList<Entity>();
+		for (Entity entity : entitylist)
+			if (entity.getPosition().equals(tile.getPosition()))
+				list.add(entity);
+		return list;
 	}
 
 	public Integer getWidth() {
@@ -98,11 +109,11 @@ public class World implements Constants {
 					+ animation + "  did not list any files ");
 			return;
 		}
-		if (!tile.animations.containsKey(rotation)) {
+		if (!tile.getAnimations().containsKey(rotation)) {
 			var addMap = new HashMap<Animations,ArrayList<String>>();
-			tile.animations.put(rotation,addMap);
+			tile.getAnimations().put(rotation,addMap);
 		}
-		tile.animations.get(rotation).put(animation,add);
+		tile.getAnimations().get(rotation).put(animation,add);
 	}
 
 	public static void loadAnimation(Rotations rotation,Animations animation,Entity entity) {
@@ -137,12 +148,12 @@ public class World implements Constants {
 					+ "  did not list any files ");
 			return;
 		}
-		if (!tile.pictures.containsKey(layer)) {
+		if (!tile.getPictures().containsKey(layer)) {
 			var addMap = new HashMap<Animations,ArrayList<String>>();
-			tile.pictures.put(layer,addMap);
+			tile.getPictures().put(layer,addMap);
 		}
 
-		tile.pictures.get(layer).put(animation,add);
+		tile.getPictures().get(layer).put(animation,add);
 	}
 
 }
