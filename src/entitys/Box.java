@@ -13,7 +13,7 @@ import world.World;
 public class Box extends Entity {
 
 	public Box(int x,int y) {
-		super(new Point(x,y),8,18);
+		super(new Point(x,y),8,12);
 	}
 
 	@Override

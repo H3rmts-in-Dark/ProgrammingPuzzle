@@ -6,7 +6,9 @@ import Enums.Signalcolors;
 import entitys.Box;
 import tiles.Schalter;
 import tiles.Computer;
+import tiles.Entitysensor;
 import tiles.Förderband;
+import tiles.Lampe;
 import world.World;
 
 
@@ -46,6 +48,12 @@ public class MainControl {
 
 		world.setTile(0,3,new Schalter(Signalcolors.red));
 		world.setTile(3,1,new Schalter(Signalcolors.green));
+
+		world.setTile(3,0,new Lampe(Signalcolors.green));
+
+		world.setTile(3,2,new Entitysensor(Signalcolors.blue));
+		world.setTile(3,3,new Lampe(Signalcolors.blue));
+		world.setTile(4,2,new Computer(Signalcolors.blue));
 
 		world.addEntity(new Box(0,0));
 		world.addEntity(new Box(2,0));

@@ -25,7 +25,7 @@ public class DebuggingWindow extends CustomWindow {
 	// ManagementFactory.getOperatingSystemMXBean();
 
 	public DebuggingWindow() {
-		super(300,400,new Point(20,20),"Debugging");
+		super(300,400,new Point(20,20),"Debugging",1);
 		new Task(15,-1) {
 
 			@Override

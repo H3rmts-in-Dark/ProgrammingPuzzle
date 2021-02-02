@@ -19,7 +19,7 @@ public class DescriptionTileWindow extends CustomWindow {
 	private Tile tile;
 
 	public DescriptionTileWindow(Tile tile,Point point) {
-		super(200,300,point,"Description of " + tile.getClass().getSimpleName());
+		super(200,300,point,"Description of " + tile.getClass().getSimpleName(),0);
 		this.tile = tile;
 	}
 

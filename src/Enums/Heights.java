@@ -24,7 +24,7 @@ public enum Heights implements Constants {
 			case FLOORHEIGHT:
 				return 0;
 			case TRANSPORT:
-				return (int) (DEFAULTIMAGEWIDHTHEIGHT / 1.9);
+				return (int) (DEFAULTIMAGEWIDHTHEIGHT / 2.1);
 			case UNPASSABLE:
 				return DEFAULTIMAGEWIDHTHEIGHT;
 		}

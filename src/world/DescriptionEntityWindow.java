@@ -19,7 +19,7 @@ public class DescriptionEntityWindow extends CustomWindow {
 	private Entity entity;
 
 	public DescriptionEntityWindow(Entity entity,Point point) {
-		super(200,300,point,"Description of " + entity.getClass().getSimpleName());
+		super(200,300,point,"Description of " + entity.getClass().getSimpleName(),0);
 		this.entity = entity;
 	}
 

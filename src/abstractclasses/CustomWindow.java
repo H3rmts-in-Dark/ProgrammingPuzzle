@@ -53,10 +53,10 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 	}
 
 	public CustomWindow(int defaultWidht,int defaultHeight,String title) {
-		this(defaultWidht,defaultHeight,new Point(DEFAULTX,DEFAULTY),title);
+		this(defaultWidht,defaultHeight,new Point(DEFAULTX,DEFAULTY),title,1);
 	}
 
-	public CustomWindow(int defaultWidht,int defaultHeight,Point defaultPosition,String title) {
+	public CustomWindow(int defaultWidht,int defaultHeight,Point defaultPosition,String title,int level) {
 		setnewLocation(defaultPosition.x,defaultPosition.y);
 		setnewSize(
 				Frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht
@@ -68,7 +68,7 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 		close = new Rectangle(getWidth() - 27,8,20,20);
 		maximise = new Rectangle(getWidth() - 57,8,20,20);
 
-		Frame.getWindowManager().addWindow(this);
+		Frame.getWindowManager().addWindow(level,this);
 
 		addKeyListener(new UserInputInterpreter());
 

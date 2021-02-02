@@ -1,7 +1,9 @@
 package frame;
 
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.TreeMap;
 
 import javax.swing.JLayeredPane;
 
@@ -13,25 +15,39 @@ import logic.Debugger;
 public class CustomWindowManager extends JLayeredPane implements Constants {
 
 	CustomWindow fullscreen;
-	LinkedList<CustomWindow> windows;
+	TreeMap<Integer,LinkedList<CustomWindow>> windows;
 
 	public CustomWindowManager() {
-		windows = new LinkedList<>();
+		windows = new TreeMap<Integer,LinkedList<CustomWindow>>();
 	}
 
-	public LinkedList<CustomWindow> getWindows() {
-		return windows;
-	}
-
-	public void addWindow(CustomWindow window) {
-		windows.add(window);
+	public void addWindow(int layer,CustomWindow window) {
+		if (windows.get(layer) == null)
+			windows.put(layer,new LinkedList<>());
+		windows.get(layer).add(window);
 		clean();
 	}
 
 	public void removeWindow(CustomWindow newWindow) {
-		windows.remove(newWindow);
+		for (LinkedList<CustomWindow> linkedList : windows.values()) {
+			for (CustomWindow customWindow : linkedList) {
+				if (customWindow == newWindow)
+					linkedList.remove(newWindow);
+				break;
+			}
+		}
 		Debugger.removeWindow(newWindow);
 		clean();
+	}
+
+	public ArrayList<CustomWindow> getWindows() {
+		ArrayList<CustomWindow> ret = new ArrayList<>();
+		for (LinkedList<CustomWindow> list : windows.values()) {
+			for (CustomWindow customWindow : list) {
+				ret.add(customWindow);
+			}
+		}
+		return ret;
 	}
 
 	public void windowToFront(CustomWindow window) {
@@ -40,19 +56,23 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 	}
 
 	private void clean() {
-		windows.sort(null);
-		Integer actlayer = 0;
-		for (CustomWindow window : windows) {
-			window.setLayer(actlayer);
-			actlayer++;
+		for (LinkedList<CustomWindow> linkedList : windows.values()) {
+			linkedList.sort(null);
+			int actlayer = 0;
+			for (CustomWindow window : linkedList) {
+				window.setLayer(actlayer);
+				actlayer++;
+			}
 		}
 		addComponents();
 	}
 
 	private void addComponents() {
 		removeAll();
-		for (CustomWindow window : windows) {
-			add(window);
+		for (LinkedList<CustomWindow> linkedList : windows.values()) {
+			for (CustomWindow customWindow : linkedList) {
+				add(customWindow);
+			}
 		}
 	}
 

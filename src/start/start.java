@@ -2,7 +2,6 @@ package start;
 
 
 import frame.Frame;
-import logic.DebuggingWindow;
 import logic.MainControl;
 
 
@@ -21,8 +20,6 @@ public class start {
 		Frame.setVisible();
 		
 		MainControl.createWorld();
-
-		new DebuggingWindow();
 
 	}
 
