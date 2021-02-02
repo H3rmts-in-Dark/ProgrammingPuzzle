@@ -32,7 +32,7 @@ public class DescriptionEntityWindow extends CustomWindow {
 		int y = 2;
 		var res = new LinkedHashMap<String,String>();
 		res.put("",entity.getClass().getSimpleName());
-		res.put("Height",String.valueOf(Heights.getheight(entity.getHeight())));
+		res.put("Height",String.valueOf(Heights.getint(entity.getHeight())));
 		res.put("Position","x:" + entity.getPosition().x + " y:" + entity.getPosition().y);
 		res.put("PixelPosi","x:" + entity.getPixelPosition().x + " y:" + entity.getPixelPosition().y);
 		res.put("Rotation",entity.getRotation().toString());

@@ -32,7 +32,7 @@ public class DescriptionTileWindow extends CustomWindow {
 		int y = 2;
 		var res = new LinkedHashMap<String,String>();
 		res.put("",tile.getClass().getSimpleName());
-		res.put("Height",String.valueOf(Heights.getheight(tile.getHeight())));
+		res.put("Height",String.valueOf(Heights.getint(tile.getHeight())));
 		res.put("Position","x:" + tile.getPosition().x + " y:" + tile.getPosition().y);
 		res.put("Rotation",tile.getRotation().toString());
 		res.put("Activated",String.valueOf(tile.getActivated()));

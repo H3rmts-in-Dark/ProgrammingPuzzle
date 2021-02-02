@@ -16,7 +16,7 @@ import world.World;
 public class Förderband extends Tile {
 
 	public Förderband(Rotations rotation,Signalcolors signalcolor,int speed) {
-		super(Heights.TRANSPORT,ANIMATED,0,-10,rotation,speed,signalcolor);
+		super(Heights.TRANSPORT,0,-10,rotation,speed,signalcolor);
 	}
 
 	@Override

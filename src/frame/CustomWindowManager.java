@@ -25,15 +25,18 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 		if (windows.get(layer) == null)
 			windows.put(layer,new LinkedList<>());
 		windows.get(layer).add(window);
-		clean();
+		add(window);
+		windowToFront(window);
 	}
 
 	public void removeWindow(CustomWindow newWindow) {
 		for (LinkedList<CustomWindow> linkedList : windows.values()) {
 			for (CustomWindow customWindow : linkedList) {
-				if (customWindow == newWindow)
+				if (customWindow == newWindow) {
 					linkedList.remove(newWindow);
-				break;
+					remove(customWindow);
+					break;
+				}
 			}
 		}
 		Debugger.removeWindow(newWindow);
@@ -51,7 +54,6 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 	}
 
 	public void windowToFront(CustomWindow window) {
-		window.setLayer(-1);
 		clean();
 	}
 
@@ -68,10 +70,9 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 	}
 
 	private void addComponents() {
-		removeAll();
 		for (LinkedList<CustomWindow> linkedList : windows.values()) {
 			for (CustomWindow customWindow : linkedList) {
-				add(customWindow);
+				setLayer(customWindow,customWindow.getLayer());
 			}
 		}
 	}

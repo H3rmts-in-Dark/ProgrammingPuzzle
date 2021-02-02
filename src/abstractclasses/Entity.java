@@ -50,11 +50,10 @@ public abstract class Entity implements Constants {
 	}
 
 	protected Entity(Point position,int relativedrawX,int relativedrawY) {
-		this(position,relativedrawX,relativedrawY,Rotations.norotation,DEFAULTIMAGECHANGETICKDELAY,ANIMATED);
+		this(position,relativedrawX,relativedrawY,Rotations.norotation,DEFAULTIMAGECHANGETICKDELAY);
 	}
 
-	protected Entity(Point position,int relativedrawX,int relativedrawY,Rotations rotation,int ticksperimagechange,
-			boolean animated) {
+	protected Entity(Point position,int relativedrawX,int relativedrawY,Rotations rotation,int ticksperimagechange) {
 		setHeight(Heights.UNPASSABLE);
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
@@ -63,9 +62,8 @@ public abstract class Entity implements Constants {
 		this.ticksperimagechange = ticksperimagechange;
 
 		loadAnimations();
-		if (animated) {
-			triggerAnimation(Animations.deactivatedanimation);
-		}
+		triggerAnimation(Animations.deactivatedanimation);
+
 	}
 
 	public abstract void loadAnimations();
@@ -172,10 +170,6 @@ public abstract class Entity implements Constants {
 		}
 		task = new ChangeEntityImageTask(ticksperimagechange,this,animations.get(rotation).get(animation).size() - 1,
 				animation);
-	}
-
-	public void delete() {
-		task.end();
 	}
 
 }

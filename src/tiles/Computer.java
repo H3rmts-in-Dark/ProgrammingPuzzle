@@ -16,7 +16,7 @@ import world.World;
 public class Computer extends Tile {
 
 	public Computer(Signalcolors signalcolor) {
-		super(Heights.UNPASSABLE,ANIMATED,-5,-20,signalcolor);
+		super(Heights.UNPASSABLE,-5,-20,signalcolor);
 	}
 
 	@Override

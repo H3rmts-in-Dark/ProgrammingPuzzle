@@ -37,24 +37,20 @@ public abstract class Tile implements Constants {
 	private int ticksperimagechange;
 
 	private HashMap<Rotations,HashMap<Animations,ArrayList<String>>> animations = new HashMap<>();
-	private HashMap<Layers,HashMap<Animations,ArrayList<String>>> pictures = new HashMap<>();
+	private HashMap<Layers,HashMap<Animations,String>> pictures = new HashMap<>();
 
-	protected HashMap<Layers,Animations> actualanimation = new HashMap<>();
-	protected HashMap<Layers,Integer> actualanimationcounter = new HashMap<>();
-	protected HashMap<Layers,ChangeTileImageTask> tasks = new HashMap<>();
+	protected HashMap<Layers,Animations> actualanimations = new HashMap<>();
+	protected int actualanimationcounter;
+	protected ChangeTileImageTask task;
 
 	private World world;
 
-	protected Tile(Heights height) {
-		this(height,false,0,0,Signalcolors.nocolor);
+	protected Tile(Heights height,int relativedrawX,int relativedrawY,Signalcolors signalcolor) {
+		this(height,relativedrawX,relativedrawY,Rotations.norotation,DEFAULTIMAGECHANGETICKDELAY,signalcolor);
 	}
 
-	protected Tile(Heights height,Boolean animated,int relativedrawX,int relativedrawY,Signalcolors signalcolor) {
-		this(height,animated,relativedrawX,relativedrawY,Rotations.norotation,DEFAULTIMAGECHANGETICKDELAY,signalcolor);
-	}
-
-	protected Tile(Heights height,Boolean animated,int relativedrawX,int relativedrawY,Rotations rotation,
-			int ticksperimagechange,Signalcolors signalcolor) {
+	protected Tile(Heights height,int relativedrawX,int relativedrawY,Rotations rotation,int ticksperimagechange,
+			Signalcolors signalcolor) {
 		this.height = height;
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
@@ -62,9 +58,10 @@ public abstract class Tile implements Constants {
 		this.ticksperimagechange = ticksperimagechange;
 		this.color = signalcolor;
 		loadAnimations();
-		if (animated) {
-			triggerAnimation(Animations.deactivatedanimation);
-		}
+
+		triggerAnimation(Animations.deactivatedanimation);
+		triggerAnimation(Animations.offanimation);
+		triggerAnimation(Animations.noanimation);
 	}
 
 	public abstract void loadAnimations();
@@ -72,7 +69,7 @@ public abstract class Tile implements Constants {
 	public abstract void getdata(LinkedHashMap<String,String> List);
 
 	public Boolean isPassable(Heights height) {
-		return Heights.getheight(height) >= Heights.getheight(this.height);
+		return Heights.getint(height) >= Heights.getint(this.height);
 	}
 
 	public void setPosition(Point position) {
@@ -97,7 +94,7 @@ public abstract class Tile implements Constants {
 
 	public BufferedImage getFloorImage() {
 		try {
-			return Images.getImage(pictures.get(Layers.Floor).get(Animations.noanimation).get(0));
+			return Images.getImage(pictures.get(Layers.Floor).get(actualanimations.get(Layers.Floor)));
 		} catch (NullPointerException | IndexOutOfBoundsException e) {
 			return null;
 		}
@@ -105,8 +102,7 @@ public abstract class Tile implements Constants {
 
 	public BufferedImage getCableImage() {
 		try {
-			return Images.getImage(pictures.get(Layers.Cable).get(actualanimation.get(Layers.Cable))
-					.get(actualanimationcounter.get(Layers.Cable)));
+			return Images.getImage(pictures.get(Layers.Cable).get(actualanimations.get(Layers.Cable)));
 		} catch (NullPointerException | IndexOutOfBoundsException e) {
 		}
 		return null;
@@ -114,8 +110,8 @@ public abstract class Tile implements Constants {
 
 	public BufferedImage getObjektImage() {
 		try {
-			return Images.getImage(animations.get(rotation).get(actualanimation.get(Layers.Objects))
-					.get(actualanimationcounter.get(Layers.Objects)));
+			return Images.getImage(
+					animations.get(rotation).get(actualanimations.get(Layers.Objects)).get(actualanimationcounter));
 		} catch (NullPointerException | IndexOutOfBoundsException e) {
 		}
 		return null;
@@ -123,8 +119,7 @@ public abstract class Tile implements Constants {
 
 	public BufferedImage getEffectsImage() {
 		try {
-			return Images.getImage(pictures.get(Layers.Effects).get(actualanimation.get(Layers.Effects))
-					.get(actualanimationcounter.get(Layers.Effects)));
+			return Images.getImage(pictures.get(Layers.Effects).get(actualanimations.get(Layers.Effects)));
 		} catch (NullPointerException | IndexOutOfBoundsException e) {
 		}
 		return null;
@@ -142,7 +137,7 @@ public abstract class Tile implements Constants {
 		return color;
 	}
 
-	public HashMap<Layers,HashMap<Animations,ArrayList<String>>> getPictures() {
+	public HashMap<Layers,HashMap<Animations,String>> getPictures() {
 		return pictures;
 	}
 
@@ -150,7 +145,7 @@ public abstract class Tile implements Constants {
 		return animations;
 	}
 
-	public HashMap<Layers,Integer> getActualanimationcounter() {
+	public Integer getActualanimationcounter() {
 		return actualanimationcounter;
 	}
 
@@ -178,10 +173,13 @@ public abstract class Tile implements Constants {
 		if (activate == activated)
 			return;
 		activated = activate;
-		if (activate)
-			this.triggerAnimation(Animations.activatedanimation);
-		else
-			this.triggerAnimation(Animations.deactivatedanimation);
+		if (activate) {
+			triggerAnimation(Animations.activatedanimation);
+			triggerAnimation(Animations.onanimation);
+		} else {
+			triggerAnimation(Animations.deactivatedanimation);
+			triggerAnimation(Animations.offanimation);
+		}
 		if (color != Signalcolors.nocolor) {
 			if (getPosition().x > 0)
 				if (world.getTile(getPosition().x - 1,getPosition().y).getColor() == color)
@@ -203,32 +201,22 @@ public abstract class Tile implements Constants {
 		return activated;
 	}
 
-	public void nextimage(Layers layer) {
-		getActualanimationcounter().replace(layer,getActualanimationcounter().get(layer) + 1);
+	public void nextimage() {
+		actualanimationcounter++;
 	}
 
 	public void triggerAnimation(Animations animation) {
-		Layers layer = Animations.getLayer(animation);
-		actualanimation.put(layer,animation);
-		try {
-			tasks.get(layer).end();
-		} catch (NullPointerException e) {
-		}
-		actualanimationcounter.put(layer,0);
-		if (layer == Layers.Objects) {
-			int size = getAnimations().get(rotation).get(animation).size() - 1;
-			if (size > 2)
-				tasks.put(layer,new ChangeTileImageTask(ticksperimagechange,this,size,animation));
-		} else {
-			int size = getPictures().get(layer).get(animation).size() - 1;
-			if (size > 2)
-				tasks.put(layer,new ChangeTileImageTask(ticksperimagechange,this,size,animation));
-		}
-	}
-
-	public void delete() {
-		for (Task task : tasks.values()) {
-			task.end();
+		actualanimations.put(Animations.getLayer(animation),animation);
+		if (Animations.getLayer(animation) == Layers.Objects) {
+			if (!(animations.containsKey(rotation) && animations.get(rotation).containsKey(animation)))
+				return;
+			actualanimationcounter = 0;
+			try {
+				task.end();
+			} catch (NullPointerException e) {
+			}
+			task = new ChangeTileImageTask(ticksperimagechange,this,animations.get(rotation).get(animation).size() - 1,
+					animation);
 		}
 	}
 

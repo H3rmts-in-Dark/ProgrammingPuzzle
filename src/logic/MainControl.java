@@ -38,7 +38,7 @@ public class MainControl {
 		world.setTile(0,0,new Förderband(Rotations.right,Signalcolors.red,2));
 		world.setTile(1,0,new Förderband(Rotations.right,Signalcolors.red,2));
 		world.setTile(2,0,new Förderband(Rotations.down,Signalcolors.green,3));
-		world.setTile(2,1,new Förderband(Rotations.down,Signalcolors.green,3));
+		world.setTile(2,1,new Förderband(Rotations.down,Signalcolors.green,0));
 		world.setTile(2,2,new Förderband(Rotations.right,Signalcolors.green,1));
 		world.setTile(1,2,new Förderband(Rotations.left,Signalcolors.green,1));
 		world.setTile(0,2,new Förderband(Rotations.up,Signalcolors.red,3));

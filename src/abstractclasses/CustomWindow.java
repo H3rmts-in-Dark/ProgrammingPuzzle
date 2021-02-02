@@ -28,7 +28,7 @@ import world.Images;
 
 public abstract class CustomWindow extends Canvas implements Comparable<CustomWindow>,Constants {
 
-	private int layer = -1;
+	private int layer = 10000;
 	private String title = "Default";
 
 	Rectangle close = new Rectangle();
@@ -38,8 +38,9 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 	Point reversemousePoint = new Point();
 	Point bottomRight = new Point();
 
-	Point newposition = new Point();
 	Dimension newsize = new Dimension();
+
+	BufferedImage image;
 
 	Mousestate mousestate;
 
@@ -57,7 +58,7 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 	}
 
 	public CustomWindow(int defaultWidht,int defaultHeight,Point defaultPosition,String title,int level) {
-		setnewLocation(defaultPosition.x,defaultPosition.y);
+		setLocation(defaultPosition.x,defaultPosition.y);
 		setnewSize(
 				Frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht
 						: Frame.getWidth() - (int) defaultPosition.getX(),
@@ -118,6 +119,7 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 
 		});
 		setIgnoreRepaint(true);
+		createBufferStrategy(3);
 	}
 
 	public void setTitle(String title) {
@@ -132,73 +134,72 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 		return this;
 	}
 
+	@Override
+	public void paint(Graphics g) {
+		g.drawImage(image,0,0,null);
+	}
+
 	public void Render() {
 		Debugger.startDraw(this);
-		BufferStrategy bs = super.getBufferStrategy();
 
-		// setSize(newsize);
-		// setLocation(newposition);
+		setSize(newsize);
 
 		close.setBounds(getWidth() - 27,8,14,14);
 		maximise.setBounds(getWidth() - 47,8,14,14);
 
-		do {
-			Graphics g;
-			try {
-				if (bs == null) {
-					this.createBufferStrategy(3);
-					return;
-				}
-				g = bs.getDrawGraphics();
-			} catch (IllegalStateException | NullPointerException e) {
-				return;
-			}
+		BufferedImage draw = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D g = draw.createGraphics();
 
-			BufferedImage drawimage;
+		BufferedImage drawimage;
 
-			try {
-				drawimage = getImage();
-			} catch (Exception e) {
-				e.printStackTrace();
-				drawimage = getErrorImage();
-			}
-
-			g.setColor(Color.black);
-			g.fillRect(0,0,getWidth(),getHeight());
-
-			g.drawImage(drawimage,getImageborders().x,getImageborders().y,null);
-
-			g.drawImage(Images.getImage("rsc/Gui/Window/top left.png"),0,0,18,30,null);
-			g.drawImage(Images.getImage("rsc/Gui/Window/top.png"),18,0,getWidth() - 34,30,null);
-			g.drawImage(Images.getImage("rsc/Gui/Window/top right.png"),getWidth() - 18,0,null);
-			g.drawImage(Images.getImage("rsc/Gui/Window/side.png"),0,30,18,getHeight() - 48,null);
-			g.drawImage(Images.getImage("rsc/Gui/Window/side.png"),getWidth() - 18,30,18,getHeight() - 48,null);
-			g.drawImage(Images.getImage("rsc/Gui/Window/bottom left.png"),0,getHeight() - 18,18,18,null);
-			g.drawImage(Images.getImage("rsc/Gui/Window/bottom.png"),18,getHeight() - 18,getWidth(),18,null);
-			g.drawImage(Images.getImage("rsc/Gui/Window/bottom right.png"),getWidth() - 18,getHeight() - 18,null);
-
-			g.drawImage(Images.getImage("rsc/Gui/Window/maximise.png"),maximise.x,maximise.y,null);
-			g.drawImage(Images.getImage("rsc/Gui/Window/close.png"),close.x,close.y,null);
-
-			// Zeichnet den Titel des Fensters
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Consolas",Font.BOLD,18));
-			String newtitle = "";
-			for (int i = 0; i < title.length() * 10; i += 10) {
-				if (i + (SIDEBARWIDTH * 0.7) < maximise.x - maximise.width)
-					newtitle += title.charAt(i / 10);
-				else
-					break;
-			}
-			g.drawString(newtitle,(int) (SIDEBARWIDTH * 0.7),20);
-
-			g.dispose();
-
-		} while (bs.contentsRestored());
 		try {
-			bs.show();
-		} catch (IllegalStateException e) {
+			drawimage = getImage();
+		} catch (Exception e) {
+			e.printStackTrace();
+			drawimage = getErrorImage();
 		}
+
+		g.setColor(Color.black);
+		g.fillRect(0,0,getWidth(),getHeight());
+
+		g.drawImage(drawimage,getImageborders().x,getImageborders().y,null);
+
+		g.drawImage(Images.getImage("rsc/Gui/Window/top left.png"),0,0,18,30,null);
+		g.drawImage(Images.getImage("rsc/Gui/Window/top.png"),18,0,getWidth() - 34,30,null);
+		g.drawImage(Images.getImage("rsc/Gui/Window/top right.png"),getWidth() - 18,0,null);
+		g.drawImage(Images.getImage("rsc/Gui/Window/side.png"),0,30,18,getHeight() - 48,null);
+		g.drawImage(Images.getImage("rsc/Gui/Window/side.png"),getWidth() - 18,30,18,getHeight() - 48,null);
+		g.drawImage(Images.getImage("rsc/Gui/Window/bottom left.png"),0,getHeight() - 18,18,18,null);
+		g.drawImage(Images.getImage("rsc/Gui/Window/bottom.png"),18,getHeight() - 18,getWidth(),18,null);
+		g.drawImage(Images.getImage("rsc/Gui/Window/bottom right.png"),getWidth() - 18,getHeight() - 18,null);
+
+		g.drawImage(Images.getImage("rsc/Gui/Window/maximise.png"),maximise.x,maximise.y,null);
+		g.drawImage(Images.getImage("rsc/Gui/Window/close.png"),close.x,close.y,null);
+
+		// Zeichnet den Titel des Fensters
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Consolas",Font.BOLD,18));
+		String newtitle = "";
+		for (int i = 0; i < title.length() * 10; i += 10) {
+			if (i + (SIDEBARWIDTH * 0.7) < maximise.x - maximise.width)
+				newtitle += title.charAt(i / 10);
+			else
+				break;
+		}
+		g.drawString(newtitle,(int) (SIDEBARWIDTH * 0.7),20);
+
+		g.dispose();
+		BufferStrategy bs = getBufferStrategy();
+
+		do {
+			do {
+				Graphics g2 = bs.getDrawGraphics();
+				g2.drawImage(draw,0,0,null);
+				g2.dispose();
+
+			} while (bs.contentsRestored());
+			bs.show();
+		} while (bs.contentsLost());
 
 		Debugger.endDraw(this);
 	}
@@ -234,8 +235,8 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 	}
 
 	public void setnewSize(int w,int h) {
-		// this.newsize = new Dimension(w,h);
-		setSize(w,h);
+		this.newsize = new Dimension(w,h);
+		// setSize(w,h);
 	}
 
 	/**
@@ -317,7 +318,6 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 			case DEFAULT_CURSOR:
 			break;
 		}
-		Render();
 	}
 
 	public void saveBounds(Point point) {

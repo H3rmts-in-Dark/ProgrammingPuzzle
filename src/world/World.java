@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import Enums.Animations;
 import Enums.Rotations;
+import Enums.Signalcolors;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
 import logic.Constants;
@@ -36,10 +37,6 @@ public class World implements Constants {
 	}
 
 	public void setTile(int x,int y,Tile tile) {
-		try {
-			world[x][y].delete();
-		} catch (NullPointerException e) {
-		}
 		world[x][y] = tile;
 		tile.setWorld(this);
 		tile.setPosition(new Point(x,y));
@@ -93,7 +90,7 @@ public class World implements Constants {
 	private void fillempty() {
 		for (int x = 0; x < getWidth(); x++)
 			for (int y = 0; y < getHeight(); y++)
-				setTile(x,y,new Default());
+				setTile(x,y,new Default(Signalcolors.nocolor));
 	}
 
 	public static void loadAnimation(Rotations rotation,Animations animation,Tile tile) {
@@ -137,23 +134,22 @@ public class World implements Constants {
 	}
 
 	public static void loadPicture(Layers layer,Animations animation,Tile tile,String name) {
-		var add = new ArrayList<String>();
+		String path = "";
 		try {
-			for (File file : new File(
-					"rsc/" + Layers.toString(layer) + name + "/" + (layer == Layers.Floor ? "" : animation)).listFiles()) {
-				add.add(file.getPath());
-			}
+			path = new File(
+					"rsc/" + Layers.toString(layer) + "/" + name + (layer == Layers.Floor ? "" : "/" + animation) + "/0.png")
+							.getPath();
 		} catch (NullPointerException e) {
 			System.err.println("rsc/" + Layers.toString(layer) + name + "/" + (layer == Layers.Floor ? "" : animation)
-					+ "  did not list any files ");
+					+ "/0.png" + "  did not list any files ");
 			return;
 		}
 		if (!tile.getPictures().containsKey(layer)) {
-			var addMap = new HashMap<Animations,ArrayList<String>>();
+			HashMap<Animations,String> addMap = new HashMap<Animations,String>();
 			tile.getPictures().put(layer,addMap);
 		}
 
-		tile.getPictures().get(layer).put(animation,add);
+		tile.getPictures().get(layer).put(animation,path);
 	}
 
 }

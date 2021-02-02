@@ -16,7 +16,7 @@ import world.World;
 public class Entitysensor extends Tile {
 
 	public Entitysensor(Signalcolors signalcolor) {
-		super(Heights.FLOORHEIGHT,ANIMATED,0,0,signalcolor);
+		super(Heights.FLOORHEIGHT,0,0,signalcolor);
 	}
 
 	@Override

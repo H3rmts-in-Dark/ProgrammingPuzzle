@@ -15,7 +15,7 @@ import world.World;
 public class Tonne extends Tile {
 
 	public Tonne() {
-		super(Heights.UNPASSABLE,ANIMATED,10,20,Signalcolors.nocolor);
+		super(Heights.UNPASSABLE,10,20,Signalcolors.nocolor);
 	}
 
 	@Override

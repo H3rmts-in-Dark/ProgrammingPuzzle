@@ -19,7 +19,7 @@ public enum Heights implements Constants {
 	 */
 	TRANSPORT;
 
-	public static int getheight(Heights height) {
+	public static int getint(Heights height) {
 		switch (height) {
 			case FLOORHEIGHT:
 				return 0;

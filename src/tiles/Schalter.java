@@ -16,7 +16,7 @@ import world.World;
 public class Schalter extends Tile {
 
 	public Schalter(Signalcolors signalcolor) {
-		super(Heights.FLOORHEIGHT,ANIMATED,0,-10,signalcolor);
+		super(Heights.FLOORHEIGHT,0,-10,signalcolor);
 	}
 
 	@Override

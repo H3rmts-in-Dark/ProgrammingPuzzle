@@ -29,7 +29,7 @@ public enum Animations {
 			case onanimation:
 				return Layers.Cable;
 			case noanimation:
-				return null;
+				return Layers.Floor;
 		}
 		return null;
 	}

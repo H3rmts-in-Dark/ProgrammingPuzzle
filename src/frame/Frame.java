@@ -29,7 +29,7 @@ public class Frame implements Constants {
 
 		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		
+
 		Windowmanager = new CustomWindowManager();
 		Windowmanager.setBounds(0,0,frame.getWidth(),frame.getHeight());
 		Windowmanager.setVisible(false);
@@ -47,7 +47,7 @@ public class Frame implements Constants {
 	public static JFrame getFrame() {
 		return frame;
 	}
-	
+
 	public static Dimension getMaxDimension() {
 		return new Dimension(800,800);// frame.getGraphicsConfiguration().getBounds().getSize();
 	}
