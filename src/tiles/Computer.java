@@ -3,33 +3,34 @@ package tiles;
 
 import java.util.LinkedHashMap;
 
-import Enums.Animations;
-import Enums.Heights;
-import Enums.Rotations;
-import Enums.Signalcolors;
+import Enums.Animation;
+import Enums.Cabletype;
+import Enums.Height;
+import Enums.Layer;
+import Enums.Rotation;
+import Enums.Signalcolor;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
-import logic.Layers;
 import world.World;
 
 
 public class Computer extends Tile {
 
-	public Computer(Signalcolors signalcolor) {
-		super(Heights.UNPASSABLE,-5,-20,signalcolor);
+	public Computer(Signalcolor signalcolor,Cabletype cabletype) {
+		super(Height.UNPASSABLE,-5,-20,signalcolor,cabletype);
 	}
 
 	@Override
 	public void loadAnimations() {
-		World.loadPicture(Layers.Floor,Animations.noanimation,this,"Default");
-		World.loadAnimation(Rotations.norotation,Animations.deactivatedanimation,this);
-		World.loadAnimation(Rotations.norotation,Animations.activatedanimation,this);
-		World.loadAnimation(Rotations.norotation,Animations.interactanimation,this);
+		World.load(Layer.Floor,Animation.noanimation,this,"Default");
+		World.load(Rotation.norotation,Animation.deactivatedanimation,this);
+		World.load(Rotation.norotation,Animation.activatedanimation,this);
+		World.load(Rotation.norotation,Animation.interactanimation,this);
 	}
 
 	@Override
 	public void onInteract(Entity entity) {
-		triggerAnimation(Animations.interactanimation);
+		triggerAnimation(Animation.interactanimation);
 	}
 
 	@Override

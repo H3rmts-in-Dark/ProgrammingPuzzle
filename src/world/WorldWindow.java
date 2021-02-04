@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-import Enums.Heights;
+import Enums.Height;
 import abstractclasses.CustomWindow;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
@@ -34,6 +34,10 @@ public class WorldWindow extends CustomWindow {
 
 	@Override
 	public BufferedImage getImage() {
+		
+		if (world == null)
+			return null;
+		
 		double widhei = (int) (DEFAULTIMAGEWIDHTHEIGHT * zoom);
 		double widh = (int) Math.ceil(Math.min(world.getWidth() * widhei,getWidth()) / widhei);
 		double heig = (int) Math.ceil(Math.min(world.getHeight() * widhei,getHeight() - widhei) / widhei);
@@ -78,7 +82,7 @@ public class WorldWindow extends CustomWindow {
 		for (Entity entity : world.getEntitylist()) {
 			g2.drawImage(
 					entity.getImage(),entity.getPixelPosition().x + entity.getRelativedrawX(),entity.getPixelPosition().y
-							+ DEFAULTIMAGEWIDHTHEIGHT + entity.getRelativedrawY() - Heights.getint(entity.getHeight()),
+							+ DEFAULTIMAGEWIDHTHEIGHT + entity.getRelativedrawY() - Height.getint(entity.getHeight()),
 					null);
 		}
 		for (int x = 0; x < widh; x++)

@@ -1,7 +1,7 @@
 package tasks;
 
 
-import Enums.Animations;
+import Enums.Animation;
 import abstractclasses.Entity;
 import abstractclasses.Task;
 
@@ -9,9 +9,9 @@ import abstractclasses.Task;
 public class ChangeEntityImageTask extends Task {
 
 	private Entity entity;
-	private Animations animation;
+	private Animation animation;
 
-	public ChangeEntityImageTask(Integer tickDifference,Entity entity,Integer loop,Animations animation) {
+	public ChangeEntityImageTask(Integer tickDifference,Entity entity,Integer loop,Animation animation) {
 		super(tickDifference,loop);
 		this.entity = entity;
 		this.animation = animation;
@@ -25,10 +25,10 @@ public class ChangeEntityImageTask extends Task {
 
 	@Override
 	public void onEnd() {
-		if (Animations.getRepeat(animation))
+		if (Animation.getRepeat(animation))
 			entity.triggerAnimation(animation);
 		else
-			entity.triggerAnimation(Animations.deactivatedanimation);
+			entity.triggerAnimation(Animation.deactivatedanimation);
 	}
 
 }

@@ -1,7 +1,7 @@
 package tasks;
 
 
-import Enums.Animations;
+import Enums.Animation;
 import abstractclasses.Task;
 import abstractclasses.Tile;
 
@@ -9,9 +9,9 @@ import abstractclasses.Tile;
 public class ChangeTileImageTask extends Task {
 
 	private Tile tile;
-	private Animations animation;
+	private Animation animation;
 
-	public ChangeTileImageTask(Integer tickDifference,Tile tile,Integer loop,Animations animation) {
+	public ChangeTileImageTask(Integer tickDifference,Tile tile,Integer loop,Animation animation) {
 		super(tickDifference,loop);
 		this.tile = tile;
 		this.animation = animation;
@@ -25,12 +25,12 @@ public class ChangeTileImageTask extends Task {
 
 	@Override
 	public void onEnd() {
-		if (Animations.getRepeat(animation))
+		if (Animation.getRepeat(animation))
 			tile.triggerAnimation(animation);
 		else if (tile.getActivated())
-			tile.triggerAnimation(Animations.activatedanimation);
+			tile.triggerAnimation(Animation.activatedanimation);
 		else
-			tile.triggerAnimation(Animations.deactivatedanimation);
+			tile.triggerAnimation(Animation.deactivatedanimation);
 	}
 
 }

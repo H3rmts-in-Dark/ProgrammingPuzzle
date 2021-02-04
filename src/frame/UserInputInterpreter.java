@@ -4,7 +4,7 @@ package frame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import Enums.Rotations;
+import Enums.Rotation;
 import logic.DebuggingWindow;
 import logic.MainControl;
 import tasks.MoveEntityTask;
@@ -52,7 +52,7 @@ public class UserInputInterpreter extends KeyAdapter {
 		} else if (command.equals("world")) {
 			MainControl.createWorld();
 		} else if (command.equals("move")) {
-			new MoveEntityTask(2,MainControl.getWorld().getEntitylist().get(0),Rotations.right);
+			new MoveEntityTask(2,MainControl.getWorld().getEntitylist().get(0),Rotation.right);
 		}
 	}
 

@@ -3,33 +3,34 @@ package tiles;
 
 import java.util.LinkedHashMap;
 
-import Enums.Animations;
-import Enums.Heights;
-import Enums.Rotations;
-import Enums.Signalcolors;
+import Enums.Animation;
+import Enums.Cabletype;
+import Enums.Height;
+import Enums.Layer;
+import Enums.Rotation;
+import Enums.Signalcolor;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
-import logic.Layers;
 import world.World;
 
 
 public class Förderband extends Tile {
 
-	public Förderband(Rotations rotation,Signalcolors signalcolor,int speed) {
-		super(Heights.TRANSPORT,0,-10,rotation,speed,signalcolor);
+	public Förderband(Rotation rotation,int speed,Signalcolor signalcolor,Cabletype cabletype) {
+		super(Height.TRANSPORT,0,-10,rotation,speed,signalcolor,cabletype);
 	}
 
 	@Override
 	public void loadAnimations() {
-		World.loadPicture(Layers.Floor,Animations.noanimation,this,"Default");
-		World.loadAnimation(Rotations.left,Animations.deactivatedanimation,this);
-		World.loadAnimation(Rotations.right,Animations.deactivatedanimation,this);
-		World.loadAnimation(Rotations.down,Animations.deactivatedanimation,this);
-		World.loadAnimation(Rotations.up,Animations.deactivatedanimation,this);
-		World.loadAnimation(Rotations.left,Animations.activatedanimation,this);
-		World.loadAnimation(Rotations.right,Animations.activatedanimation,this);
-		World.loadAnimation(Rotations.down,Animations.activatedanimation,this);
-		World.loadAnimation(Rotations.up,Animations.activatedanimation,this);
+		World.load(Layer.Floor,Animation.noanimation,this,"Default");
+		World.load(Rotation.left,Animation.deactivatedanimation,this);
+		World.load(Rotation.right,Animation.deactivatedanimation,this);
+		World.load(Rotation.down,Animation.deactivatedanimation,this);
+		World.load(Rotation.up,Animation.deactivatedanimation,this);
+		World.load(Rotation.left,Animation.activatedanimation,this);
+		World.load(Rotation.right,Animation.activatedanimation,this);
+		World.load(Rotation.down,Animation.activatedanimation,this);
+		World.load(Rotation.up,Animation.activatedanimation,this);
 	}
 
 	@Override

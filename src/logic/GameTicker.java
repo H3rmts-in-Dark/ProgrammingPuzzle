@@ -72,13 +72,8 @@ public class GameTicker extends Thread implements Constants {
 
 	private static void render() {
 		Debugger.startrender();
-		try {
-			for (int i = 0; i < Frame.getWindowManager().getWindows().size(); i++) {
-				Frame.getWindowManager().getWindows().get(i).Render();
-			}
-		} catch (NullPointerException e) {
-			// if anything destroys the rendering (deleting window during render) keep gameticker
-			// running
+		for (int i = 0; i < Frame.getWindowManager().getWindows().size(); i++) {
+			Frame.getWindowManager().getWindows().get(i).Render();
 		}
 		Debugger.endrender();
 	}

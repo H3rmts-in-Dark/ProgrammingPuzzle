@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
-import Enums.Heights;
+import Enums.Height;
 import abstractclasses.CustomWindow;
 import abstractclasses.Tile;
 
@@ -32,7 +32,7 @@ public class DescriptionTileWindow extends CustomWindow {
 		int y = 2;
 		var res = new LinkedHashMap<String,String>();
 		res.put("",tile.getClass().getSimpleName());
-		res.put("Height",String.valueOf(Heights.getint(tile.getHeight())));
+		res.put("Height",String.valueOf(Height.getint(tile.getHeight())));
 		res.put("Position","x:" + tile.getPosition().x + " y:" + tile.getPosition().y);
 		res.put("Rotation",tile.getRotation().toString());
 		res.put("Activated",String.valueOf(tile.getActivated()));

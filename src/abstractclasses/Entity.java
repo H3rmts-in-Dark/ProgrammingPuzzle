@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import Enums.Animations;
-import Enums.Heights;
-import Enums.Rotations;
+import Enums.Animation;
+import Enums.Height;
+import Enums.Layer;
+import Enums.Rotation;
 import logic.Constants;
-import logic.Layers;
 import tasks.ChangeEntityImageTask;
 import tasks.MoveEntityTask;
 import world.Images;
@@ -26,18 +26,18 @@ import world.World;
 
 public abstract class Entity implements Constants {
 
-	private Heights height;
+	private Height height;
 	private int relativedrawX;
 	private int relativedrawY;
 
 	private Point pixelposition;
-	protected Rotations rotation;
+	protected Rotation rotation;
 
 	private int ticksperimagechange;
 
-	public HashMap<Rotations,HashMap<Animations,ArrayList<String>>> animations = new HashMap<>();
+	public HashMap<Rotation,HashMap<Animation,ArrayList<String>>> animations = new HashMap<>();
 
-	protected Animations actualanimation = null;
+	protected Animation actualanimation = null;
 	protected int actualanimationcounter = 0;
 	protected ChangeEntityImageTask task = null;
 
@@ -50,11 +50,11 @@ public abstract class Entity implements Constants {
 	}
 
 	protected Entity(Point position,int relativedrawX,int relativedrawY) {
-		this(position,relativedrawX,relativedrawY,Rotations.norotation,DEFAULTIMAGECHANGETICKDELAY);
+		this(position,relativedrawX,relativedrawY,Rotation.norotation,DEFAULTIMAGECHANGETICKDELAY);
 	}
 
-	protected Entity(Point position,int relativedrawX,int relativedrawY,Rotations rotation,int ticksperimagechange) {
-		setHeight(Heights.UNPASSABLE);
+	protected Entity(Point position,int relativedrawX,int relativedrawY,Rotation rotation,int ticksperimagechange) {
+		setHeight(Height.UNPASSABLE);
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
 		setPosition(position);
@@ -62,7 +62,7 @@ public abstract class Entity implements Constants {
 		this.ticksperimagechange = ticksperimagechange;
 
 		loadAnimations();
-		triggerAnimation(Animations.deactivatedanimation);
+		triggerAnimation(Animation.deactivatedanimation);
 
 	}
 
@@ -78,11 +78,11 @@ public abstract class Entity implements Constants {
 		this.world = world;
 	}
 
-	public void setHeight(Heights height) {
+	public void setHeight(Height height) {
 		this.height = height;
 	}
 
-	public void setRotation(Rotations rotation) {
+	public void setRotation(Rotation rotation) {
 		this.rotation = rotation;
 	}
 
@@ -110,7 +110,7 @@ public abstract class Entity implements Constants {
 		return world;
 	}
 
-	public void nextimage(Layers layer) {
+	public void nextimage(Layer layer) {
 		actualanimationcounter++;
 	}
 
@@ -122,11 +122,11 @@ public abstract class Entity implements Constants {
 		return null;
 	}
 
-	public Rotations getRotation() {
+	public Rotation getRotation() {
 		return rotation;
 	}
 
-	public Heights getHeight() {
+	public Height getHeight() {
 		return height;
 	}
 
@@ -137,12 +137,12 @@ public abstract class Entity implements Constants {
 		actualanimationcounter++;
 	}
 
-	public void startmove(int ticksperimagechange,Rotations rotation) {
+	public void startmove(int ticksperimagechange,Rotation rotation) {
 		if (movetask == null || movetask.getEnded())
 			movetask = new MoveEntityTask(ticksperimagechange,this,rotation);
 	}
 
-	public void move(Rotations direction) {
+	public void move(Rotation direction) {
 		switch (direction) {
 			case down:
 				pixelposition.y++;
@@ -161,7 +161,7 @@ public abstract class Entity implements Constants {
 		}
 	}
 
-	public void triggerAnimation(Animations animation) {
+	public void triggerAnimation(Animation animation) {
 		actualanimation = animation;
 		actualanimationcounter = 0;
 		try {
