@@ -3,6 +3,7 @@ package logic;
 
 import Enums.Cabletype;
 import Enums.Signalcolor;
+import Programming.ProgrammingWindow;
 import tiles.Default;
 import tiles.Schalter;
 import world.World;
@@ -44,11 +45,12 @@ public class MainControl {
 		world.setTile(1,2,new Default(Signalcolor.blue,Cabletype.wno));
 		world.setTile(0,1,new Schalter(Signalcolor.blue,Cabletype.so));
 	}
-
-	public static World getWorld() {
-		return world;
+	
+	
+	public static void createProgrammingWindow() {
+		new ProgrammingWindow(world);
 	}
-
+	
 }
 
 

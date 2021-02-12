@@ -3,6 +3,7 @@ package abstractclasses;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -10,6 +11,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -19,6 +22,10 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLayeredPane;
+
 import frame.Frame;
 import frame.UserInputInterpreter;
 import logic.Constants;
@@ -26,23 +33,23 @@ import logic.Debugger;
 import world.Images;
 
 
-public abstract class CustomWindow extends Canvas implements Comparable<CustomWindow>,Constants {
+public abstract class CustomWindow extends JLayeredPane implements Comparable<CustomWindow>,Constants {
 
 	private int layer = 10000;
 	private String title = "Default";
+	
+	private JButton close = new JButton(new ImageIcon(Images.getImage("rsc/Gui/Window/close.png")));
+	private JButton maximise = new JButton(new ImageIcon(Images.getImage("rsc/Gui/Window/maximise.png")));
 
-	Rectangle close = new Rectangle();
-	Rectangle maximise = new Rectangle();
+	private Point mousePoint = new Point();
+	private Point reversemousePoint = new Point();
+	private Point bottomRight = new Point();
 
-	Point mousePoint = new Point();
-	Point reversemousePoint = new Point();
-	Point bottomRight = new Point();
+	private Dimension newsize = new Dimension();
 
-	Dimension newsize = new Dimension();
-
-	BufferedImage image;
-
-	Mousestate mousestate;
+	private Mousestate mousestate;
+	
+	private Canvas window;
 
 	enum Mousestate {
 		DEFAULT_CURSOR,MOVE_CURSOR,E_RESIZE_CURSOR,S_RESIZE_CURSOR,N_RESIZE_CURSOR,W_RESIZE_CURSOR,SE_RESIZE_CURSOR,
@@ -59,21 +66,48 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 
 	public CustomWindow(int defaultWidht,int defaultHeight,Point defaultPosition,String title,int level) {
 		setLocation(defaultPosition.x,defaultPosition.y);
-		setnewSize(
+		
+		window = new Canvas();
+		window.setLocation(0,0);
+		
+		setSize(
 				Frame.getWidth() > defaultWidht + defaultPosition.getX() ? defaultWidht
 						: Frame.getWidth() - (int) defaultPosition.getX(),
 				Frame.getHeight() > defaultHeight + defaultPosition.getY() ? defaultHeight
 						: Frame.getHeight() - (int) defaultPosition.getY());
+		
+		setnewSize(getSize().width,getSize().height);
+		
+		window.setSize(getSize());
+		
 		setTitle(title + "  " + new Random().nextInt(999));
 
-		close = new Rectangle(getWidth() - 27,8,20,20);
-		maximise = new Rectangle(getWidth() - 57,8,20,20);
+		close.setBounds(getWidth() - 27,6,17,17);
+		close.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Frame.getWindowManager().removeWindow(getThis());
+			}
+		});
+		close.setFocusPainted(false);
+		close.setRolloverEnabled(false);
+		
+		maximise.setBounds(getWidth() - 47,6,17,17);
+		maximise.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setnewLocation(0,0);
+				setnewSize(Frame.getMaxDimension().width,Frame.getMaxDimension().height);
+			}
+		});
+		maximise.setFocusPainted(false);
+		maximise.setRolloverEnabled(false);
 
 		Frame.getWindowManager().addWindow(level,this);
 
-		addKeyListener(new UserInputInterpreter());
+		window.addKeyListener(new UserInputInterpreter());
 
-		addMouseListener(new MouseAdapter() {
+		window.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -84,7 +118,6 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				processMousePressedEvent(e);
-				press(e);
 			}
 
 			@Override
@@ -94,7 +127,7 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 
 		});
 
-		addMouseMotionListener(new MouseMotionListener() {
+		window.addMouseMotionListener(new MouseMotionListener() {
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
@@ -110,7 +143,7 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 
 		});
 
-		addMouseWheelListener(new MouseWheelListener() {
+		window.addMouseWheelListener(new MouseWheelListener() {
 
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
@@ -118,8 +151,17 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 			}
 
 		});
-		setIgnoreRepaint(true);
-		createBufferStrategy(3);
+
+		add(window,JLayeredPane.DEFAULT_LAYER);
+		
+		add(close,JLayeredPane.PALETTE_LAYER);
+		add(maximise,JLayeredPane.PALETTE_LAYER);
+		
+		close.repaint();
+		maximise.repaint();
+		
+		window.setIgnoreRepaint(true);
+		window.createBufferStrategy(3);
 	}
 
 	public void setTitle(String title) {
@@ -134,19 +176,15 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 		return this;
 	}
 
-	@Override
-	public void paint(Graphics g) {
-		g.drawImage(image,0,0,null);
-	}
-
 	public void Render() {
 		Debugger.startDraw(this);
 
 		setSize(newsize);
-
-		close.setBounds(getWidth() - 27,8,14,14);
-		maximise.setBounds(getWidth() - 47,8,14,14);
-
+		window.setSize(newsize);
+		
+		close.setBounds(getWidth() - 27,6,17,17);
+		maximise.setBounds(getWidth() - 47,6,17,17);
+		
 		BufferedImage draw = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D g = draw.createGraphics();
 
@@ -161,8 +199,9 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 
 		g.setColor(Color.black);
 		g.fillRect(0,0,getWidth(),getHeight());
-
-		g.drawImage(drawimage,getImageborders().x,getImageborders().y,null);
+		
+		if (drawimage != null)
+			g.drawImage(drawimage,getImageborders().x,getImageborders().y,null);
 
 		g.drawImage(Images.getImage("rsc/Gui/Window/top left.png"),0,0,18,30,null);
 		g.drawImage(Images.getImage("rsc/Gui/Window/top.png"),18,0,getWidth() - 34,30,null);
@@ -173,15 +212,12 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 		g.drawImage(Images.getImage("rsc/Gui/Window/bottom.png"),18,getHeight() - 18,getWidth(),18,null);
 		g.drawImage(Images.getImage("rsc/Gui/Window/bottom right.png"),getWidth() - 18,getHeight() - 18,null);
 
-		g.drawImage(Images.getImage("rsc/Gui/Window/maximise.png"),maximise.x,maximise.y,null);
-		g.drawImage(Images.getImage("rsc/Gui/Window/close.png"),close.x,close.y,null);
-
 		// Zeichnet den Titel des Fensters
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Consolas",Font.BOLD,18));
 		String newtitle = "";
 		for (int i = 0; i < title.length() * 10; i += 10) {
-			if (i + (SIDEBARWIDTH * 0.7) < maximise.x - maximise.width)
+			if (i + (SIDEBARWIDTH * 0.7) < maximise.getX() - maximise.getWidth())
 				newtitle += title.charAt(i / 10);
 			else
 				break;
@@ -189,7 +225,7 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 		g.drawString(newtitle,(int) (SIDEBARWIDTH * 0.7),20);
 
 		g.dispose();
-		BufferStrategy bs = getBufferStrategy();
+		BufferStrategy bs = window.getBufferStrategy();
 
 		do {
 			do {
@@ -200,6 +236,9 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 			} while (bs.contentsRestored());
 			bs.show();
 		} while (bs.contentsLost());
+
+		close.repaint();
+		maximise.repaint();
 
 		Debugger.endDraw(this);
 	}
@@ -230,13 +269,19 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 	}
 
 	public void setnewLocation(int x,int y) {
-		// this.newposition = new Point(x,y);
 		setLocation(x,y);
 	}
 
 	public void setnewSize(int w,int h) {
 		this.newsize = new Dimension(w,h);
-		// setSize(w,h);
+	}
+	
+	public void setComponentBounds(int x,int y, int width,int height, Component component) {
+		component.setBounds(x+getImageborders().x,y+getImageborders().y,width,height);
+	}
+	
+	public void setComponentLocation(int x,int y, Component component) {
+		setComponentBounds(x,y,component.getWidth(),component.getHeight(),component);
 	}
 
 	/**
@@ -262,19 +307,6 @@ public abstract class CustomWindow extends Canvas implements Comparable<CustomWi
 
 	private static int checkHeight(int check) {
 		return Math.min(Math.max(check,DEFAULTMINHEIGHT),Frame.getMaxDimension().height);
-	}
-
-	@SuppressWarnings("incomplete-switch")
-	public void press(MouseEvent e) {
-		switch (mousestate) {
-			case MAXIMAISE:
-				setnewLocation(0,0);
-				setnewSize(Frame.getMaxDimension().width,Frame.getMaxDimension().height);
-			break;
-			case CLOSE:
-				Frame.getWindowManager().removeWindow(this);
-			break;
-		}
 	}
 
 	@SuppressWarnings("incomplete-switch")

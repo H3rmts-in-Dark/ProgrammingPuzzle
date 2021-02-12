@@ -19,8 +19,8 @@ public class start {
 		MainControl.start();
 		Frame.setVisible();
 		
-		MainControl.createWorld();
-
+		MainControl.createProgrammingWindow();
+	//	MainControl.createWorld();
 	}
 
 }
