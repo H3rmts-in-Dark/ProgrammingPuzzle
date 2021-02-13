@@ -54,6 +54,7 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 	}
 
 	public void windowToFront(CustomWindow window) {
+		window.setLayer(10000);
 		clean();
 	}
 

@@ -10,23 +10,16 @@ public interface Constants {
 	// -----------------------------------------------------------
 	// --------------------Customwindow---------------------------
 
-	public static final Integer RESIZEWIDTHHEIGHT_INTEGER = 10;
-	public static final Integer CORNERWIDTH = 18;
-	public static final Integer TOPBARWIDTH = 30;
-	public static final Integer SIDEBARWIDTH = 18;
-
 	public static final Integer DEFAULTX = 40;
 	public static final Integer DEFAULTY = 40;
 	public static final Integer DEFAULTWITH = 200;
 	public static final Integer DEFAULTHEIGHT = 100;
-	public static final Integer DEFAULTMINWIDTH = CORNERWIDTH * 2 + 60;
-	public static final Integer DEFAULTMINHEIGHT = TOPBARWIDTH + CORNERWIDTH + 60;
 
 	//
 	// -----------------------------------------------------------
 	// --------------------Worldwindow----------------------------
 
-	public static final Float MAXZOOM = 3.6f;
+	public static final Float MAXZOOM = 2.8f;
 	public static final Float MINZOOM = 0.4f;
 
 	public static final String CROSS_COLOR = "red";

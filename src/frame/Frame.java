@@ -1,9 +1,15 @@
 package frame;
 
 
+import java.awt.AWTEvent;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
 import logic.Constants;
@@ -25,7 +31,6 @@ public class Frame implements Constants {
 		frame.setFocusable(true);
 		frame.setLayout(null);
 		frame.setResizable(false);
-		frame.addKeyListener(new UserInputInterpreter());
 
 		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -38,6 +43,31 @@ public class Frame implements Constants {
 
 		Windowmanager.setVisible(true);
 
+		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+
+			@Override
+			public void eventDispatched(AWTEvent e) {
+				if (e instanceof KeyEvent && e.getID() == KeyEvent.KEY_RELEASED) {
+					UserInputInterpreter.keyPressed((KeyEvent) e);
+				}
+			}
+
+		},AWTEvent.KEY_EVENT_MASK);
+
+		// Metal j, Nimbus, CDE/Motifcom, Windowscom, Windows Classic,
+
+		for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+			if ("Windows".equals(info.getName())) {
+				try {
+					UIManager.setLookAndFeel(info.getClassName());
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+		}
+
 	}
 
 	public static CustomWindowManager getWindowManager() {
@@ -49,7 +79,7 @@ public class Frame implements Constants {
 	}
 
 	public static Dimension getMaxDimension() {
-		return new Dimension(800,800);// frame.getGraphicsConfiguration().getBounds().getSize();
+		return new Dimension(1200,1200);// frame.getGraphicsConfiguration().getBounds().getSize();
 	}
 
 	public static int getWidth() {
