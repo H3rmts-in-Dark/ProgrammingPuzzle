@@ -1,13 +1,10 @@
 package frame;
 
 
-import java.awt.AWTEvent;
 import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.AWTEventListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -42,18 +39,15 @@ public class Frame implements Constants {
 		frame.getContentPane().add(Windowmanager);
 
 		Windowmanager.setVisible(true);
-
-		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-
-			@Override
-			public void eventDispatched(AWTEvent e) {
-				if (e instanceof KeyEvent && e.getID() == KeyEvent.KEY_RELEASED) {
-					UserInputInterpreter.keyPressed((KeyEvent) e);
-				}
-			}
-
-		},AWTEvent.KEY_EVENT_MASK);
-
+		/*
+		 * Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+		 * 
+		 * @Override public void eventDispatched(AWTEvent e) { if (e instanceof KeyEvent &&
+		 * e.getID() == KeyEvent.KEY_RELEASED) { UserInputInterpreter.keyPressed((KeyEvent) e); }
+		 * }
+		 * 
+		 * },AWTEvent.KEY_EVENT_MASK);
+		 */
 		// Metal j, Nimbus, Windows,
 
 		for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -79,7 +73,7 @@ public class Frame implements Constants {
 	}
 
 	public static Dimension getMaxDimension() {
-		return new Dimension(900,900);// frame.getGraphicsConfiguration().getBounds().getSize();
+		return new Dimension(1400,1400);// frame.getGraphicsConfiguration().getBounds().getSize();
 	}
 
 	public static int getWidth() {
@@ -88,10 +82,6 @@ public class Frame implements Constants {
 
 	public static int getHeight() {
 		return frame.getHeight();
-	}
-
-	public static void setVisible() {
-		frame.setVisible(true);
 	}
 
 }

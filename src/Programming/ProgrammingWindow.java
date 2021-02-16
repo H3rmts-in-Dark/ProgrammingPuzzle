@@ -45,6 +45,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
@@ -106,7 +109,7 @@ public class ProgrammingWindow extends CustomWindow {
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)));
 
-		pack();
+		Interpreter.init();
 
 	}
 
@@ -159,10 +162,10 @@ public class ProgrammingWindow extends CustomWindow {
 
 		OutputPanelLayout.setHorizontalGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(OutputPanelLayout.createSequentialGroup().addContainerGap()
-						.addGroup(OutputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+						.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 								.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,82,GroupLayout.PREFERRED_SIZE)
 								.addGroup(OutputPanelLayout.createSequentialGroup()
-										.addGroup(OutputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+										.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 												.addComponent(Run,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE)
 												.addComponent(Stop,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE))
 										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -253,25 +256,23 @@ public class ProgrammingWindow extends CustomWindow {
 		MenuBarOther = new JMenu();
 		MenuBarOther.setText("Other");
 
-		MenuBarOtherItem1 = new JMenuItem();
-		MenuBarOtherItem1.setText("Run");
+		MenuBarOtherItem1 = new JMenuItem("Run");
 		addListener(MenuBarOtherItem1);
 		MenuBarOther.add(MenuBarOtherItem1);
 
-		MenuBarOtherItem2 = new JMenuItem();
-		MenuBarOtherItem2.setText("Stop");
+		MenuBarOtherItem2 = new JMenuItem("Stop");
 		addListener(MenuBarOtherItem2);
 		MenuBarOther.add(MenuBarOtherItem2);
 
+		actions.add("Interpret",MenuBarOther);
+
 		MenuBarOther.add(new Separator());
 
-		MenuBarOtherItem3 = new JMenuItem();
-		MenuBarOtherItem3.setText("Go to");
+		MenuBarOtherItem3 = new JMenuItem("Go to");
 		addListener(MenuBarOtherItem3);
 		MenuBarOther.add(MenuBarOtherItem3);
 
-		MenuBarOtherItem4 = new JMenuItem();
-		MenuBarOtherItem4.setText("Find");
+		MenuBarOtherItem4 = new JMenuItem("Find");
 		addListener(MenuBarOtherItem4);
 		MenuBarOther.add(MenuBarOtherItem4);
 
@@ -346,6 +347,7 @@ class Tab extends JPanel {
 
 		UndoAction undoAction = new UndoAction(manager);
 		RedoAction redoAction = new RedoAction(manager);
+		InterpretAction interpretAction = new InterpretAction(document);
 
 		redoAction.setUndoAction(undoAction);
 		undoAction.setRedoAction(redoAction);
@@ -353,6 +355,8 @@ class Tab extends JPanel {
 		actions.append(undoAction);
 
 		actions.append(redoAction);
+
+		actions.append(interpretAction);
 
 		addBindings();
 		window.GenerateMenuBar(actions);
@@ -397,6 +401,15 @@ class Tab extends JPanel {
 			}
 
 		});
+
+		try {
+			MutableAttributeSet set = new SimpleAttributeSet();
+			StyleConstants.setFontFamily(set,"SansSerif");
+			StyleConstants.setFontSize(set,30);
+			document.insertString(0,"ProgrammingPuzzle",set);
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
 
 	}
 
@@ -472,6 +485,7 @@ class Actionlist extends ArrayList<Action> {
 				return;
 			}
 		}
+		System.out.println(Name + " not found");
 	}
 
 	public Action get(String Name) {
@@ -567,11 +581,38 @@ class RedoAction extends AbstractAction {
 
 
 
+class InterpretAction extends AbstractAction {
+
+	AbstractDocument document;
+
+	public InterpretAction(AbstractDocument doc) {
+		super("Interpret");
+		this.document = doc;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		try {
+			Interpreter.interpret(document);
+		} catch (ExceptionInInitializerError e2) {
+			System.err.println(e2.getMessage());
+		}
+
+	}
+
+}
+
+
+
 class Listener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(((AbstractButton) e.getSource()).getText());
+		switch (((AbstractButton) e.getSource()).getText()) {
+			case "Run":
+				System.out.println("hi");
+			break;
+		}
 	}
 
 }

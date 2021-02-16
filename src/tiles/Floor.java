@@ -12,9 +12,9 @@ import abstractclasses.Tile;
 import world.World;
 
 
-public class Default extends Tile {
+public class Floor extends Tile {
 
-	public Default(Signalcolor color,Cabletype cabletype) {
+	public Floor(Signalcolor color,Cabletype cabletype) {
 		super(Height.FLOORHEIGHT,0,0,color,cabletype);
 	}
 
