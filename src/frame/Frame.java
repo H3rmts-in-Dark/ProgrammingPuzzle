@@ -54,10 +54,10 @@ public class Frame implements Constants {
 
 		},AWTEvent.KEY_EVENT_MASK);
 
-		// Metal j, Nimbus, CDE/Motifcom, Windowscom, Windows Classic,
+		// Metal j, Nimbus, Windows,
 
 		for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-			if ("Windows".equals(info.getName())) {
+			if ("Nimbus".equals(info.getName())) {
 				try {
 					UIManager.setLookAndFeel(info.getClassName());
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
@@ -79,7 +79,7 @@ public class Frame implements Constants {
 	}
 
 	public static Dimension getMaxDimension() {
-		return new Dimension(1200,1200);// frame.getGraphicsConfiguration().getBounds().getSize();
+		return new Dimension(900,900);// frame.getGraphicsConfiguration().getBounds().getSize();
 	}
 
 	public static int getWidth() {

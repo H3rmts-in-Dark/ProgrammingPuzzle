@@ -22,19 +22,21 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 	}
 
 	public void addWindow(int layer,CustomWindow window) {
+		
 		if (windows.get(layer) == null)
 			windows.put(layer,new LinkedList<>());
 		windows.get(layer).add(window);
 		add(window);
 		windowToFront(window);
+		
+		//add(window);
 	}
-
+	
 	public void removeWindow(CustomWindow newWindow) {
 		for (LinkedList<CustomWindow> linkedList : windows.values()) {
 			for (CustomWindow customWindow : linkedList) {
 				if (customWindow == newWindow) {
 					linkedList.remove(newWindow);
-					remove(customWindow);
 					break;
 				}
 			}

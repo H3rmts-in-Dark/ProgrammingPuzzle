@@ -56,6 +56,7 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 		setSize(Widht,Height);
 		setTitle(title + "  " + new Random().nextInt(999));
 		setFocusable(true);
+		setIgnoreRepaint(true);
 
 		if (def) {
 			setLayout(null);

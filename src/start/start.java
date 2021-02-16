@@ -20,7 +20,7 @@ public class start {
 		Frame.setVisible();
 		
 		MainControl.createProgrammingWindow();
-		MainControl.createWorld();
+//		MainControl.createWorld();
 	}
 
 }
