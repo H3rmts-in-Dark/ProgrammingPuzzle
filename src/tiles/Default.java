@@ -3,22 +3,25 @@ package tiles;
 
 import java.util.LinkedHashMap;
 
-import Enums.Animations;
-import Enums.Heights;
+import Enums.Animation;
+import Enums.Cabletype;
+import Enums.Height;
+import Enums.Layer;
+import Enums.Signalcolor;
 import abstractclasses.Tile;
-import logic.Layers;
 import world.World;
 
 
 public class Default extends Tile {
 
-	public Default() {
-		super(Heights.FLOORHEIGHT);
+	public Default(Signalcolor color,Cabletype cabletype) {
+		super(Height.FLOORHEIGHT,0,0,color,cabletype);
 	}
 
 	@Override
 	public void loadAnimations() {
-		World.loadPicture(Layers.Floor,Animations.noanimation,this,"Default");
+		World.load(Layer.Floor,Animation.noanimation,this,"Default");
+		World.load(Layer.Floor,Animation.noanimation,this,"Default");
 	}
 
 	@Override

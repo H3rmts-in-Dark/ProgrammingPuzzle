@@ -1,26 +1,21 @@
 package frame;
 
 
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import Enums.Rotations;
 import logic.DebuggingWindow;
 import logic.MainControl;
-import tasks.MoveEntityTask;
 import world.WorldSelectionWindow;
 
 
-public class UserInputInterpreter extends KeyAdapter {
+public class UserInputInterpreter {
 
-	private String commandString;
+	private static String commandString = "";
 
-	public UserInputInterpreter() {
-		commandString = "";
+	private UserInputInterpreter() {
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
+	public static void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			commandString = "";
 			return;
@@ -37,7 +32,7 @@ public class UserInputInterpreter extends KeyAdapter {
 		} else if (e.getKeyCode() != KeyEvent.VK_SHIFT) {
 			char c = e.getKeyChar();
 			commandString += c;
-			// System.out.println(commandString);
+			System.out.println(commandString);
 		}
 	}
 
@@ -51,8 +46,6 @@ public class UserInputInterpreter extends KeyAdapter {
 			new WorldSelectionWindow();
 		} else if (command.equals("world")) {
 			MainControl.createWorld();
-		} else if (command.equals("move")) {
-			new MoveEntityTask(2,MainControl.getWorld().getEntitylist().get(0),Rotations.right);
 		}
 	}
 

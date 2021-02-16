@@ -1,9 +1,15 @@
 package frame;
 
 
+import java.awt.AWTEvent;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
 import logic.Constants;
@@ -25,11 +31,10 @@ public class Frame implements Constants {
 		frame.setFocusable(true);
 		frame.setLayout(null);
 		frame.setResizable(false);
-		frame.addKeyListener(new UserInputInterpreter());
 
 		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		
+
 		Windowmanager = new CustomWindowManager();
 		Windowmanager.setBounds(0,0,frame.getWidth(),frame.getHeight());
 		Windowmanager.setVisible(false);
@@ -37,6 +42,31 @@ public class Frame implements Constants {
 		frame.getContentPane().add(Windowmanager);
 
 		Windowmanager.setVisible(true);
+
+		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+
+			@Override
+			public void eventDispatched(AWTEvent e) {
+				if (e instanceof KeyEvent && e.getID() == KeyEvent.KEY_RELEASED) {
+					UserInputInterpreter.keyPressed((KeyEvent) e);
+				}
+			}
+
+		},AWTEvent.KEY_EVENT_MASK);
+
+		// Metal j, Nimbus, Windows,
+
+		for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+			if ("Nimbus".equals(info.getName())) {
+				try {
+					UIManager.setLookAndFeel(info.getClassName());
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+		}
 
 	}
 
@@ -47,9 +77,9 @@ public class Frame implements Constants {
 	public static JFrame getFrame() {
 		return frame;
 	}
-	
+
 	public static Dimension getMaxDimension() {
-		return new Dimension(800,800);// frame.getGraphicsConfiguration().getBounds().getSize();
+		return new Dimension(900,900);// frame.getGraphicsConfiguration().getBounds().getSize();
 	}
 
 	public static int getWidth() {

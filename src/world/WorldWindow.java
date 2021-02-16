@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-import Enums.Heights;
+import Enums.Height;
 import abstractclasses.CustomWindow;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
@@ -25,8 +25,7 @@ public class WorldWindow extends CustomWindow {
 	 * @param world this
 	 */
 	public WorldWindow(World world) {
-		super(world.getWidth() * DEFAULTIMAGEWIDHTHEIGHT + SIDEBARWIDTH * 2,
-				(world.getHeight() + 1) * DEFAULTIMAGEWIDHTHEIGHT + TOPBARWIDTH,"World");
+		super((world.getWidth() + 1) * DEFAULTIMAGEWIDHTHEIGHT,(world.getHeight() + 2) * DEFAULTIMAGEWIDHTHEIGHT,"World");
 		this.world = world;
 		this.mouse = new Point(0,0);
 		zoom = 1f;
@@ -34,11 +33,12 @@ public class WorldWindow extends CustomWindow {
 
 	@Override
 	public BufferedImage getImage() {
+		if (world == null)
+			return null;
 
 		double widhei = (int) (DEFAULTIMAGEWIDHTHEIGHT * zoom);
 		double widh = (int) Math.ceil(Math.min(world.getWidth() * widhei,getWidth()) / widhei);
 		double heig = (int) Math.ceil(Math.min(world.getHeight() * widhei,getHeight() - widhei) / widhei);
-		// System.out.println(widh + "-" + heig);
 
 		BufferedImage image = new BufferedImage((int) Math.ceil(widh * DEFAULTIMAGEWIDHTHEIGHT),
 				(int) Math.ceil((heig + 1) * DEFAULTIMAGEWIDHTHEIGHT),BufferedImage.TYPE_4BYTE_ABGR);
@@ -77,9 +77,9 @@ public class WorldWindow extends CustomWindow {
 			}
 
 		for (Entity entity : world.getEntitylist()) {
-			g2.drawImage(
-					entity.getImage(),entity.getPixelPosition().x + entity.getRelativedrawX(),entity.getPixelPosition().y
-							+ DEFAULTIMAGEWIDHTHEIGHT + entity.getRelativedrawY() - Heights.getheight(entity.getHeight()),
+			g2.drawImage(entity.getImage(),entity.getPixelPosition().x + entity.getRelativedrawX(),
+					entity.getPixelPosition().y + DEFAULTIMAGEWIDHTHEIGHT + entity.getRelativedrawY()
+							- Height.getint(entity.getHeight()),
 					null);
 		}
 		for (int x = 0; x < widh; x++)
@@ -116,6 +116,8 @@ public class WorldWindow extends CustomWindow {
 	@Override
 	public void mousePressed(Point point) {
 		Tile tile = getTile(point);
+		if (tile == null)
+			return;
 		if (tile instanceof Schalter)
 			tile.onInteract(null);
 		else if (tile instanceof Computer)

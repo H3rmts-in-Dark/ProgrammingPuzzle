@@ -1,7 +1,7 @@
 package tasks;
 
 
-import Enums.Rotations;
+import Enums.Rotation;
 import abstractclasses.Entity;
 import abstractclasses.Task;
 import abstractclasses.Tile;
@@ -10,10 +10,10 @@ import abstractclasses.Tile;
 public class MoveEntityTask extends Task {
 
 	private Entity entity;
-	private Rotations direction;
+	private Rotation direction;
 	private Tile left;
 
-	public MoveEntityTask(Integer tickDifference,Entity entity,Rotations direction) {
+	public MoveEntityTask(Integer tickDifference,Entity entity,Rotation direction) {
 		super(tickDifference,DEFAULTIMAGEWIDHTHEIGHT);
 		this.entity = entity;
 		this.direction = direction;

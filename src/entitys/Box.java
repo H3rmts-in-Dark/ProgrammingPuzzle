@@ -4,8 +4,8 @@ package entitys;
 import java.awt.Point;
 import java.util.LinkedHashMap;
 
-import Enums.Animations;
-import Enums.Rotations;
+import Enums.Animation;
+import Enums.Rotation;
 import abstractclasses.Entity;
 import world.World;
 
@@ -18,7 +18,7 @@ public class Box extends Entity {
 
 	@Override
 	public void loadAnimations() {
-		World.loadAnimation(Rotations.norotation,Animations.deactivatedanimation,this);
+		World.load(Rotation.norotation,Animation.deactivatedanimation,this);
 	}
 
 	@Override
