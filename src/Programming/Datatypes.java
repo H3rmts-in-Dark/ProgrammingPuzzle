@@ -1,12 +1,9 @@
 package Programming;
 
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
-
 enum Datatypes {
 
-	notype,all,MY_int,MY_String,MY_boolean;
+	notype,all,MY_int,MY_long,MY_String,MY_boolean;
 
 	static Datatypes contains(String type) {
 		for (Datatypes datatype : Datatypes.values()) {
@@ -25,8 +22,8 @@ enum Datatypes {
 				return MY_boolean;
 			case "int":
 				return MY_int;
-			default:
-			break;
+			case "long":
+				return MY_long;
 		}
 		return null;
 	}
@@ -35,7 +32,7 @@ enum Datatypes {
 
 
 
-abstract class Datatype<T> {
+abstract class Variable<T> {
 
 	protected Datatypes type;
 
@@ -43,7 +40,7 @@ abstract class Datatype<T> {
 
 	protected String name;
 
-	public Datatype(String name,Datatypes type) {
+	public Variable(String name,Datatypes type) {
 		this.name = name;
 		this.type = type;
 	}
@@ -77,13 +74,13 @@ abstract class Datatype<T> {
 
 
 
-class MY_String extends Datatype<String> {
+class MY_String extends Variable<String> {
 
 	public MY_String(String name) {
 		this("",name);
 	}
 
-	public MY_String(String value,String name) {
+	public MY_String(Object value,String name) {
 		super(name,Datatypes.MY_String);
 		changeValue(value);
 	}
@@ -103,13 +100,13 @@ class MY_String extends Datatype<String> {
 
 
 
-class MY_boolean extends Datatype<Boolean> {
+class MY_boolean extends Variable<Boolean> {
 
 	public MY_boolean(String name) {
 		this(false,name);
 	}
 
-	public MY_boolean(boolean value,String name) {
+	public MY_boolean(Object value,String name) {
 		super(name,Datatypes.MY_boolean);
 		changeValue(value);
 	}
@@ -128,13 +125,13 @@ class MY_boolean extends Datatype<Boolean> {
 
 
 
-class MY_int extends Datatype<Integer> {
+class MY_int extends Variable<Integer> {
 
 	public MY_int(String name) {
 		this(0,name);
 	}
 
-	public MY_int(int value,String name) {
+	public MY_int(Object value,String name) {
 		super(name,Datatypes.MY_int);
 		changeValue(value);
 	}
@@ -148,6 +145,33 @@ class MY_int extends Datatype<Integer> {
 		}
 		throw new WrongTypeException(type,test,3);
 
+	}
+
+}
+
+
+
+class MY_long extends Variable<Long> {
+
+	public MY_long(String name) {
+		this((long) 0,name);
+	}
+
+	public MY_long(Object value,String name) {
+		super(name,Datatypes.MY_long);
+		changeValue(value);
+	}
+
+	@Override
+	public boolean checkvalue(Object test) throws InvalidValueException,WrongTypeException {
+		try {
+			Long longg = (long) test;
+			if (longg > Long.MIN_VALUE && longg < Long.MAX_VALUE)
+				return true;
+			throw new InvalidValueException(Long.MIN_VALUE,Long.MAX_VALUE,test,3);
+		} catch (ClassCastException e) {
+			throw new WrongTypeException(type,test,3);
+		}
 	}
 
 }

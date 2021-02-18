@@ -11,10 +11,15 @@ public class Interpreter {
 
 	private static MethodList methods;
 
-	private static DatatypeList datatypes;
+	private static VariableList variables;
 
 	public Interpreter() {
 
+	}
+
+	public static void interpret() {
+		String programm = "String str = \"hi\"; if(); long lng; ";
+		interpret(programm);
 	}
 
 	public static void interpret(AbstractDocument document) {
@@ -28,7 +33,9 @@ public class Interpreter {
 	public static void interpret(String str) {
 		init();
 
-		Str text = new Str(str);
+		CustStr text = new CustStr(str);
+
+		System.out.println(text);
 
 		// System.out.println("interpreting:\n" + text);
 		interpretblock(text);
@@ -37,56 +44,96 @@ public class Interpreter {
 		interpretblock(text);
 		interpretblock(text);
 		interpretblock(text);
+
+		System.out.println("\n" + variables);
 		// while (text.length() > 0) {
 
 		// }
 	}
 
-	private static void interpretblock(Str text) {
-		if (text.isBlank())
+	/**
+	 * @param text
+	 */
+	@SuppressWarnings("incomplete-switch")
+	private static void interpretblock(CustStr text) {
+		if (text.val.isBlank())
 			return;
-		if (text.startswith(Keywords.values())) {
-			System.out.println("keyword");
+		System.out.println("testing: " + text);
+		if (StrUtils.startswith(text.val.strip(),Keywords.values())) {
+			System.err.println("keyword");
+			String part = StrUtils.textuntil(text.val,"}").strip();
+			text.val = StrUtils.removetext(text.val,part,"}");
 			return;
 		}
-		String part = text.textuntil(";").strip();
-		System.out.println("\nprocess: " + part);
+		String part = StrUtils.textuntil(text.val,";").strip();
+		text.val = StrUtils.removetext(text.val,part,";");
+		System.out.println("\nprocess spl: " + part);
 		if (part.contains("(")) {
-			String firs = Str.first(part,'(');
+			String firs = StrUtils.first(part,'(');
 			Method method = methods.get(firs);
 			if (method != null) {
 				System.out.println("method: " + method);
+				String parameters = StrUtils.fromto(part,'(',')');
+				System.out.println("parameters = " + parameters);
+			} else {
+				System.err.println("method exeption");
 			}
-			String parameters = Str.fromto(part,'(',')');
-			System.out.println("parameters = " + parameters);
 		} else {
-			String typestr = Str.first(part,' ');
+			String typestr = StrUtils.first(part,' ');
 			Datatypes type = Datatypes.contains(typestr);
 			if (type != null) {
 				System.out.println("datatype: " + type);
-				String name = Str.part(part,' ',1);
+				String name = StrUtils.part(part,' ',1);
 				System.out.println("name: " + name);
 				if (checkname(name)) {
-					String value = Str.part(part,'=',1);
-					System.out.println("value: " + value);
-
-					datatypes.append(new Datatype<Integer>(value,type) {
-
-						@Override
-						public Integer getValue() {
-							return (int) (System.currentTimeMillis() / 0.001);
+					if (part.contains("=")) {
+						String value = StrUtils.part(part,'=',1);
+						System.out.println("value: " + value);
+						Variable<?> variable;
+						switch (type) {
+							case MY_int:
+								variable = new MY_int(value,name);
+								variables.add(variable);
+							break;
+							case MY_boolean:
+								variable = new MY_boolean(value,name);
+								variables.add(variable);
+							break;
+							case MY_String:
+								variable = new MY_String(value,name);
+								variables.add(variable);
+							break;
+							case MY_long:
+								variable = new MY_long(value,name);
+								variables.add(variable);
+							break;
 						}
-
-						@Override
-						boolean checkvalue(Object test) {
-							return true;
+					} else {
+						Variable<?> variable;
+						switch (type) {
+							case MY_int:
+								variable = new MY_int(name);
+								variables.add(variable);
+							break;
+							case MY_boolean:
+								variable = new MY_boolean(name);
+								variables.add(variable);
+							break;
+							case MY_String:
+								variable = new MY_String(name);
+								variables.add(variable);
+							break;
+							case MY_long:
+								variable = new MY_long(name);
+								variables.add(variable);
+							break;
 						}
-
-					});
+					}
+				} else {
+					System.err.println("naming exeption");
 				}
 			}
 		}
-
 	}
 
 	private static boolean checkname(String name) {
@@ -100,72 +147,64 @@ public class Interpreter {
 
 		methods.append(new move());
 
-		datatypes = new DatatypeList();
+		variables = new VariableList();
 
-		datatypes.append(new MY_boolean(true,"testing"));
-
-		datatypes.append(new MY_int("sec") {
+		variables.append(new MY_long("sec") {
 
 			@Override
-			public Integer getValue() {
-				return (int) (System.currentTimeMillis() / 0.001);
+			public Long getValue() {
+				return (long) (System.currentTimeMillis() * 0.001);
 			}
 
 		});
-
-		System.out.println(methods);
-
-		System.out.println(datatypes);
 	}
 
 }
 
 
 
-class Str {
+class CustStr {
 
-	private String data;
+	public String val;
 
-	public Str(AbstractDocument document) {
+	public CustStr(String text) {
+		val = text;
+	}
+
+	@Override
+	public String toString() {
+		return val;
+	}
+
+}
+
+
+
+class StrUtils {
+
+	public static String getText(AbstractDocument document) {
 		try {
-			data = document.getText(0,document.getLength());
+			return document.getText(0,document.getLength());
 		} catch (BadLocationException e) {
-			return;
+			return "";
 		}
 	}
 
-	public Str(String str) {
-		data = str;
-	}
-
-	public void setString(String data) {
-		this.data = data;
-	}
-
-	public int length() {
-		return data.length();
-	}
-
-	public boolean isBlank() {
-		return data.isBlank();
-	}
-
-	public boolean startswith(Keywords...keywords) {
-		for (Keywords string : keywords) {
-			if (data.startsWith(string.toString()))
+	public static boolean startswith(String text,Keywords...keywords) {
+		for (Keywords keyword : keywords) {
+			if (text.startsWith(Keywords.convert(keyword)))
 				return true;
 		}
 		return false;
 	}
 
-	public String textuntil(String ch) {
-		String ret = data.split(ch)[0];
-		removetext(ret,ch);
+	public static String textuntil(String text,String ch) {
+		String ret = text.split(ch)[0];
 		return ret;
 	}
 
-	private void removetext(String ret,String ch) {
-		data = data.substring(Math.min((ret + ch).length(),data.length()));
+	public static String removetext(String text,String ret,String ch) {
+		return text.substring(Math.min((ret + ch).length(),text.length()));
 	}
 
 	public static String first(String text,char split) {
@@ -247,20 +286,29 @@ class MethodList extends ArrayList<Method> {
 		}
 	}
 
+	@Override
+	public String toString() {
+		String ret = "MethodList:\n";
+		for (Method method : this) {
+			ret += "  " + method.toString() + "\n";
+		}
+		return ret;
+	}
+
 }
 
 
 
-class DatatypeList extends ArrayList<Datatype<?>> {
+class VariableList extends ArrayList<Variable<?>> {
 
-	public DatatypeList() {
+	public VariableList() {
 		super();
 	}
 
-	public Datatype<?> get(String name) {
-		for (Datatype<?> datatype : this) {
-			if (datatype.getName().equals(name))
-				return datatype;
+	public Variable<?> get(String name) {
+		for (Variable<?> variable : this) {
+			if (variable.getName().equals(name))
+				return variable;
 		}
 		return null;
 	}
@@ -270,13 +318,22 @@ class DatatypeList extends ArrayList<Datatype<?>> {
 	 * 
 	 * @param method
 	 */
-	public void append(Datatype<?> datatype) {
-		Datatype<?> old = get(datatype.getName());
+	public void append(Variable<?> variable) {
+		Variable<?> old = get(variable.getName());
 		if (old == null) {
-			add(datatype);
+			add(variable);
 		} else {
-			throw new RuntimeException("duplicate Datatype:" + datatype);
+			throw new RuntimeException("duplicate Variable:" + variable);
 		}
+	}
+
+	@Override
+	public String toString() {
+		String ret = "VariableList:\n";
+		for (Variable<?> var : this) {
+			ret += "  " + var.toString() + "\n";
+		}
+		return ret;
 	}
 
 }

@@ -34,7 +34,7 @@ class InvalidDatatypeException extends CustomExeption {
 class WrongTypeException extends CustomExeption {
 
 	public WrongTypeException(Datatypes type,Object object,int line) {
-		super(type + " did not match " + object.toString(),line);
+		super(object.toString() + " did not match " + type,line);
 	}
 
 }

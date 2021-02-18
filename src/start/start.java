@@ -22,12 +22,7 @@ public class start {
 	 */
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
-		/*
-		 * String programm = "" + "String str = \"tststr\";" + "int stps = 132;" +
-		 * "int times = 3;" + "boolean bool = true;" + " \nprint(str);" + " \nmove(stps,times);";
-		 */
-		String programm = "String str = \"tststr\";";
-		Interpreter.interpret(programm);
+		Interpreter.interpret();
 		if (1 == 1)
 			return;
 		SwingUtilities.invokeLater(new Runnable() {
