@@ -1,6 +1,5 @@
 package abstractclasses;
 
-
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -18,10 +17,9 @@ import tasks.ChangeTileImageTask;
 import world.Images;
 import world.World;
 
-
 /**
- * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das Objekt sich
- * nicht bewegen können und muss auf einer World platziert werden.
+ * Die Grundklasse aller Tiles. Um als Tile klassifiziert zu werden, darf das
+ * Objekt sich nicht bewegen können und muss auf einer World platziert werden.
  */
 public abstract class Tile implements Constants {
 
@@ -37,10 +35,10 @@ public abstract class Tile implements Constants {
 
 	private int ticksperimagechange;
 
-	private HashMap<Rotation,HashMap<Animation,ArrayList<String>>> objektanimations = new HashMap<>();
-	private HashMap<Layer,HashMap<Animation,String>> pictures = new HashMap<>();
+	private HashMap<Rotation, HashMap<Animation, ArrayList<String>>> objektanimations = new HashMap<>();
+	private HashMap<Layer, HashMap<Animation, String>> pictures = new HashMap<>();
 
-	protected HashMap<Layer,Animation> animations = new HashMap<>();
+	protected HashMap<Layer, Animation> animations = new HashMap<>();
 
 	protected int objectanimationcounter;
 	protected ChangeTileImageTask objecttask;
@@ -50,26 +48,27 @@ public abstract class Tile implements Constants {
 
 	private World world;
 
-	protected Tile(Height height,int relativedrawX,int relativedrawY,Signalcolor signalcolor,Cabletype cabletype) {
-		this(height,relativedrawX,relativedrawY,Rotation.norotation,DEFAULTIMAGECHANGETICKDELAY,signalcolor,cabletype);
+	protected Tile(Height height, int relativedrawX, int relativedrawY, Signalcolor signalcolor, Cabletype cabletype) {
+		this(height, relativedrawX, relativedrawY, Rotation.norotation, DEFAULTIMAGECHANGETICKDELAY, signalcolor,
+				cabletype);
 	}
 
-	protected Tile(Height height,int relativedrawX,int relativedrawY,Rotation rotation,int ticksperimagechange,
-			Signalcolor signalcolor,Cabletype cabletype) {
+	protected Tile(Height height, int relativedrawX, int relativedrawY, Rotation rotation, int ticksperimagechange,
+			Signalcolor signalcolor, Cabletype cabletype) {
 		this.height = height;
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
 		this.rotation = rotation;
 		this.ticksperimagechange = ticksperimagechange;
 		this.color = signalcolor;
-		
+
 		loadAnimations();
-		
-		if(cabletype != Cabletype.notype) {
-			World.load(Layer.Cable,Animation.onanimation,this,getColor(),cabletype);
-			World.load(Layer.Cable,Animation.offanimation,this,getColor(),cabletype);
+
+		if (cabletype != Cabletype.notype) {
+			World.load(Layer.Cable, Animation.onanimation, this, getColor(), cabletype);
+			World.load(Layer.Cable, Animation.offanimation, this, getColor(), cabletype);
 		}
-			
+
 		triggerAnimation(Animation.deactivatedanimation);
 		triggerAnimation(Animation.offanimation);
 		triggerAnimation(Animation.noanimation);
@@ -77,7 +76,7 @@ public abstract class Tile implements Constants {
 
 	public abstract void loadAnimations();
 
-	public abstract void getdata(LinkedHashMap<String,String> List);
+	public abstract void getdata(LinkedHashMap<String, String> List);
 
 	public Boolean isPassable(Height height) {
 		return Height.getint(height) >= Height.getint(this.height);
@@ -139,7 +138,7 @@ public abstract class Tile implements Constants {
 	public Rotation getRotation() {
 		return rotation;
 	}
-	
+
 	public void setRotation(Rotation rotation) {
 		this.rotation = rotation;
 		for (Animation ani : animations.values()) {
@@ -155,11 +154,11 @@ public abstract class Tile implements Constants {
 		return color;
 	}
 
-	public HashMap<Layer,HashMap<Animation,String>> getPictures() {
+	public HashMap<Layer, HashMap<Animation, String>> getPictures() {
 		return pictures;
 	}
 
-	public HashMap<Rotation,HashMap<Animation,ArrayList<String>>> getAnimations() {
+	public HashMap<Rotation, HashMap<Animation, ArrayList<String>>> getAnimations() {
 		return objektanimations;
 	}
 
@@ -184,10 +183,10 @@ public abstract class Tile implements Constants {
 	public void onEntityLeft(Entity entity) {
 	}
 
-	public void onSignal(Tile caller,boolean activate) {
+	public void onSignal(Tile caller, boolean activate) {
 	}
 
-	public void onSignalRelayer(Tile caller,boolean activate) {
+	public void onSignalRelayer(Tile caller, boolean activate) {
 		if (activate == activated)
 			return;
 		activated = activate;
@@ -200,19 +199,19 @@ public abstract class Tile implements Constants {
 		}
 		if (color != Signalcolor.nocolor) {
 			if (getPosition().x > 0)
-				if (world.getTile(getPosition().x - 1,getPosition().y).getColor() == color)
-					world.getTile(getPosition().x - 1,getPosition().y).onSignalRelayer(this,activate);
+				if (world.getTile(getPosition().x - 1, getPosition().y).getColor() == color)
+					world.getTile(getPosition().x - 1, getPosition().y).onSignalRelayer(this, activate);
 			if (getPosition().y > 0)
-				if (world.getTile(getPosition().x,getPosition().y - 1).getColor() == color)
-					world.getTile(getPosition().x,getPosition().y - 1).onSignalRelayer(this,activate);
+				if (world.getTile(getPosition().x, getPosition().y - 1).getColor() == color)
+					world.getTile(getPosition().x, getPosition().y - 1).onSignalRelayer(this, activate);
 			if (getPosition().x < world.getWidth() - 1)
-				if (world.getTile(getPosition().x + 1,getPosition().y).getColor() == color)
-					world.getTile(getPosition().x + 1,getPosition().y).onSignalRelayer(this,activate);
+				if (world.getTile(getPosition().x + 1, getPosition().y).getColor() == color)
+					world.getTile(getPosition().x + 1, getPosition().y).onSignalRelayer(this, activate);
 			if (getPosition().y < world.getHeight() - 1)
-				if (world.getTile(getPosition().x,getPosition().y + 1).getColor() == color)
-					world.getTile(getPosition().x,getPosition().y + 1).onSignalRelayer(this,activate);
+				if (world.getTile(getPosition().x, getPosition().y + 1).getColor() == color)
+					world.getTile(getPosition().x, getPosition().y + 1).onSignalRelayer(this, activate);
 		}
-		onSignal(caller,activate);
+		onSignal(caller, activate);
 	}
 
 	public boolean getActivated() {
@@ -224,7 +223,7 @@ public abstract class Tile implements Constants {
 	}
 
 	public void triggerAnimation(Animation animation) {
-		animations.put(Animation.getLayer(animation),animation);
+		animations.put(Animation.getLayer(animation), animation);
 		if (Animation.getLayer(animation) == Layer.Objects) {
 			if (!(objektanimations.containsKey(rotation) && objektanimations.get(rotation).containsKey(animation)))
 				return;
@@ -233,8 +232,8 @@ public abstract class Tile implements Constants {
 				objecttask.end();
 			} catch (NullPointerException e) {
 			}
-			objecttask = new ChangeTileImageTask(ticksperimagechange,this,
-					objektanimations.get(rotation).get(animation).size() - 1,animation);
+			objecttask = new ChangeTileImageTask(ticksperimagechange, this,
+					objektanimations.get(rotation).get(animation).size() - 1, animation);
 		}
 	}
 

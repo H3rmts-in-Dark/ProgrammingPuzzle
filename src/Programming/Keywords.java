@@ -1,9 +1,8 @@
 package Programming;
 
-
 public enum Keywords {
 
-	MY_if,MY_function;
+	MY_if, MY_function;
 
 	static Keywords contains(String type) {
 		for (Keywords datatype : Keywords.values()) {
@@ -16,11 +15,11 @@ public enum Keywords {
 
 	static Keywords convert(String str) {
 		switch (str) {
-			case "if":
-				return MY_if;
-			case "function":
-				return MY_function;
-			default:
+		case "if":
+			return MY_if;
+		case "function":
+			return MY_function;
+		default:
 			break;
 		}
 		return null;
@@ -28,11 +27,11 @@ public enum Keywords {
 
 	static String convert(Keywords keyword) {
 		switch (keyword) {
-			case MY_if:
-				return "if";
-			case MY_function:
-				return "function";
-			default:
+		case MY_if:
+			return "if";
+		case MY_function:
+			return "function";
+		default:
 			break;
 		}
 		return null;

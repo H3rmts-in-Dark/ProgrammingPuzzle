@@ -1,6 +1,5 @@
 package tiles;
 
-
 import java.util.LinkedHashMap;
 
 import Enums.Animation;
@@ -12,21 +11,20 @@ import Enums.Signalcolor;
 import abstractclasses.Tile;
 import world.World;
 
-
 public class Tonne extends Tile {
 
 	public Tonne() {
-		super(Height.UNPASSABLE,10,20,Signalcolor.nocolor,Cabletype.notype);
+		super(Height.UNPASSABLE, 10, 20, Signalcolor.nocolor, Cabletype.notype);
 	}
 
 	@Override
 	public void loadAnimations() {
-		World.load(Layer.Floor,Animation.noanimation,this,"Default");
-		World.load(Rotation.norotation,Animation.deactivatedanimation,this);
+		World.load(Layer.Floor, Animation.noanimation, this, "Default");
+		World.load(Rotation.norotation, Animation.deactivatedanimation, this);
 	}
 
 	@Override
-	public void getdata(LinkedHashMap<String,String> List) {
+	public void getdata(LinkedHashMap<String, String> List) {
 	}
 
 }

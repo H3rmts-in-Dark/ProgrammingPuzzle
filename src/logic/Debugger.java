@@ -1,6 +1,5 @@
 package logic;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -9,17 +8,16 @@ import java.util.Set;
 import abstractclasses.CustomWindow;
 import abstractclasses.Task;
 
-
 public class Debugger implements Constants {
 
 	protected static Thread controlThread;
 
 	static long starttime = 0;
 
-	static HashMap<String,Integer> taskTypes = new HashMap<>();
-	static long startTasks = 0,startRender = 0,executiontime = 0,rendertime = 0;
-	static int taskSize = 0,tps = 0,fps = 0;
-	static HashMap<CustomWindow,Window> windows = new HashMap<>();
+	static HashMap<String, Integer> taskTypes = new HashMap<>();
+	static long startTasks = 0, startRender = 0, executiontime = 0, rendertime = 0;
+	static int taskSize = 0, tps = 0, fps = 0;
+	static HashMap<CustomWindow, Window> windows = new HashMap<>();
 
 	private Debugger() {
 	}
@@ -34,15 +32,15 @@ public class Debugger implements Constants {
 		for (Task task : tasks) {
 			String name = task.getname();
 			if (taskTypes.containsKey(name))
-				taskTypes.replace(name,taskTypes.get(name) + 1);
+				taskTypes.replace(name, taskTypes.get(name) + 1);
 			else
-				taskTypes.put(name,1);
+				taskTypes.put(name, 1);
 		}
 	}
 
 	public static void startDraw(CustomWindow wind) {
 		if (!windows.containsKey(wind))
-			windows.put(wind,new Window(wind));
+			windows.put(wind, new Window(wind));
 		windows.get(wind).startdraw();
 	}
 
@@ -98,21 +96,19 @@ public class Debugger implements Constants {
 		return taskSize;
 	}
 
-	public static HashMap<String,Integer> getTasktypes() {
+	public static HashMap<String, Integer> getTasktypes() {
 		return taskTypes;
 	}
 
-	public static Set<Entry<String,String>> getWindows() {
-		var returnmap = new HashMap<String,String>();
-		for (Entry<CustomWindow,Window> entry : windows.entrySet()) {
-			returnmap.put(entry.getValue().getTitle(),entry.getValue().getDrawtime());
+	public static Set<Entry<String, String>> getWindows() {
+		var returnmap = new HashMap<String, String>();
+		for (Entry<CustomWindow, Window> entry : windows.entrySet()) {
+			returnmap.put(entry.getValue().getTitle(), entry.getValue().getDrawtime());
 		}
 		return returnmap.entrySet();
 	}
 
 }
-
-
 
 class Window {
 

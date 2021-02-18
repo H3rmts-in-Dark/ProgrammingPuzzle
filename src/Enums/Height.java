@@ -1,8 +1,6 @@
 package Enums;
 
-
 import logic.Constants;
-
 
 public enum Height implements Constants {
 
@@ -21,12 +19,12 @@ public enum Height implements Constants {
 
 	public static int getint(Height height) {
 		switch (height) {
-			case FLOORHEIGHT:
-				return 0;
-			case TRANSPORT:
-				return (int) (DEFAULTIMAGEWIDHTHEIGHT / 2.1);
-			case UNPASSABLE:
-				return DEFAULTIMAGEWIDHTHEIGHT;
+		case FLOORHEIGHT:
+			return 0;
+		case TRANSPORT:
+			return (int) (DEFAULTIMAGEWIDHTHEIGHT / 2.1);
+		case UNPASSABLE:
+			return DEFAULTIMAGEWIDHTHEIGHT;
 		}
 		return 0;
 	}

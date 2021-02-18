@@ -1,4 +1,10 @@
+/tiles/
+/world/
+/Enums/
 /Programming/
-/start/
+/abstractclasses/
+/entitys/
 /frame/
 /logic/
+/start/
+/tasks/

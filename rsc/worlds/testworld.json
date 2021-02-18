@@ -1,0 +1,16 @@
+{
+    "name": "WorldBlueprint",
+    "created": "2.2.2021, 20:50:16",
+    "height": 2,
+    "width": 2,
+    "tiles": [
+        {
+            "type": "gewichtssensor",
+            "signalcolor": "blau",
+            "rotation": null,
+            "x": 1,
+            "y": 1
+        }
+    ],
+    "entities": []
+}

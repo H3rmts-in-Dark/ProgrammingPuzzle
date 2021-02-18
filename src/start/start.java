@@ -1,6 +1,5 @@
 package start;
 
-
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
@@ -12,7 +11,6 @@ import frame.Frame;
 import logic.MainControl;
 import world.Images;
 
-
 public class start {
 
 	/**
@@ -23,7 +21,7 @@ public class start {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Interpreter.interpret();
-		if (1 == 1)
+		if (true)
 			return;
 		SwingUtilities.invokeLater(new Runnable() {
 
@@ -39,7 +37,7 @@ public class start {
 
 				MainControl.createWorld();
 
-				new CustomWindow(300,300,new Point(30,30),"Jan Kaufer",0) {
+				new CustomWindow(300, 300, new Point(30, 30), "Jan Kaufer", 0) {
 
 					@Override
 					public BufferedImage getImage() {
@@ -47,7 +45,7 @@ public class start {
 					}
 
 				};
-				new CustomWindow(300,300,new Point(30,30),"Fynn Stroot",0) {
+				new CustomWindow(300, 300, new Point(30, 30), "Fynn Stroot", 0) {
 
 					@Override
 					public BufferedImage getImage() {
@@ -55,7 +53,7 @@ public class start {
 					}
 
 				};
-				new CustomWindow(300,300,new Point(30,30),"Enrico Stemmer",0) {
+				new CustomWindow(300, 300, new Point(30, 30), "Enrico Stemmer", 0) {
 
 					@Override
 					public BufferedImage getImage() {

@@ -1,14 +1,12 @@
 package abstractclasses;
 
-
 import logic.Constants;
 import logic.MainControl;
-
 
 public abstract class Task implements Constants {
 
 	private long runTick;
-	private int Cycles,tickDifference;
+	private int Cycles, tickDifference;
 	private boolean ended;
 
 	/**
@@ -16,7 +14,7 @@ public abstract class Task implements Constants {
 	 * @param tickDifference
 	 * @param cycles         -1 to loop infinite
 	 */
-	protected Task(int tickDifference,int cycles) {
+	protected Task(int tickDifference, int cycles) {
 		this.tickDifference = tickDifference;
 		this.Cycles = cycles;
 		this.ended = false;

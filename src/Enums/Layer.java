@@ -1,6 +1,5 @@
 package Enums;
 
-
 public enum Layer {
 
 	/**
@@ -14,7 +13,7 @@ public enum Layer {
 	/**
 	 * load with loadAnimation not with loadPicture
 	 */
-	Objects,Entitys,
+	Objects, Entitys,
 	/**
 	 * load with loadPicture can be more than 1
 	 */
@@ -23,14 +22,14 @@ public enum Layer {
 	@SuppressWarnings("incomplete-switch")
 	public static String toString(Layer layer) {
 		switch (layer) {
-			case Cable:
-				return "cable pictures/";
-			case Effects:
-				return "effect pictures/";
-			case Floor:
-				return "floor pictures/";
-			default:
-				return "";
+		case Cable:
+			return "cable pictures/";
+		case Effects:
+			return "effect pictures/";
+		case Floor:
+			return "floor pictures/";
+		default:
+			return "";
 		}
 	}
 

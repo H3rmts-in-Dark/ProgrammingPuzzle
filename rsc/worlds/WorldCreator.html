@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>World Creator</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+            caption, table, th, td {
+                border-spacing: 0px;
+                border-collapse: collapse;
+                text-align: center;
+                padding: 0px;
+            }
+
+            img {
+                padding: 0px;
+                vertical-align: bottom;
+            }
+
+            textarea {
+                resize: none;
+                vertical-align: middle;
+            }
+
+            .bildcontainer {
+                position: relative;
+                top: 0;
+                left: 0;
+            }
+
+            .floor {
+                position: relative;
+                top: 0;
+                left: 0;
+                z-index: 0;
+            }
+
+            .object {
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 1;
+            }
+
+            .entity{
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 2;
+            }
+        </style>
+    </head>
+
+    <script>
+        const tileoptions = [null, "computer", "default", "förderband", "gewichtssensor", "lampe", "tonne"]
+        const signalcolors = [null, "red", "green", "blue"]
+        const rotations = [null, "up", "down", "left", "right"]
+        var world = {}
+    </script>
+
+    <body style="display: flex; background-color: powderblue;">
+        <span id="worldcontainer"></span>
+        <span style="margin-left: 10px; position:relative">
+            <div id="tileeditor" style=" visibility: hidden">
+                <pre style="font-family: 'Arial';" id="position">Nothing selected</pre>
+                <pre>Tile: <select id="tileoptions" name="tile" onchange="formeventlistenerfunction()"></select></pre>
+                <pre>Signalcolor: <select id="signalcolors" name="signalcolor"></select></pre>
+                <pre>Rotation: <select id="rotations" name="rotation"></select></pre>
+                <pre>Speed: <input id="speed" style="width: 25px;"></pre>
+                <button onclick="buttonSet()">Set</button>
+            </div>
+            <div style="position: absolute; bottom: 0;">
+                <pre><button onclick="switchTileSeperation()">Tileabstand</button></pre>
+                <pre>Name: <textarea id="name" rows="1" style="width: 50%;">Name</textarea></pre>
+                <pre><button onclick="exportWorld(document.getElementById('name').value)">Export</button><button
+                        onclick="importWorld(document.getElementById('port').value)">Import</button></pre>
+            </div>
+        </span>
+        <span style="margin-left: 10px;">
+            <textarea id="port" cols="32" style="height: 100%;">Im- / Exporttext</textarea>
+        </span>
+    </body>
+
+    <script>
+        class World {
+            constructor(name, height, width, tiles, entities) {
+                this.name = name
+                this.created = new Date().toLocaleString()
+                this.height = height
+                this.width = width
+                this.tiles = tiles
+                this.entities = entities
+            }
+        }
+
+        class Tile {
+            constructor(type, signalcolor, rotation, speed, x, y) {
+                this.type = type
+                this.signalcolor = signalcolor
+                this.rotation = rotation
+                this.speed = speed
+                this.x = x
+                this.y = y
+            }
+        }
+
+        const onclicklistenerpreset = function () {
+            // Übersetzt den Click auf dem Bildschirm zu einem Tile
+            if (this.tagName == "TD")
+                this.clicked = true
+            else if (this.tagName == "TR")
+                for (x = 0; x < this.childElementCount; x++)
+                    if (this.children[x].clicked) {
+                        tileClicked(x, this.position)
+                        this.children[x].clicked = false
+                        break
+                    }
+        }
+
+        const formeventlistenerfunction = function () {
+            switch (document.getElementById("tileoptions").value) {
+                case "null":
+                case "tonne":
+                    setVisibilities(false, false, false)
+                    break
+                case "computer":
+                case "default":
+                case "gewichtssensor":
+                case "lampe":
+                    setVisibilities(true, false, false)
+                    break
+                case "förderband":
+                default:
+                    setVisibilities(true, true, true)
+                    break
+            }
+        }
+
+        function deleteWorld() {
+            world = {}
+            while (document.getElementById("worldcontainer").childElementCount > 0)
+                document.getElementById("worldcontainer").children[0].remove()
+        }
+
+        function createWorld(width, height) {
+            deleteWorld()
+            world = {}
+            world.width = width
+            world.height = height
+            world.tiles = []
+            world.entities = []
+            table = document.createElement("table")
+            for (y = 0; y < height; y++) {
+                row = document.createElement("tr")
+                row.position = y
+                row.addEventListener("click", onclicklistenerpreset)
+                for (x = 0; x < width; x++) {
+                    cell = document.createElement("td")
+                    cell.position = x
+                    cell.className = "bildcontainer"
+                    cell.addEventListener("click", onclicklistenerpreset)
+                    row.append(cell)
+                }
+                table.append(row)
+            }
+            document.getElementById("worldcontainer").append(table)
+            for (var y = 0; y < world.height; y++)
+                for (var x = 0; x < world.width; x++)
+                    setTile({ "type": null, "x": x, "y": y })
+        }
+
+        function tileClicked(x, y) {
+            console.log(`Clicked: ${x}, ${y}`)
+            document.getElementById("tileeditor").style.visibility = "visible"
+            document.getElementById("position").innerHTML = JSON.stringify({ 'x': x, 'y': y })
+            if ((loadTile = getTile(x, y)) != null) {
+                document.getElementById("tileoptions").value = loadTile.type
+                document.getElementById("signalcolors").value = loadTile.signalcolor
+                document.getElementById("rotations").value = loadTile.rotation
+                document.getElementById("speed").value = loadTile.speed
+            } else {
+                document.getElementById("tileoptions").value = null
+                document.getElementById("signalcolors").value = null
+                document.getElementById("rotations").value = null
+                document.getElementById("speed").value = ""
+            }
+        }
+
+        function resetTile(x, y) {
+            for (i = 0; i < world.tiles.length; i++)
+                if (world.tiles[i].x == x && world.tiles[i].y == y)
+                    world.tiles.splice(i, 1)
+            while (document.getElementById("worldcontainer").children[0].children[y].children[x].childElementCount > 0)
+                document.getElementById("worldcontainer").children[0].children[y].children[x].children[0].remove()
+        }
+
+        function setTile(Tile) {
+            resetTile(Tile.x, Tile.y)
+            { // Erstellt und fügt den Boden ein
+                var img = document.createElement("img")
+                img.height = 64
+                img.width = 64
+                img.src = "default"
+                img.alt = "floor"
+                img.className = "floor"
+                document.getElementById("worldcontainer").children[0].children[Tile.y].children[Tile.x].append(img)
+            }
+            if (Tile.type != null) { // Erstellt und fügt das Objekt ein
+                world.tiles.push(Tile)
+                var img = document.createElement("img")
+                img.height = 64
+                img.width = 64
+                if (Tile.rotation == null || Tile.rotation == "null")
+                    img.src = (Tile.type).replace("ö", "oe")
+                else
+                    img.src = (Tile.type + "/" + Tile.rotation).replace("ö", "oe")
+                img.alt = Tile.type
+                img.className = "object"
+                document.getElementById("worldcontainer").children[0].children[Tile.y].children[Tile.x].append(img)
+            }
+        }
+
+        function getTile(x, y) {
+            for (i = 0; i < world.tiles.length; i++)
+                if (world.tiles[i].x == x && world.tiles[i].y == y)
+                    return world.tiles[i]
+            return null
+        }
+
+        function addEntity(Entity) { /* TODO Muss noch gemacht werden*/ }
+
+        function exportWorld(name) {
+            document.getElementById("port").value = JSON.stringify(new World(name, world.height, world.width, world.tiles, world.entities))
+        }
+
+        function importWorld(newWorld) {
+            parsed = JSON.parse(newWorld)
+            if (newWorld.name != null && newWorld.name != "")
+                document.getElementById("name").value = newWorld.name
+            createWorld(parsed.width, parsed.height)
+            for (i = 0; i < parsed.tiles.length; i++)
+                setTile(parsed.tiles[i])
+            for (i = 0; i < parsed.entities.length; i++)
+                addEntity(parsed.entities[i])
+            world.name = parsed.name
+        }
+
+        function addTileOptions() {
+            for (i = 0; i < tileoptions.length; i++) {
+                var option = document.createElement("option")
+                option.value = tileoptions[i]
+                option.innerHTML = `${tileoptions[i]}`.charAt(0).toUpperCase() + `${tileoptions[i]}`.slice(1)
+                document.getElementById("tileoptions").append(option)
+            }
+        }
+
+        function addSignalcolorOptions() {
+            for (i = 0; i < signalcolors.length; i++) {
+                var option = document.createElement("option")
+                option.value = signalcolors[i]
+                option.innerHTML = `${signalcolors[i]}`.charAt(0).toUpperCase() + `${signalcolors[i]}`.slice(1)
+                document.getElementById("signalcolors").append(option)
+            }
+        }
+
+        function addRotationOptions() {
+            for (i = 0; i < rotations.length; i++) {
+                var option = document.createElement("option")
+                option.value = rotations[i]
+                option.innerHTML = `${rotations[i]}`.charAt(0).toUpperCase() + `${rotations[i]}`.slice(1)
+                document.getElementById("rotations").append(option)
+            }
+        }
+
+        function buttonSet() {
+            var tile = JSON.parse(document.getElementById("position").innerHTML)
+            tile.type = document.getElementById("tileoptions").value
+            tile.signalcolor = document.getElementById("signalcolors").value
+            tile.rotation = document.getElementById("rotations").value
+            tile.speed = document.getElementById("speed").value
+            setTile(tile)
+        }
+
+        function switchTileSeperation() {
+            const imgs = document.getElementsByTagName("img")
+            for (i = 0; i < imgs.length; i++)
+                if (imgs[i].style.padding == "1px")
+                    imgs[i].style.padding = "0px"
+                else
+                    imgs[i].style.padding = "1px"
+        }
+
+        function setVisibilities(signalcolorsetter, rotationsetter, speedsetter) {
+            document.getElementById("signalcolors").parentElement.style.visibility = (signalcolorsetter) ? "visible" : "hidden"
+            document.getElementById("rotations").parentElement.style.visibility = (rotationsetter) ? "visible" : "hidden"
+            document.getElementById("speed").parentElement.style.visibility = (speedsetter) ? "visible" : "hidden"
+        }
+
+        addSignalcolorOptions()
+        addTileOptions()
+        addRotationOptions()
+        createWorld(10, 10)
+    </script>
+
+</html>
