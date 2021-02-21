@@ -100,16 +100,22 @@ public class ProgrammingWindow extends CustomWindow {
 
 		GroupLayout jInternalFrame1Layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(jInternalFrame1Layout);
-		jInternalFrame1Layout.setHorizontalGroup(jInternalFrame1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+		jInternalFrame1Layout
+			.setHorizontalGroup(jInternalFrame1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(TabbedPane,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)
 				.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE));
 		jInternalFrame1Layout.setVerticalGroup(jInternalFrame1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jInternalFrame1Layout.createSequentialGroup()
-						.addComponent(TabbedPane,GroupLayout.PREFERRED_SIZE,457,GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)));
+			.addGroup(jInternalFrame1Layout.createSequentialGroup()
+				.addComponent(TabbedPane,GroupLayout.PREFERRED_SIZE,457,GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+				.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)));
 
-		Interpreter.init();
+		try {
+			Interpreter.init();
+		} catch (UnsupportetVariableNameExeption | UnsupportetMethodNameExeption | InvalidValueException
+			| WrongTypeException e) {
+			System.err.println("init gone wrong (some idiot added duplicate metods or attributes):" + e.getMessage());
+		}
 
 	}
 
@@ -161,27 +167,26 @@ public class ProgrammingWindow extends CustomWindow {
 		OutputPanel.setLayout(OutputPanelLayout);
 
 		OutputPanelLayout.setHorizontalGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(OutputPanelLayout.createSequentialGroup().addContainerGap()
-						.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,82,GroupLayout.PREFERRED_SIZE)
-								.addGroup(OutputPanelLayout.createSequentialGroup()
-										.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addComponent(Run,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE)
-												.addComponent(Stop,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE))
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(OutputTextPaneScrollPane)))
-						.addContainerGap()));
+			.addGroup(OutputPanelLayout.createSequentialGroup().addContainerGap().addGroup(OutputPanelLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,82,GroupLayout.PREFERRED_SIZE)
+				.addGroup(OutputPanelLayout.createSequentialGroup()
+					.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(Run,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE)
+						.addComponent(Stop,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(OutputTextPaneScrollPane)))
+				.addContainerGap()));
 
 		OutputPanelLayout.setVerticalGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(OutputPanelLayout.createSequentialGroup()
-						.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,22,GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addGroup(OutputPanelLayout.createSequentialGroup().addComponent(Run)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(Stop)
-										.addGap(0,123,Short.MAX_VALUE))
-								.addComponent(OutputTextPaneScrollPane))
-						.addContainerGap()));
+			.addGroup(OutputPanelLayout.createSequentialGroup()
+				.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,22,GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+				.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addGroup(OutputPanelLayout.createSequentialGroup().addComponent(Run)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(Stop)
+						.addGap(0,123,Short.MAX_VALUE))
+					.addComponent(OutputTextPaneScrollPane))
+				.addContainerGap()));
 	}
 
 	public void GenerateMenuBar(Actionlist actions) {
@@ -326,14 +331,14 @@ class Tab extends JPanel {
 
 		GroupLayout ProgrammingPanelLayout = new GroupLayout(this);
 		ProgrammingPanelLayout.setHorizontalGroup(ProgrammingPanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(GroupLayout.Alignment.TRAILING,
-						ProgrammingPanelLayout.createSequentialGroup().addGap(2,2,2)
-								.addComponent(LinecounterPaneScrollPane,GroupLayout.PREFERRED_SIZE,43,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(ProgrammingPaneScrollPane,GroupLayout.DEFAULT_SIZE,500,Short.MAX_VALUE)));
+			.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(GroupLayout.Alignment.TRAILING,
+				ProgrammingPanelLayout.createSequentialGroup().addGap(2,2,2)
+					.addComponent(LinecounterPaneScrollPane,GroupLayout.PREFERRED_SIZE,43,GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addComponent(ProgrammingPaneScrollPane,GroupLayout.DEFAULT_SIZE,500,Short.MAX_VALUE)));
 
-		ProgrammingPanelLayout.setVerticalGroup(ProgrammingPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+		ProgrammingPanelLayout
+			.setVerticalGroup(ProgrammingPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(ProgrammingPaneScrollPane,GroupLayout.DEFAULT_SIZE,100,Short.MAX_VALUE)
 				.addComponent(LinecounterPaneScrollPane));
 
@@ -385,7 +390,7 @@ class Tab extends JPanel {
 
 			@Override
 			public void replace(FilterBypass fb,int offset,int length,String text,AttributeSet attrs)
-					throws BadLocationException {
+				throws BadLocationException {
 				super.insertString(fb,offset,text.replace("\t","   "),attrs);
 			}
 
@@ -450,7 +455,7 @@ class Tab extends JPanel {
 			doc.remove(0,doc.getLength());
 
 			for (int i = 1; i <= ProgrammingPane.getText().length()
-					- ProgrammingPane.getText().replaceAll("\n","").length() + 1; i++) {
+				- ProgrammingPane.getText().replaceAll("\n","").length() + 1; i++) {
 				doc.insertString(doc.getLength(),i + "\n",null);
 			}
 		} catch (BadLocationException e) {

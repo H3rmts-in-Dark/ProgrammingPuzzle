@@ -80,10 +80,12 @@ public class MainControl {
 		world.addEntity(new Box(0,2));
 	}
 
+	@SuppressWarnings("unused")
 	public static void createProgrammingWindow() {
 		new ProgrammingWindow(world);
 	}
 
+	@SuppressWarnings("unused")
 	public static void createWorldselectionWindow() {
 		new WorldSelectionWindow();
 	}
