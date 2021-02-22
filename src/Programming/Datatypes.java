@@ -1,6 +1,9 @@
 package Programming;
 
 
+import java.util.ArrayList;
+
+
 enum Datatypes {
 
 	notype,alltypes,MY_int,MY_long,MY_String,MY_boolean,MY_double;
@@ -311,6 +314,48 @@ class MY_double extends Variable<Double> {
 			e.printStackTrace();
 			throw new WrongTypeException(type,test,3);
 		}
+	}
+
+}
+
+
+
+class VariableList extends ArrayList<Variable<?>> {
+
+	public VariableList() {
+		super();
+	}
+
+	public Variable<?> get(String name) {
+		name = name.strip();
+		for (Variable<?> variable : this) {
+			if (variable.getName().equals(name))
+				return variable;
+		}
+		return null;
+	}
+
+	/**
+	 * tests if method with same name alread exists
+	 * 
+	 * @param method
+	 * @throws UnsupportetVariableNameExeption
+	 */
+	public boolean addVariable(Variable<?> variable) throws UnsupportetVariableNameExeption {
+		Variable<?> old = get(variable.getName());
+		if (old == null) {
+			return super.add(variable);
+		}
+		throw new UnsupportetVariableNameExeption(variable,"duplicate name ",Interpreter.line);
+	}
+
+	@Override
+	public String toString() {
+		String ret = "VariableList:\n";
+		for (Variable<?> var : this) {
+			ret += "  " + var.toString() + "\n";
+		}
+		return ret;
 	}
 
 }

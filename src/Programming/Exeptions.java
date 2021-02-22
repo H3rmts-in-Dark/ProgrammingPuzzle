@@ -88,8 +88,9 @@ class UnsupportetMethodNameExeption extends CustomExeption {
 
 class CalculationExeption extends CustomExeption {
 
-	public CalculationExeption(String calucation,int line) {
-		super("error calculation: " + calucation,line);
+	public CalculationExeption(String calucation,String operator,Datatypes type1,Datatypes type2,int line) {
+		super("error calculation: " + calucation + "  " + Datatypes.convert(type1) + operator + Datatypes.convert(type2)
+			+ " not suportet",line);
 	}
 
 }
@@ -120,6 +121,37 @@ class WrongParameterTypeExeption extends CustomExeption {
 
 	public WrongParameterTypeExeption(String given,Datatypes wanted,int place,int line) {
 		super("method wanted " + Datatypes.convert(wanted) + " at place " + place + " but got " + given,line);
+	}
+
+}
+
+
+
+class BracketExeption extends CustomExeption {
+
+	public BracketExeption(int brackets,int line) {
+		super(brackets > 0 ? brackets + " closing brackets missing " : brackets * -1 + "opening brackets missing",line);
+	}
+
+}
+
+
+
+class ExitProgramm extends CustomExeption {
+
+	public ExitProgramm(int line) {
+		super("exied programm at",line);
+	}
+
+}
+
+
+
+class BooleanateExeption extends CustomExeption {
+
+	public BooleanateExeption(String calucation,String operator,Datatypes type1,Datatypes type2,int line) {
+		super("error booleanation: " + calucation + "  " + Datatypes.convert(type1) + operator
+			+ Datatypes.convert(type2) + " not suportet",line);
 	}
 
 }

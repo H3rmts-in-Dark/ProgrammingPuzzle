@@ -9,64 +9,73 @@ abstract class Method {
 
 	String name;
 	Datatypes returntype;
-	Datatypes[] parameters;
+	Datatypes[] parametertypes;
 
 	public Method(Datatypes returntype,Datatypes...parameters) {
 		this.name = getClass().getSimpleName();
 		this.returntype = returntype;
-		if (parameters != null) {
-			this.parameters = parameters;
-		} else
-			this.parameters = parameters;
+		this.parametertypes = parameters;
 	}
 
 	public int getParametersize() {
-		return parameters.length;
+		return parametertypes.length;
 	}
 
 	@SuppressWarnings("incomplete-switch")
-	public Variable<?> execute(ArrayList<String> parameters) throws WrongParameterTypeExeption {
+	public Variable<?> execute(ArrayList<Object> parameters) throws CustomExeption {
 		ArrayList<Variable<?>> parameterlist = new ArrayList<>();
-		for (String paramter : parameters) {
-			try {
-				switch (this.parameters[parameters.indexOf(paramter)]) {
-					case MY_String:
-					case alltypes:
-						parameterlist.add(new MY_String(paramter,name + "paramter" + parameters.indexOf(paramter)));
-					break;
-					case MY_boolean:
-						parameterlist.add(new MY_boolean(paramter,name + "paramter" + parameters.indexOf(paramter)));
-					break;
-					case MY_double:
-						parameterlist.add(new MY_double(paramter,name + "paramter" + parameters.indexOf(paramter)));
-					break;
-					case MY_int:
-						parameterlist.add(new MY_int(paramter,name + "paramter" + parameters.indexOf(paramter)));
-					break;
-					case MY_long:
-						parameterlist.add(new MY_long(paramter,name + "paramter" + parameters.indexOf(paramter)));
-					break;
+		for (Object paramter : parameters) {
+			if (paramter instanceof Variable<?>) {
+				if (((Variable<?>) paramter).getType() != this.parametertypes[parameters.indexOf(paramter)])
+					throw new WrongParameterTypeExeption(paramter.toString(),
+						parametertypes[parameters.indexOf(paramter)],parameters.indexOf(paramter),Interpreter.line);
+				parameterlist.add((Variable<?>) paramter);
+			} else
+				try {
+					switch (parametertypes[parameters.indexOf(paramter)]) {
+						case MY_String:
+						case alltypes:
+							parameterlist.add(
+								new MY_String(paramter.toString(),name + "paramter" + parameters.indexOf(paramter)));
+						break;
+						case MY_boolean:
+							parameterlist.add(
+								new MY_boolean(paramter.toString(),name + "paramter" + parameters.indexOf(paramter)));
+						break;
+						case MY_double:
+							parameterlist.add(
+								new MY_double(paramter.toString(),name + "paramter" + parameters.indexOf(paramter)));
+						break;
+						case MY_int:
+							parameterlist
+								.add(new MY_int(paramter.toString(),name + "paramter" + parameters.indexOf(paramter)));
+						break;
+						case MY_long:
+							parameterlist
+								.add(new MY_long(paramter.toString(),name + "paramter" + parameters.indexOf(paramter)));
+						break;
+					}
+				} catch (WrongTypeException | InvalidValueException e) {
+					throw new WrongParameterTypeExeption(paramter.toString(),
+						this.parametertypes[parameters.indexOf(paramter)],parameters.indexOf(paramter),
+						Interpreter.line);
 				}
-			} catch (WrongTypeException | InvalidValueException e) {
-				throw new WrongParameterTypeExeption(paramter,this.parameters[parameters.indexOf(paramter)],
-					parameters.indexOf(paramter),-1);
-			}
 		}
-		System.out.println("running " + getClass().getSimpleName() + " with parameters " + parameterlist);
+		System.out.println(Interpreter.sysoutin + "running " + name + " with parameters " + parameterlist);
 		return runCode(parameterlist.toArray(new Variable<?>[0]));
 	}
 
 	@Override
 	public String toString() {
 		return "Name:" + name + " returntype:" + returntype + " parameters:"
-			+ new ArrayList<>(Arrays.asList(parameters));
+			+ new ArrayList<>(Arrays.asList(parametertypes));
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	abstract Variable<?> runCode(Variable<?>...parameters);
+	abstract Variable<?> runCode(Variable<?>...parameters) throws CustomExeption;
 
 }
 
@@ -80,7 +89,7 @@ class print extends Method {
 
 	@Override
 	Variable<?> runCode(Variable<?>...parameters) {
-		System.out.println("print to console:" + parameters[0].getValue());
+		System.out.println(Interpreter.sysoutin + "print to console:" + parameters[0].getValue());
 		return null;
 	}
 
@@ -107,6 +116,41 @@ class toString extends Method {
 
 
 
+class delay extends Method {
+
+	public delay() {
+		super(Datatypes.notype,Datatypes.MY_double);
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) {
+		try {
+			Thread.sleep((long) ((double) (parameters[0].getValue()) * 1000));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+}
+
+
+
+class exit extends Method {
+
+	public exit() {
+		super(Datatypes.notype,Datatypes.notype);
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		throw new ExitProgramm(Interpreter.line);
+	}
+
+}
+
+
+
 class move extends Method {
 
 	public move() {
@@ -118,6 +162,48 @@ class move extends Method {
 		System.out
 			.println("moving " + parameters[0].getValue() + " steps in " + parameters[1].getValue() + " direction");
 		return null;
+	}
+
+}
+
+
+
+class MethodList extends ArrayList<Method> {
+
+	public MethodList() {
+		super();
+	}
+
+	public Method get(String name) {
+		for (Method method : this) {
+			if (method.name.equals(name))
+				return method;
+		}
+		return null;
+	}
+
+	/**
+	 * tests if method with same name alread exists
+	 * 
+	 * @param method
+	 * @return
+	 * @throws DuplicateMethodExeption
+	 */
+	public boolean addMethod(Method method) throws UnsupportetMethodNameExeption {
+		Method old = get(method.name);
+		if (old == null) {
+			return super.add(method);
+		}
+		throw new UnsupportetMethodNameExeption(method,"duplicate name ",Interpreter.line);
+	}
+
+	@Override
+	public String toString() {
+		String ret = "MethodList:\n";
+		for (Method method : this) {
+			ret += "  " + method.toString() + "\n";
+		}
+		return ret;
 	}
 
 }
