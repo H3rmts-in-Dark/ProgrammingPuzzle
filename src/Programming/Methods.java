@@ -26,7 +26,8 @@ abstract class Method {
 		ArrayList<Variable<?>> parameterlist = new ArrayList<>();
 		for (Object paramter : parameters) {
 			if (paramter instanceof Variable<?>) {
-				if (((Variable<?>) paramter).getType() != this.parametertypes[parameters.indexOf(paramter)])
+				if (((Variable<?>) paramter).getType() != this.parametertypes[parameters.indexOf(paramter)]
+					&& (this.parametertypes[parameters.indexOf(paramter)] != Datatypes.alltypes))
 					throw new WrongParameterTypeExeption(paramter.toString(),
 						parametertypes[parameters.indexOf(paramter)],parameters.indexOf(paramter),Interpreter.line);
 				parameterlist.add((Variable<?>) paramter);
@@ -49,10 +50,6 @@ abstract class Method {
 						case MY_int:
 							parameterlist
 								.add(new MY_int(paramter.toString(),name + "paramter" + parameters.indexOf(paramter)));
-						break;
-						case MY_long:
-							parameterlist
-								.add(new MY_long(paramter.toString(),name + "paramter" + parameters.indexOf(paramter)));
 						break;
 					}
 				} catch (WrongTypeException | InvalidValueException e) {
@@ -162,6 +159,21 @@ class move extends Method {
 		System.out
 			.println("moving " + parameters[0].getValue() + " steps in " + parameters[1].getValue() + " direction");
 		return null;
+	}
+
+}
+
+
+
+class loopbreak extends Method {
+
+	public loopbreak() {
+		super(Datatypes.notype,Datatypes.notype);
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws BreakException {
+		throw new BreakException(Interpreter.line);
 	}
 
 }

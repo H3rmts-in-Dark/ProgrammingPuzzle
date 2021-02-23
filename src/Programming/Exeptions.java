@@ -137,6 +137,26 @@ class BracketExeption extends CustomExeption {
 
 
 
+class BreakException extends CustomExeption {
+
+	public BreakException(int line) {
+		super("break",line);
+	}
+
+}
+
+
+
+class InvalidDatatypeExeption extends CustomExeption {
+
+	public InvalidDatatypeExeption(String type,int line) {
+		super(type + " is not a valid datatype",line);
+	}
+
+}
+
+
+
 class ExitProgramm extends CustomExeption {
 
 	public ExitProgramm(int line) {

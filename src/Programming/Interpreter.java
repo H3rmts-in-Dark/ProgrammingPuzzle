@@ -17,14 +17,14 @@ public class Interpreter {
 
 	public static String sysoutin;
 
+	public static String tabwith = "|---|  ";
+
 	public Interpreter() {
 
 	}
 
 	public static void interpret() {
-		// String programm = "int dir;int stepps = 12 * 2;move(stepps - 3,dir+1);String test =
-		// toString(stepps / 13); print(test+\"lustig\")";
-		String programm = "boolean te = 7 > \"ffff\";\nif (te) {\n    print(hi);\n}\ndelay(0.5);";
+		String programm = "int te = sec + 5;\nprint(te);\nwhile (sec < te) {\n	delay(2);\n}";
 		interpret(programm);
 	}
 
@@ -55,9 +55,9 @@ public class Interpreter {
 
 		while (text.val.length() > 0) {
 			try {
-				interpretblock(text,"");
+				interpretblock(text,tabwith);
 			} catch (CustomExeption e) {
-				e.printStackTrace();
+				// e.printStackTrace();
 				exeption = e.getMessage();
 				break;
 			}
@@ -90,11 +90,13 @@ public class Interpreter {
 
 		methods.addMethod(new exit());
 
-		variables.addVariable(new MY_long("sec") {
+		methods.addMethod(new loopbreak());
+
+		variables.addVariable(new MY_int("sec") {
 
 			@Override
-			public Long getValue() {
-				return (long) (System.currentTimeMillis() * 0.001);
+			public Integer getValue() {
+				return (int) (System.currentTimeMillis() * 0.001);
 			}
 
 		});
@@ -119,7 +121,7 @@ public class Interpreter {
 				line += StrUtils.count(part,"\n");
 			text.val = StrUtils.removetext(text.val,part + ";");
 			part = StrUtils.fullstrip(part);
-			System.out.println(sysoutin + "process: " + part);
+			System.out.println(sysoutin + "process: " + StrUtils.removespace(part));
 
 			String name = StrUtils.first(part,'(');
 			System.out.println(sysoutin + "name: " + name);
@@ -138,24 +140,27 @@ public class Interpreter {
 					keyword = new MY_while(inner);
 				break;
 			}
-
 			String parameters = StrUtils.fromto(part,'(',')');
-			ArrayList<String> params = StrUtils.parts(parameters,',',true);
-			ArrayList<Object> newparams = new ArrayList<>();
-			if (params.size() != keyword.getParametersize())
-				throw new MethodParametersExeption(params.size(),keyword.getParametersize(),line);
-			for (String param : params) {
-				if (param.contains("+") || param.contains("-") || param.contains("*") || param.contains("/")) {
-					newparams.add(params.indexOf(param),calculate(param));
-				} else if (param.contains("=") || param.contains(">") || param.contains("<") || param.contains("!")) {
-					newparams.add(params.indexOf(param),booleanate(param));
-				} else if (variables.get(param) != null) {
-					newparams.add(params.indexOf(param),variables.get(param));
-				} else {
-					newparams.add(param);
+			ArrayList<Object> newparams;
+			Interpreter.sysoutin = Interpreter.sysoutin + Interpreter.tabwith;
+			do {
+				ArrayList<String> params = StrUtils.parts(parameters,',',true);
+				newparams = new ArrayList<>();
+				if (params.size() != keyword.getParametersize())
+					throw new MethodParametersExeption(params.size(),keyword.getParametersize(),line);
+				for (String param : params) {
+					if (param.contains("+") || param.contains("-") || param.contains("*") || param.contains("/")) {
+						newparams.add(params.indexOf(param),calculate(param));
+					} else if (param.contains("=") || param.contains(">") || param.contains("<")
+						|| param.contains("!")) {
+						newparams.add(params.indexOf(param),booleanate(param));
+					} else if (variables.get(param) != null) {
+						newparams.add(params.indexOf(param),variables.get(param));
+					} else {
+						newparams.add(param);
+					}
 				}
-			}
-			keyword.execute(newparams);
+			} while (keyword.execute(newparams));
 		} else {
 			String part = StrUtils.part(text.val,';',0);
 			if (StrUtils.count(part,"\n") > 0)
@@ -247,9 +252,6 @@ public class Interpreter {
 							case MY_String:
 								variable = new MY_String(value,name);
 							break;
-							case MY_long:
-								variable = new MY_long(value,name);
-							break;
 							case MY_double:
 								variable = new MY_double(value,name);
 							break;
@@ -268,9 +270,6 @@ public class Interpreter {
 							case MY_String:
 								variable = new MY_String(name);
 							break;
-							case MY_long:
-								variable = new MY_long(name);
-							break;
 							case MY_double:
 								variable = new MY_double(name);
 							break;
@@ -278,7 +277,8 @@ public class Interpreter {
 						variables.add(variable);
 					}
 
-				}
+				} else
+					throw new InvalidDatatypeExeption(typestr,line);
 			}
 		}
 		System.out.println(sysoutin + "##################\n");
@@ -625,7 +625,7 @@ class StrUtils {
 		part.getChars(0,part.length(),chars,0);
 		String out = "";
 		for (char ch : chars) {
-			if (!(ch == '\n'))
+			if (!(ch == '\n' || ch == '\t'))
 				out += ch;
 			else
 				out += " ";
@@ -642,8 +642,10 @@ class StrUtils {
 		for (char ch : chars) {
 			if (ch == ' ') {
 				spacecounter++;
-				if (!(spacecounter > 1))
+				if (!(spacecounter > 1)) {
 					out += ch;
+					spacecounter = 0;
+				}
 			} else {
 				out += ch;
 			}
@@ -660,7 +662,7 @@ class StrUtils {
 	}
 
 	public static String removetext(String text,String ret) {
-		return text.strip().substring(ret.strip().length(),text.strip().length());
+		return text.strip().substring(Math.min(ret.strip().length(),text.strip().length()),text.strip().length());
 	}
 
 	public static String first(String text,char split) {

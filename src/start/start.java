@@ -30,9 +30,9 @@ public class start {
 				MainControl.start();
 				Frame.getFrame().setVisible(true);
 
-				// MainControl.createProgrammingWindow();
+				MainControl.createProgrammingWindow();
 				// MainControl.createWorld();
-				MainControl.createWorldselectionWindow();
+				// MainControl.createWorldselectionWindow();
 			}
 
 		});

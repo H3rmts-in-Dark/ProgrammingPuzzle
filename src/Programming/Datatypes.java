@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 enum Datatypes {
 
-	notype,alltypes,MY_int,MY_long,MY_String,MY_boolean,MY_double;
+	notype,alltypes,MY_int,MY_String,MY_boolean,MY_double;
 
 	static Datatypes contains(String type) {
 		for (Datatypes datatype : Datatypes.values()) {
@@ -25,8 +25,6 @@ enum Datatypes {
 				return MY_boolean;
 			case "int":
 				return MY_int;
-			case "long":
-				return MY_long;
 			case "double":
 				return MY_double;
 		}
@@ -41,8 +39,6 @@ enum Datatypes {
 				return "boolean";
 			case MY_int:
 				return "int";
-			case MY_long:
-				return "long";
 			case MY_double:
 				return "double";
 			case alltypes:
@@ -233,46 +229,6 @@ class MY_int extends Variable<Integer> {
 
 		}
 
-	}
-
-}
-
-
-
-class MY_long extends Variable<Long> {
-
-	/**
-	 * Declaration without parameters
-	 * 
-	 * @param name
-	 * @throws WrongTypeException
-	 * @throws InvalidValueException
-	 */
-	public MY_long(String name) throws InvalidValueException,WrongTypeException {
-		this("0",name);
-	}
-
-	/**
-	 * Decalration with parameters or from other variable
-	 * 
-	 * @param value
-	 * @param name
-	 * @throws WrongTypeException
-	 * @throws InvalidValueException
-	 */
-	public MY_long(String value,String name) throws InvalidValueException,WrongTypeException {
-		super(name,Datatypes.MY_long);
-		changeValue(value);
-	}
-
-	@Override
-	public Long checkvalue(String test) throws WrongTypeException {
-		try {
-			Long newvalue = Long.parseLong(test);
-			return newvalue;
-		} catch (NumberFormatException e) {
-			throw new WrongTypeException(type,test,3);
-		}
 	}
 
 }

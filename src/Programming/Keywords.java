@@ -67,7 +67,7 @@ abstract class Keyword {
 		return parametertypes.length;
 	}
 
-	public void execute(ArrayList<Object> parameters) throws CustomExeption {
+	public boolean execute(ArrayList<Object> parameters) throws CustomExeption {
 		ArrayList<Variable<?>> parameterlist = new ArrayList<>();
 		for (Object paramter : parameters) {
 			if (paramter instanceof Variable<?>) {
@@ -95,10 +95,6 @@ abstract class Keyword {
 							parameterlist
 								.add(new MY_int(paramter.toString(),name + "paramter" + parameters.indexOf(paramter)));
 						break;
-						case MY_long:
-							parameterlist
-								.add(new MY_long(paramter.toString(),name + "paramter" + parameters.indexOf(paramter)));
-						break;
 					}
 				} catch (WrongTypeException | InvalidValueException e) {
 					throw new WrongParameterTypeExeption(paramter.toString(),
@@ -107,7 +103,7 @@ abstract class Keyword {
 				}
 		}
 		System.out.println(Interpreter.sysoutin + "running " + name + " with parameters" + parameters);
-		run(parameterlist.toArray(new Variable<?>[0]));
+		return run(parameterlist.toArray(new Variable<?>[0]));
 	}
 
 	@Override
@@ -119,7 +115,7 @@ abstract class Keyword {
 		return name;
 	}
 
-	abstract void run(Variable<?>...parameters) throws CustomExeption;
+	abstract boolean run(Variable<?>...parameters) throws CustomExeption;
 
 }
 
@@ -132,15 +128,16 @@ class MY_if extends Keyword {
 	}
 
 	@Override
-	void run(Variable<?>...parameters) throws CustomExeption {
+	boolean run(Variable<?>...parameters) throws CustomExeption {
+		String ind = Interpreter.sysoutin + Interpreter.tabwith;
 		if ((boolean) parameters[0].getValue()) {
 			CustStr str = new CustStr(inner.strip());
 			System.out.println();
-			String ind = Interpreter.sysoutin + "   ";
 			while (str.val.length() > 0) {
 				Interpreter.interpretblock(str,ind);
 			}
 		}
+		return false;
 	}
 
 }
@@ -154,7 +151,23 @@ class MY_while extends Keyword {
 	}
 
 	@Override
-	void run(Variable<?>...parameters) throws CustomExeption {
+	boolean run(Variable<?>...parameters) throws CustomExeption {
+		if ((boolean) parameters[0].getValue()) {
+			CustStr str = new CustStr(inner.strip());
+			System.out.println();
+			while (str.val.length() > 0) {
+				try {
+					Interpreter.interpretblock(str,Interpreter.sysoutin);
+				} catch (BreakException e) {
+		//			System.out.println(ind + Interpreter.tabwith + "breaking out of current Loop\n" + ind
+		//				+ Interpreter.tabwith + "##################");
+		//			System.out.println("\n" + ind + "##################\n");
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 }
@@ -168,7 +181,8 @@ class MY_function extends Keyword {
 	}
 
 	@Override
-	void run(Variable<?>...parameters) throws CustomExeption {
+	boolean run(Variable<?>...parameters) throws CustomExeption {
+		return false;
 	}
 
 }
