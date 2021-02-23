@@ -34,15 +34,14 @@ public class UserInputInterpreter {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static void commandProcessor(String command) {
-		command = command.replace("\n", "");
-		// System.out.println(command);
-		command = command.toLowerCase();
-		if (command.equals("debug")) {
+		String prccommand = command.replace("\n", "").toLowerCase();
+		if (prccommand.equals("debug")) {
 			new DebuggingWindow();
-		} else if (command.equals("select")) {
+		} else if (prccommand.equals("select")) {
 			new WorldSelectionWindow();
-		} else if (command.equals("world")) {
+		} else if (prccommand.equals("world")) {
 			MainControl.createWorld();
 		}
 	}

@@ -1,5 +1,6 @@
 package Programming;
 
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
@@ -54,6 +55,7 @@ import javax.swing.undo.UndoManager;
 import abstractclasses.CustomWindow;
 import world.World;
 
+
 public class ProgrammingWindow extends CustomWindow {
 
 	private World world;
@@ -89,7 +91,7 @@ public class ProgrammingWindow extends CustomWindow {
 	/* ================================================================= */
 
 	public ProgrammingWindow(World world) {
-		super(700, 700, new Point(40, 40), "Programming Window", 0, false);
+		super(700,700,new Point(40,40),"Programming Window",0,false);
 		this.world = world;
 
 		GenerateProgrammingPane();
@@ -98,17 +100,22 @@ public class ProgrammingWindow extends CustomWindow {
 
 		GroupLayout jInternalFrame1Layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(jInternalFrame1Layout);
-		jInternalFrame1Layout.setHorizontalGroup(jInternalFrame1Layout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(TabbedPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addComponent(OutputPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+		jInternalFrame1Layout
+			.setHorizontalGroup(jInternalFrame1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(TabbedPane,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)
+				.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE));
 		jInternalFrame1Layout.setVerticalGroup(jInternalFrame1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jInternalFrame1Layout.createSequentialGroup()
-						.addComponent(TabbedPane, GroupLayout.PREFERRED_SIZE, 457, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(OutputPanel,
-								GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+			.addGroup(jInternalFrame1Layout.createSequentialGroup()
+				.addComponent(TabbedPane,GroupLayout.PREFERRED_SIZE,457,GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+				.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)));
 
-		Interpreter.init();
+		try {
+			Interpreter.init();
+		} catch (UnsupportetVariableNameExeption | UnsupportetMethodNameExeption | InvalidValueException
+			| WrongTypeException e) {
+			System.err.println("init gone wrong (some idiot added duplicate metods or attributes):" + e.getMessage());
+		}
 
 	}
 
@@ -123,7 +130,7 @@ public class ProgrammingWindow extends CustomWindow {
 
 	private void GenerateProgrammingPane() {
 		TabbedPane = new JTabbedPane();
-		TabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
+		TabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,2,true));
 		TabbedPane.setToolTipText("");
 
 		Tabs = new ArrayList<>();
@@ -131,56 +138,55 @@ public class ProgrammingWindow extends CustomWindow {
 		Tab firstTab = new Tab(this);
 		Tabs.add(firstTab);
 
-		TabbedPane.addTab("Tab", firstTab);
+		TabbedPane.addTab("Tab",firstTab);
 	}
 
 	private void GenerateOutputPanel() {
 		Run = new JButton("Run");
-		Run.setFont(new Font("Arial", 1, 10));
+		Run.setFont(new Font("Arial",1,10));
 		addListener(Run);
 
 		Stop = new JButton("Stop");
-		Stop.setFont(new Font("Arial", 1, 10));
+		Stop.setFont(new Font("Arial",1,10));
 		addListener(Stop);
 
 		OutputTextPane = new JTextPane();
 		OutputTextPane.setEditable(false);
-		OutputTextPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
+		OutputTextPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
 
 		OutputTextPaneScrollPane = new JScrollPane(OutputTextPane);
 
 		OutputLabel = new JLabel();
-		OutputLabel.setFont(new Font("Arial", 1, 16));
+		OutputLabel.setFont(new Font("Arial",1,16));
 		OutputLabel.setText("Output");
 
 		OutputPanel = new JPanel();
-		OutputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, false));
+		OutputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,2,false));
 
 		GroupLayout OutputPanelLayout = new GroupLayout(OutputPanel);
 		OutputPanel.setLayout(OutputPanelLayout);
 
 		OutputPanelLayout.setHorizontalGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(OutputPanelLayout.createSequentialGroup().addContainerGap().addGroup(OutputPanelLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(OutputLabel, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
-						.addGroup(OutputPanelLayout.createSequentialGroup()
-								.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-										.addComponent(Run, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-										.addComponent(Stop, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(OutputTextPaneScrollPane)))
-						.addContainerGap()));
+			.addGroup(OutputPanelLayout.createSequentialGroup().addContainerGap().addGroup(OutputPanelLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,82,GroupLayout.PREFERRED_SIZE)
+				.addGroup(OutputPanelLayout.createSequentialGroup()
+					.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(Run,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE)
+						.addComponent(Stop,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(OutputTextPaneScrollPane)))
+				.addContainerGap()));
 
 		OutputPanelLayout.setVerticalGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(OutputPanelLayout.createSequentialGroup()
-						.addComponent(OutputLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addGroup(OutputPanelLayout.createSequentialGroup().addComponent(Run)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(Stop)
-										.addGap(0, 123, Short.MAX_VALUE))
-								.addComponent(OutputTextPaneScrollPane))
-						.addContainerGap()));
+			.addGroup(OutputPanelLayout.createSequentialGroup()
+				.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,22,GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+				.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addGroup(OutputPanelLayout.createSequentialGroup().addComponent(Run)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(Stop)
+						.addGap(0,123,Short.MAX_VALUE))
+					.addComponent(OutputTextPaneScrollPane))
+				.addContainerGap()));
 	}
 
 	public void GenerateMenuBar(Actionlist actions) {
@@ -213,18 +219,18 @@ public class ProgrammingWindow extends CustomWindow {
 
 		MenuBarEdit = new JMenu("Edit");
 
-		actions.add("Undo", MenuBarEdit);
-		actions.add("Redo", MenuBarEdit);
+		actions.add("Undo",MenuBarEdit);
+		actions.add("Redo",MenuBarEdit);
 
 		MenuBarEdit.addSeparator();
 
-		actions.add(DefaultEditorKit.cutAction, MenuBarEdit);
-		actions.add(DefaultEditorKit.copyAction, MenuBarEdit);
-		actions.add(DefaultEditorKit.pasteAction, MenuBarEdit);
+		actions.add(DefaultEditorKit.cutAction,MenuBarEdit);
+		actions.add(DefaultEditorKit.copyAction,MenuBarEdit);
+		actions.add(DefaultEditorKit.pasteAction,MenuBarEdit);
 
 		MenuBarEdit.addSeparator();
 
-		actions.add(DefaultEditorKit.selectAllAction, MenuBarEdit);
+		actions.add(DefaultEditorKit.selectAllAction,MenuBarEdit);
 
 		MenuBar.add(MenuBarEdit);
 
@@ -263,7 +269,7 @@ public class ProgrammingWindow extends CustomWindow {
 		addListener(MenuBarOtherItem2);
 		MenuBarOther.add(MenuBarOtherItem2);
 
-		actions.add("Interpret", MenuBarOther);
+		actions.add("Interpret",MenuBarOther);
 
 		MenuBarOther.add(new Separator());
 
@@ -286,6 +292,8 @@ public class ProgrammingWindow extends CustomWindow {
 
 }
 
+
+
 class Tab extends JPanel {
 
 	private JScrollPane ProgrammingPaneScrollPane;
@@ -303,37 +311,36 @@ class Tab extends JPanel {
 
 		ProgrammingPane = new JTextPane();
 		ProgrammingPane.setEditable(true);
-		ProgrammingPane.setMargin(new Insets(5, 5, 5, 5));
+		ProgrammingPane.setMargin(new Insets(5,5,5,5));
 
 		LinecounterPane = new JTextPane();
 		LinecounterPane.setEditable(false);
-		LinecounterPane.setMargin(new Insets(5, 5, 5, 5));
+		LinecounterPane.setMargin(new Insets(5,5,5,5));
 
-		setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
+		setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
 
 		ProgrammingPaneScrollPane = new JScrollPane(ProgrammingPane);
 		ProgrammingPaneScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		ProgrammingPaneScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		ProgrammingPaneScrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
+		ProgrammingPaneScrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
 
 		LinecounterPaneScrollPane = new JScrollPane(LinecounterPane);
 		LinecounterPaneScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		LinecounterPaneScrollPane.setViewportView(LinecounterPane);
-		LinecounterPaneScrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
+		LinecounterPaneScrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
 
 		GroupLayout ProgrammingPanelLayout = new GroupLayout(this);
 		ProgrammingPanelLayout.setHorizontalGroup(ProgrammingPanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(GroupLayout.Alignment.TRAILING, ProgrammingPanelLayout.createSequentialGroup().addGap(2, 2, 2)
-						.addComponent(LinecounterPaneScrollPane, GroupLayout.PREFERRED_SIZE, 43,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(ProgrammingPaneScrollPane, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)));
+			.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(GroupLayout.Alignment.TRAILING,
+				ProgrammingPanelLayout.createSequentialGroup().addGap(2,2,2)
+					.addComponent(LinecounterPaneScrollPane,GroupLayout.PREFERRED_SIZE,43,GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addComponent(ProgrammingPaneScrollPane,GroupLayout.DEFAULT_SIZE,500,Short.MAX_VALUE)));
 
 		ProgrammingPanelLayout
-				.setVerticalGroup(ProgrammingPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(ProgrammingPaneScrollPane, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-						.addComponent(LinecounterPaneScrollPane));
+			.setVerticalGroup(ProgrammingPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(ProgrammingPaneScrollPane,GroupLayout.DEFAULT_SIZE,100,Short.MAX_VALUE)
+				.addComponent(LinecounterPaneScrollPane));
 
 		setLayout(ProgrammingPanelLayout);
 
@@ -382,9 +389,9 @@ class Tab extends JPanel {
 		document.setDocumentFilter(new DocumentFilter() {
 
 			@Override
-			public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-					throws BadLocationException {
-				super.insertString(fb, offset, text.replace("\t", "   "), attrs);
+			public void replace(FilterBypass fb,int offset,int length,String text,AttributeSet attrs)
+				throws BadLocationException {
+				super.insertString(fb,offset,text.replace("\t","   "),attrs);
 			}
 
 		});
@@ -402,9 +409,9 @@ class Tab extends JPanel {
 
 		try {
 			MutableAttributeSet set = new SimpleAttributeSet();
-			StyleConstants.setFontFamily(set, "SansSerif");
-			StyleConstants.setFontSize(set, 30);
-			document.insertString(0, "ProgrammingPuzzle", set);
+			StyleConstants.setFontFamily(set,"SansSerif");
+			StyleConstants.setFontSize(set,30);
+			document.insertString(0,"ProgrammingPuzzle",set);
 		} catch (BadLocationException e1) {
 			e1.printStackTrace();
 		}
@@ -416,40 +423,40 @@ class Tab extends JPanel {
 
 		KeyStroke key;
 
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK);
-		inputMap.put(key, DefaultEditorKit.copyAction);
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_C,InputEvent.CTRL_DOWN_MASK);
+		inputMap.put(key,DefaultEditorKit.copyAction);
 
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK);
-		inputMap.put(key, DefaultEditorKit.cutAction);
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_X,InputEvent.CTRL_DOWN_MASK);
+		inputMap.put(key,DefaultEditorKit.cutAction);
 
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK);
-		inputMap.put(key, DefaultEditorKit.pasteAction);
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_V,InputEvent.CTRL_DOWN_MASK);
+		inputMap.put(key,DefaultEditorKit.pasteAction);
 
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK);
-		inputMap.put(key, DefaultEditorKit.selectLineAction);
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_Q,InputEvent.CTRL_DOWN_MASK);
+		inputMap.put(key,DefaultEditorKit.selectLineAction);
 
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK);
-		inputMap.put(key, DefaultEditorKit.endLineAction);
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_E,InputEvent.CTRL_DOWN_MASK);
+		inputMap.put(key,DefaultEditorKit.endLineAction);
 
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_DOWN_MASK);
-		inputMap.put(key, DefaultEditorKit.beginLineAction);
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_B,InputEvent.CTRL_DOWN_MASK);
+		inputMap.put(key,DefaultEditorKit.beginLineAction);
 
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK);
-		inputMap.put(key, actions.get("Undo"));
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_Z,InputEvent.CTRL_DOWN_MASK);
+		inputMap.put(key,actions.get("Undo"));
 
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK);
-		inputMap.put(key, actions.get("Redo"));
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_Y,InputEvent.CTRL_DOWN_MASK);
+		inputMap.put(key,actions.get("Redo"));
 	}
 
 	private void lineNumbers() {
 		try {
 			Document doc = LinecounterPane.getDocument();
 
-			doc.remove(0, doc.getLength());
+			doc.remove(0,doc.getLength());
 
 			for (int i = 1; i <= ProgrammingPane.getText().length()
-					- ProgrammingPane.getText().replaceAll("\n", "").length() + 1; i++) {
-				doc.insertString(doc.getLength(), i + "\n", null);
+				- ProgrammingPane.getText().replaceAll("\n","").length() + 1; i++) {
+				doc.insertString(doc.getLength(),i + "\n",null);
 			}
 		} catch (BadLocationException e) {
 			e.printStackTrace();
@@ -457,6 +464,8 @@ class Tab extends JPanel {
 	}
 
 }
+
+
 
 class Actionlist extends ArrayList<Action> {
 
@@ -474,7 +483,7 @@ class Actionlist extends ArrayList<Action> {
 		}
 	}
 
-	public void add(String Name, JMenu bar) {
+	public void add(String Name,JMenu bar) {
 		for (Action action : this) {
 			if ((String) action.getValue(Action.NAME) == Name) {
 				bar.add(action);
@@ -493,6 +502,8 @@ class Actionlist extends ArrayList<Action> {
 	}
 
 }
+
+
 
 class UndoAction extends AbstractAction {
 
@@ -524,14 +535,16 @@ class UndoAction extends AbstractAction {
 	protected void updateUndoState() {
 		if (manager.canUndo()) {
 			setEnabled(true);
-			putValue(Action.NAME, manager.getUndoPresentationName());
+			putValue(Action.NAME,manager.getUndoPresentationName());
 		} else {
 			setEnabled(false);
-			putValue(Action.NAME, "Undo");
+			putValue(Action.NAME,"Undo");
 		}
 	}
 
 }
+
+
 
 class RedoAction extends AbstractAction {
 
@@ -562,14 +575,16 @@ class RedoAction extends AbstractAction {
 	protected void updateRedoState() {
 		if (manager.canRedo()) {
 			setEnabled(true);
-			putValue(Action.NAME, manager.getRedoPresentationName());
+			putValue(Action.NAME,manager.getRedoPresentationName());
 		} else {
 			setEnabled(false);
-			putValue(Action.NAME, "Redo");
+			putValue(Action.NAME,"Redo");
 		}
 	}
 
 }
+
+
 
 class InterpretAction extends AbstractAction {
 
@@ -592,13 +607,15 @@ class InterpretAction extends AbstractAction {
 
 }
 
+
+
 class Listener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (((AbstractButton) e.getSource()).getText()) {
-		case "Run":
-			System.out.println("hi");
+			case "Run":
+				System.out.println("hi");
 			break;
 		}
 	}
