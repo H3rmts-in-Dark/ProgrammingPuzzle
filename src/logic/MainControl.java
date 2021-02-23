@@ -7,7 +7,7 @@ import Enums.Signalcolor;
 import Programming.ProgrammingWindow;
 import entitys.Box;
 import tiles.Computer;
-import tiles.Entitysensor;
+import tiles.GewichtsSensor;
 import tiles.Förderband;
 import tiles.Lampe;
 import tiles.Schalter;
@@ -70,7 +70,7 @@ public class MainControl {
 
 		world.setTile(3,0,new Lampe(Signalcolor.green,Cabletype.notype));
 
-		world.setTile(3,2,new Entitysensor(Signalcolor.blue,Cabletype.notype));
+		world.setTile(3,2,new GewichtsSensor(Signalcolor.blue,Cabletype.notype));
 		world.setTile(3,3,new Lampe(Signalcolor.blue,Cabletype.notype));
 		world.setTile(4,2,new Computer(Signalcolor.blue,Cabletype.notype));
 
