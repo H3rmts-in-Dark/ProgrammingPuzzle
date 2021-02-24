@@ -160,7 +160,7 @@ class InvalidDatatypeExeption extends CustomExeption {
 class ExitProgramm extends CustomExeption {
 
 	public ExitProgramm(int line) {
-		super("exied programm at",line);
+		super("exited programm",line);
 	}
 
 }

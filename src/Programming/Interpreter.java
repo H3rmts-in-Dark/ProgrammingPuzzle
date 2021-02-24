@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 
+import entitys.Player;
+
 
 public class Interpreter {
 
@@ -13,19 +15,14 @@ public class Interpreter {
 
 	private static VariableList variables;
 
-	public static Integer line;
+	public static Integer line = 1;
 
-	public static String sysoutin;
+	public static String sysoutin = "";
 
 	public static String tabwith = "|---|  ";
 
-	public Interpreter() {
+	private Interpreter() {
 
-	}
-
-	public static void interpret() {
-		String programm = "int te = sec + 5;\nprint(te);\nwhile (sec < te) {\n	delay(2);\n}";
-		interpret(programm);
 	}
 
 	public static void interpret(AbstractDocument document) {
@@ -37,25 +34,15 @@ public class Interpreter {
 	}
 
 	public static void interpret(String str) {
-		try {
-			init();
-		} catch (UnsupportetVariableNameExeption | UnsupportetMethodNameExeption | InvalidValueException
-			| WrongTypeException e) {
-			System.err.println("init gone wrong (some idiot added duplicate metods or attributes):" + e.getMessage());
-			return;
-		}
-
 		CustStr text = new CustStr(str);
 
 		System.out.println("interpreting:\n" + text + "\n\n");
 
 		String exeption = "";
 
-		line = 1;
-
 		while (text.val.length() > 0) {
 			try {
-				interpretblock(text,tabwith);
+				interpretblock(text);
 			} catch (CustomExeption e) {
 				// e.printStackTrace();
 				exeption = e.getMessage();
@@ -75,14 +62,12 @@ public class Interpreter {
 		}
 	}
 
-	public static void init()
+	public static void init(Player player)
 		throws UnsupportetVariableNameExeption,UnsupportetMethodNameExeption,InvalidValueException,WrongTypeException {
 		methods = new MethodList();
 		variables = new VariableList();
 
 		methods.addMethod(new print());
-
-		methods.addMethod(new move());
 
 		methods.addMethod(new toString());
 
@@ -91,6 +76,8 @@ public class Interpreter {
 		methods.addMethod(new exit());
 
 		methods.addMethod(new loopbreak());
+
+		methods.addMethod(new Playermove(player));
 
 		variables.addVariable(new MY_int("sec") {
 
@@ -107,8 +94,8 @@ public class Interpreter {
 	 * @param text
 	 * @throws CustomExeption
 	 */
-	public static void interpretblock(CustStr text,String sysoutin) throws CustomExeption {
-		Interpreter.sysoutin = sysoutin;
+	@SuppressWarnings({"null","incomplete-switch"})
+	public static void interpretblock(CustStr text) throws CustomExeption {
 		if (text.val.isBlank()) {
 			text.val = "";
 			return;
@@ -116,10 +103,10 @@ public class Interpreter {
 		System.out.println(sysoutin + "##################");
 
 		if (StrUtils.startswith(StrUtils.fullstrip(text.val),Keywords.values())) { // keyword
-			String part = getSection(StrUtils.fullstrip(text.val),false);
+			String part = getSection(text.val,false);
 			if (StrUtils.count(part,"\n") > 0)
 				line += StrUtils.count(part,"\n");
-			text.val = StrUtils.removetext(text.val,part + ";");
+			text.val = StrUtils.removetext(text.val,part);
 			part = StrUtils.fullstrip(part);
 			System.out.println(sysoutin + "process: " + StrUtils.removespace(part));
 
@@ -142,25 +129,41 @@ public class Interpreter {
 			}
 			String parameters = StrUtils.fromto(part,'(',')');
 			ArrayList<Object> newparams;
-			Interpreter.sysoutin = Interpreter.sysoutin + Interpreter.tabwith;
-			do {
-				ArrayList<String> params = StrUtils.parts(parameters,',',true);
-				newparams = new ArrayList<>();
-				if (params.size() != keyword.getParametersize())
-					throw new MethodParametersExeption(params.size(),keyword.getParametersize(),line);
-				for (String param : params) {
-					if (param.contains("+") || param.contains("-") || param.contains("*") || param.contains("/")) {
-						newparams.add(params.indexOf(param),calculate(param));
-					} else if (param.contains("=") || param.contains(">") || param.contains("<")
-						|| param.contains("!")) {
-						newparams.add(params.indexOf(param),booleanate(param));
-					} else if (variables.get(param) != null) {
-						newparams.add(params.indexOf(param),variables.get(param));
-					} else {
-						newparams.add(param);
+			boolean rm = false;
+			try {
+				do {
+					if (rm)
+						Interpreter.sysoutin = Interpreter.sysoutin.substring(0,
+							Interpreter.sysoutin.length() - Interpreter.tabwith.length());
+					rm = true;
+					ArrayList<String> params = StrUtils.parts(parameters,',',true);
+					newparams = new ArrayList<>();
+					if (params.size() != keyword.getParametersize())
+						throw new MethodParametersExeption(params.size(),keyword.getParametersize(),line);
+					for (String param : params) {
+						if (param.contains("+") || param.contains("-") || param.contains("*") || param.contains("/")) {
+							newparams.add(params.indexOf(param),calculate(param));
+						} else if (param.contains("=") || param.contains(">") || param.contains("<")
+							|| param.contains("!")) {
+							newparams.add(params.indexOf(param),booleanate(param));
+						} else if (variables.get(param) != null) {
+							newparams.add(params.indexOf(param),variables.get(param));
+						} else {
+							newparams.add(param);
+						}
 					}
-				}
-			} while (keyword.execute(newparams));
+					System.out.println(Interpreter.sysoutin + "running " + name + " with parameters" + newparams);
+					Interpreter.sysoutin = Interpreter.sysoutin + Interpreter.tabwith;
+				} while (keyword.execute(newparams));
+				Interpreter.sysoutin = Interpreter.sysoutin.substring(0,
+					Interpreter.sysoutin.length() - Interpreter.tabwith.length());
+			} catch (BreakException e) {
+				Interpreter.sysoutin = Interpreter.sysoutin.substring(0,
+					Interpreter.sysoutin.length() - Interpreter.tabwith.length());
+				System.out.println(Interpreter.sysoutin + "##################\n");
+				throw e;
+			}
+
 		} else {
 			String part = StrUtils.part(text.val,';',0);
 			if (StrUtils.count(part,"\n") > 0)

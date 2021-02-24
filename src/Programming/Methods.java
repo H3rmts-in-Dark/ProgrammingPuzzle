@@ -4,6 +4,8 @@ package Programming;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import entitys.Player;
+
 
 abstract class Method {
 
@@ -68,6 +70,8 @@ abstract class Method {
 			+ new ArrayList<>(Arrays.asList(parametertypes));
 	}
 
+	abstract String getDescription();
+
 	public String getName() {
 		return name;
 	}
@@ -90,6 +94,32 @@ class print extends Method {
 		return null;
 	}
 
+	@Override
+	String getDescription() {
+		return " prints any information to the console";
+	}
+
+}
+
+
+
+class printerr extends Method {
+
+	public printerr() {
+		super(Datatypes.notype,Datatypes.MY_String);
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) {
+		System.out.println("error: " + Interpreter.sysoutin + "print to console:" + parameters[0].getValue());
+		return null;
+	}
+
+	@Override
+	String getDescription() {
+		return " prints any error to the console";
+	}
+
 }
 
 
@@ -107,6 +137,11 @@ class toString extends Method {
 		} catch (InvalidValueException | WrongTypeException e) {
 			return null;
 		}
+	}
+
+	@Override
+	String getDescription() {
+		return "converts any type into a String";
 	}
 
 }
@@ -129,6 +164,11 @@ class delay extends Method {
 		return null;
 	}
 
+	@Override
+	String getDescription() {
+		return "delays the programm for x * 1000 milliseconds (delays shorter than 1 sec are also possible)";
+	}
+
 }
 
 
@@ -144,21 +184,9 @@ class exit extends Method {
 		throw new ExitProgramm(Interpreter.line);
 	}
 
-}
-
-
-
-class move extends Method {
-
-	public move() {
-		super(Datatypes.notype,Datatypes.MY_int,Datatypes.MY_int);
-	}
-
 	@Override
-	Variable<?> runCode(Variable<?>...parameters) {
-		System.out
-			.println("moving " + parameters[0].getValue() + " steps in " + parameters[1].getValue() + " direction");
-		return null;
+	String getDescription() {
+		return " exits the programm";
 	}
 
 }
@@ -174,6 +202,198 @@ class loopbreak extends Method {
 	@Override
 	Variable<?> runCode(Variable<?>...parameters) throws BreakException {
 		throw new BreakException(Interpreter.line);
+	}
+
+	@Override
+	String getDescription() {
+		return " exits the current loop";
+	}
+
+}
+
+
+
+class getPlayerRotation extends Method {
+
+	Player player;
+
+	public getPlayerRotation(Player player) {
+		super(Datatypes.MY_String,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		return new MY_String(player.getStrRotation(),name + "returnValue");
+	}
+
+	@Override
+	String getDescription() {
+		return " returns the current Rotation of the player (\"up\",\"down\",\"left\",\"right\")";
+	}
+
+}
+
+
+
+class getPlayerX extends Method {
+
+	Player player;
+
+	public getPlayerX(Player player) {
+		super(Datatypes.MY_int,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		return new MY_int(player.getX(),name + "returnValue");
+	}
+
+	@Override
+	String getDescription() {
+		return "returns the players X coordinate";
+	}
+
+}
+
+
+
+class getPlayerY extends Method {
+
+	Player player;
+
+	public getPlayerY(Player player) {
+		super(Datatypes.MY_int,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		return new MY_int(player.getY(),name + "returnValue");
+	}
+
+	@Override
+	String getDescription() {
+		return "returns the players Y coordinate";
+	}
+
+}
+
+
+
+class getBlockActivated extends Method {
+
+	Player player;
+
+	public getBlockActivated(Player player) {
+		super(Datatypes.MY_boolean,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		return new MY_int(player.getBlockActivated(),name + "returnValue");
+	}
+
+	@Override
+	String getDescription() {
+		return "returns if the block the player is looking at is activated";
+	}
+
+}
+
+
+
+class getBlockSolid extends Method {
+
+	Player player;
+
+	public getBlockSolid(Player player) {
+		super(Datatypes.MY_boolean,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		return new MY_boolean(player.getBlockSolid(),name + "returnValue");
+	}
+
+	@Override
+	String getDescription() {
+		return "returns if the player can walk through the block he is looking at";
+	}
+
+}
+
+
+
+class Playermove extends Method {
+
+	Player player;
+
+	public Playermove(Player player) {
+		super(Datatypes.notype,Datatypes.MY_int);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		player.move((int) parameters[0].getValue());
+		return null;
+	}
+
+	@Override
+	String getDescription() {
+		return "moves the player x Blocks in his direction";
+	}
+
+}
+
+
+
+class changePlayerRotation extends Method {
+
+	Player player;
+
+	public changePlayerRotation(Player player) {
+		super(Datatypes.notype,Datatypes.MY_String);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) {
+		player.changeRotation((String) parameters[0].getValue());
+		return null;
+	}
+
+	@Override
+	String getDescription() {
+		return "changes the Rotation of the player to x";
+	}
+
+}
+
+
+
+class Playerinteract extends Method {
+
+	Player player;
+
+	public Playerinteract(Player player) {
+		super(Datatypes.notype,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) {
+		player.interact();
+		return null;
+	}
+
+	@Override
+	String getDescription() {
+		return "interacts with the plock the player is looking at";
 	}
 
 }

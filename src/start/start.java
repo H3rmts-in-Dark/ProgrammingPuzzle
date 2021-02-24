@@ -17,9 +17,6 @@ public class start {
 	 */
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
-		Interpreter.interpret();
-		if (true)
-			return;
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
@@ -30,8 +27,7 @@ public class start {
 				MainControl.start();
 				Frame.getFrame().setVisible(true);
 
-				MainControl.createProgrammingWindow();
-				// MainControl.createWorld();
+				MainControl.createWorld();
 				// MainControl.createWorldselectionWindow();
 			}
 

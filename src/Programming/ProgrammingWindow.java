@@ -111,10 +111,11 @@ public class ProgrammingWindow extends CustomWindow {
 				.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)));
 
 		try {
-			Interpreter.init();
+			Interpreter.init(world.getPlayer());
 		} catch (UnsupportetVariableNameExeption | UnsupportetMethodNameExeption | InvalidValueException
 			| WrongTypeException e) {
 			System.err.println("init gone wrong (some idiot added duplicate metods or attributes):" + e.getMessage());
+			return;
 		}
 
 	}
