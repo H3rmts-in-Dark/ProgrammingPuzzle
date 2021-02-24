@@ -7,7 +7,7 @@ import Enums.Signalcolor;
 import Programming.ProgrammingWindow;
 import entitys.Box;
 import tiles.Computer;
-import tiles.Entitysensor;
+import tiles.GewichtsSensor;
 import tiles.Förderband;
 import tiles.Lampe;
 import tiles.Schalter;
@@ -36,22 +36,6 @@ public class MainControl {
 	}
 
 	public static void createWorld() {
-		/*
-		 * world = new World(4,3);
-		 * 
-		 * world.setTile(0,0,new Floor(Signalcolor.blue,Cabletype.so)); world.setTile(0,2,new
-		 * Floor(Signalcolor.blue,Cabletype.no)); world.setTile(1,0,new
-		 * Floor(Signalcolor.blue,Cabletype.osw)); world.setTile(3,2,new
-		 * Floor(Signalcolor.blue,Cabletype.nw)); world.setTile(2,0,new
-		 * Floor(Signalcolor.blue,Cabletype.m)); world.setTile(3,0,new
-		 * Floor(Signalcolor.blue,Cabletype.w)); world.setTile(2,1,new
-		 * Floor(Signalcolor.blue,Cabletype.sn)); world.setTile(2,2,new
-		 * Floor(Signalcolor.blue,Cabletype.wno)); world.setTile(3,1,new
-		 * Floor(Signalcolor.blue,Cabletype.s)); world.setTile(1,1,new
-		 * Floor(Signalcolor.blue,Cabletype.nws)); world.setTile(1,2,new
-		 * Floor(Signalcolor.blue,Cabletype.wno)); world.setTile(0,1,new
-		 * Schalter(Signalcolor.blue,Cabletype.so));
-		 */
 		world = new World(8,8);
 
 		world.setTile(0,0,new Förderband(Rotation.right,2,Signalcolor.red,Cabletype.notype));
@@ -70,7 +54,7 @@ public class MainControl {
 
 		world.setTile(3,0,new Lampe(Signalcolor.green,Cabletype.notype));
 
-		world.setTile(3,2,new Entitysensor(Signalcolor.blue,Cabletype.notype));
+		world.setTile(3,2,new GewichtsSensor(Signalcolor.blue,Cabletype.notype));
 		world.setTile(3,3,new Lampe(Signalcolor.blue,Cabletype.notype));
 		world.setTile(4,2,new Computer(Signalcolor.blue,Cabletype.notype));
 

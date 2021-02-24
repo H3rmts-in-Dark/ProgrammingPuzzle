@@ -1,4 +1,4 @@
-package libraries.org.json;
+package json;
 
 /*
 Copyright (c) 2018 JSON.org

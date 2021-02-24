@@ -2,7 +2,6 @@ package Programming;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public enum Keywords {
@@ -67,6 +66,7 @@ abstract class Keyword {
 		return parametertypes.length;
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	public boolean execute(ArrayList<Object> parameters) throws CustomExeption {
 		ArrayList<Variable<?>> parameterlist = new ArrayList<>();
 		for (Object paramter : parameters) {
@@ -102,7 +102,6 @@ abstract class Keyword {
 						Interpreter.line);
 				}
 		}
-		System.out.println(Interpreter.sysoutin + "running " + name + " with parameters" + parameters);
 		return run(parameterlist.toArray(new Variable<?>[0]));
 	}
 
@@ -129,12 +128,16 @@ class MY_if extends Keyword {
 
 	@Override
 	boolean run(Variable<?>...parameters) throws CustomExeption {
-		String ind = Interpreter.sysoutin + Interpreter.tabwith;
 		if ((boolean) parameters[0].getValue()) {
 			CustStr str = new CustStr(inner.strip());
 			System.out.println();
 			while (str.val.length() > 0) {
-				Interpreter.interpretblock(str,ind);
+				try {
+					Interpreter.interpretblock(str);
+				} catch (BreakException | ExitProgramm e) {
+					System.out.println(Interpreter.sysoutin + "##################\n");
+					throw e;
+				}
 			}
 		}
 		return false;
@@ -157,13 +160,11 @@ class MY_while extends Keyword {
 			System.out.println();
 			while (str.val.length() > 0) {
 				try {
-					Interpreter.interpretblock(str,Interpreter.sysoutin);
+					Interpreter.interpretblock(str);
 				} catch (BreakException e) {
-		//			System.out.println(ind + Interpreter.tabwith + "breaking out of current Loop\n" + ind
-		//				+ Interpreter.tabwith + "##################");
-		//			System.out.println("\n" + ind + "##################\n");
 					return false;
 				}
+
 			}
 			return true;
 		}
@@ -181,7 +182,7 @@ class MY_function extends Keyword {
 	}
 
 	@Override
-	boolean run(Variable<?>...parameters) throws CustomExeption {
+	boolean run(Variable<?>...parameters) {
 		return false;
 	}
 

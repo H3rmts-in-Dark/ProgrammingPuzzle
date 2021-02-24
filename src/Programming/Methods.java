@@ -4,6 +4,11 @@ package Programming;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+
+import entitys.Player;
+
 
 abstract class Method {
 
@@ -68,6 +73,8 @@ abstract class Method {
 			+ new ArrayList<>(Arrays.asList(parametertypes));
 	}
 
+	abstract String getDescription();
+
 	public String getName() {
 		return name;
 	}
@@ -80,14 +87,58 @@ abstract class Method {
 
 class print extends Method {
 
-	public print() {
+	JTextPane textPane;
+
+	public print(JTextPane textPane) {
 		super(Datatypes.notype,Datatypes.alltypes);
+		this.textPane = textPane;
 	}
 
 	@Override
 	Variable<?> runCode(Variable<?>...parameters) {
-		System.out.println(Interpreter.sysoutin + "print to console:" + parameters[0].getValue());
+		try {
+			textPane.getDocument().insertString(textPane.getDocument().getLength(),parameters[0].getValue() + "\n",
+				null);
+			textPane.setCaretPosition(textPane.getDocument().getLength());
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 		return null;
+	}
+
+	@Override
+	String getDescription() {
+		return " prints any information to the console";
+	}
+
+}
+
+
+
+class printerr extends Method {
+
+	JTextPane textPane;
+
+	public printerr(JTextPane textPane) {
+		super(Datatypes.notype,Datatypes.MY_String);
+		this.textPane = textPane;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) {
+		try {
+			textPane.getDocument().insertString(textPane.getDocument().getLength(),
+				"error:" + parameters[0].getValue() + "\n",null);
+			textPane.setCaretPosition(textPane.getDocument().getLength());
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	String getDescription() {
+		return " prints any error to the console";
 	}
 
 }
@@ -107,6 +158,11 @@ class toString extends Method {
 		} catch (InvalidValueException | WrongTypeException e) {
 			return null;
 		}
+	}
+
+	@Override
+	String getDescription() {
+		return "converts any type into a String";
 	}
 
 }
@@ -129,6 +185,11 @@ class delay extends Method {
 		return null;
 	}
 
+	@Override
+	String getDescription() {
+		return "delays the programm for x * 1000 milliseconds (delays shorter than 1 sec are also possible)";
+	}
+
 }
 
 
@@ -144,21 +205,9 @@ class exit extends Method {
 		throw new ExitProgramm(Interpreter.line);
 	}
 
-}
-
-
-
-class move extends Method {
-
-	public move() {
-		super(Datatypes.notype,Datatypes.MY_int,Datatypes.MY_int);
-	}
-
 	@Override
-	Variable<?> runCode(Variable<?>...parameters) {
-		System.out
-			.println("moving " + parameters[0].getValue() + " steps in " + parameters[1].getValue() + " direction");
-		return null;
+	String getDescription() {
+		return " exits the programm";
 	}
 
 }
@@ -174,6 +223,198 @@ class loopbreak extends Method {
 	@Override
 	Variable<?> runCode(Variable<?>...parameters) throws BreakException {
 		throw new BreakException(Interpreter.line);
+	}
+
+	@Override
+	String getDescription() {
+		return " exits the current loop";
+	}
+
+}
+
+
+
+class getplayerrotation extends Method {
+
+	Player player;
+
+	public getplayerrotation(Player player) {
+		super(Datatypes.MY_String,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		return new MY_String(player.getStrRotation(),name + "returnValue");
+	}
+
+	@Override
+	String getDescription() {
+		return " returns the current Rotation of the player (\"up\",\"down\",\"left\",\"right\")";
+	}
+
+}
+
+
+
+class getplayerx extends Method {
+
+	Player player;
+
+	public getplayerx(Player player) {
+		super(Datatypes.MY_int,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		return new MY_int(player.getX(),name + "returnValue");
+	}
+
+	@Override
+	String getDescription() {
+		return "returns the players X coordinate";
+	}
+
+}
+
+
+
+class getplayery extends Method {
+
+	Player player;
+
+	public getplayery(Player player) {
+		super(Datatypes.MY_int,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		return new MY_int(player.getY(),name + "returnValue");
+	}
+
+	@Override
+	String getDescription() {
+		return "returns the players Y coordinate";
+	}
+
+}
+
+
+
+class getblockactivated extends Method {
+
+	Player player;
+
+	public getblockactivated(Player player) {
+		super(Datatypes.MY_boolean,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		return new MY_int(player.getBlockActivated(),name + "returnValue");
+	}
+
+	@Override
+	String getDescription() {
+		return "returns if the block the player is looking at is activated";
+	}
+
+}
+
+
+
+class getblocksolid extends Method {
+
+	Player player;
+
+	public getblocksolid(Player player) {
+		super(Datatypes.MY_boolean,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+		return new MY_boolean(player.getBlockSolid(),name + "returnValue");
+	}
+
+	@Override
+	String getDescription() {
+		return "returns if the player can walk through the block he is looking at";
+	}
+
+}
+
+
+
+class playermove extends Method {
+
+	Player player;
+
+	public playermove(Player player) {
+		super(Datatypes.notype,Datatypes.MY_int);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) {
+		player.move((int) parameters[0].getValue());
+		return null;
+	}
+
+	@Override
+	String getDescription() {
+		return "moves the player x Blocks in his direction";
+	}
+
+}
+
+
+
+class changeplayerrotation extends Method {
+
+	Player player;
+
+	public changeplayerrotation(Player player) {
+		super(Datatypes.notype,Datatypes.MY_String);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) {
+		player.changeRotation((String) parameters[0].getValue());
+		return null;
+	}
+
+	@Override
+	String getDescription() {
+		return "changes the Rotation of the player to x";
+	}
+
+}
+
+
+
+class playerinteract extends Method {
+
+	Player player;
+
+	public playerinteract(Player player) {
+		super(Datatypes.notype,Datatypes.notype);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) {
+		player.interact();
+		return null;
+	}
+
+	@Override
+	String getDescription() {
+		return "interacts with the plock the player is looking at";
 	}
 
 }
@@ -207,6 +448,11 @@ class MethodList extends ArrayList<Method> {
 			return super.add(method);
 		}
 		throw new UnsupportetMethodNameExeption(method,"duplicate name ",Interpreter.line);
+	}
+
+	@Override
+	public boolean add(Method e) {
+		throw new RuntimeException();
 	}
 
 	@Override

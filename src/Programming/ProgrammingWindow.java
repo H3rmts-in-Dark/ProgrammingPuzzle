@@ -45,9 +45,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
@@ -111,10 +108,12 @@ public class ProgrammingWindow extends CustomWindow {
 				.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)));
 
 		try {
-			Interpreter.init();
+			Interpreter.initmethods(world.getPlayer(),OutputTextPane);
+			Interpreter.clear();
 		} catch (UnsupportetVariableNameExeption | UnsupportetMethodNameExeption | InvalidValueException
 			| WrongTypeException e) {
 			System.err.println("init gone wrong (some idiot added duplicate metods or attributes):" + e.getMessage());
+			return;
 		}
 
 	}
@@ -152,6 +151,7 @@ public class ProgrammingWindow extends CustomWindow {
 
 		OutputTextPane = new JTextPane();
 		OutputTextPane.setEditable(false);
+		OutputTextPane.setMargin(new Insets(5,5,5,5));
 		OutputTextPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
 
 		OutputTextPaneScrollPane = new JScrollPane(OutputTextPane);
@@ -292,6 +292,18 @@ public class ProgrammingWindow extends CustomWindow {
 
 }
 
+/*
+ * 
+ * int nxt = sec + 7;
+ * 
+ * print(nxt); print(sec);
+ * 
+ * while(nxt >= sec) { delay(1); print(nxt - sec); print(left); }
+ * 
+ * print(finished)
+ * 
+ */
+
 
 
 class Tab extends JPanel {
@@ -406,15 +418,6 @@ class Tab extends JPanel {
 			}
 
 		});
-
-		try {
-			MutableAttributeSet set = new SimpleAttributeSet();
-			StyleConstants.setFontFamily(set,"SansSerif");
-			StyleConstants.setFontSize(set,30);
-			document.insertString(0,"ProgrammingPuzzle",set);
-		} catch (BadLocationException e1) {
-			e1.printStackTrace();
-		}
 
 	}
 
@@ -597,12 +600,19 @@ class InterpretAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		try {
-			Interpreter.interpret(document);
-		} catch (ExceptionInInitializerError e2) {
-			System.err.println(e2.getMessage());
-		}
+		new Thread() {
 
+			@Override
+			public void run() {
+				try {
+					Interpreter.clear();
+					Interpreter.interpret(document);
+				} catch (UnsupportetVariableNameExeption | InvalidValueException | WrongTypeException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}.start();
 	}
 
 }

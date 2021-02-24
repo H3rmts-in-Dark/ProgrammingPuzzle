@@ -1,4 +1,4 @@
-package libraries.org.json;
+package json;
 
 
 /*
@@ -258,7 +258,7 @@ public class JSONArray implements Iterable<Object> {
 		if (object.equals(Boolean.FALSE) || (object instanceof String && ((String) object).equalsIgnoreCase("false"))) {
 			return false;
 		} else if (object.equals(Boolean.TRUE)
-				|| (object instanceof String && ((String) object).equalsIgnoreCase("true"))) {
+			|| (object instanceof String && ((String) object).equalsIgnoreCase("true"))) {
 			return true;
 		}
 		throw wrongValueFormatException(index,"boolean",null);
