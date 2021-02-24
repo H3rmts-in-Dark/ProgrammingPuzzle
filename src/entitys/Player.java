@@ -4,21 +4,23 @@ package entitys;
 import java.awt.Point;
 import java.util.LinkedHashMap;
 
+import Enums.Animation;
 import Enums.Height;
 import Enums.Rotation;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
+import world.World;
 
 
 public class Player extends Entity implements Playercontroll {
 
 	public Player(Point position,Rotation rotation) {
-		super(position,0,0,rotation,DEFAULTIMAGECHANGETICKDELAY);
+		super(position,0,0,rotation,2);
 	}
 
 	@Override
 	public void loadAnimations() {
-
+		World.load(Rotation.right,Animation.deactivatedanimation,this);
 	}
 
 	@Override

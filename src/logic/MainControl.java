@@ -53,31 +53,31 @@ public class MainControl {
 		 * Schalter(Signalcolor.blue,Cabletype.so));
 		 */
 		world = new World(8,8);
-
-		world.setTile(0,0,new Förderband(Rotation.right,2,Signalcolor.red,Cabletype.notype));
-		world.setTile(1,0,new Förderband(Rotation.right,2,Signalcolor.red,Cabletype.notype));
-		world.setTile(2,0,new Förderband(Rotation.down,1,Signalcolor.green,Cabletype.notype));
-		world.setTile(2,1,new Förderband(Rotation.down,1,Signalcolor.green,Cabletype.notype));
-		world.setTile(2,2,new Förderband(Rotation.left,1,Signalcolor.green,Cabletype.notype));
-		world.setTile(1,2,new Förderband(Rotation.left,1,Signalcolor.green,Cabletype.notype));
-		world.setTile(0,2,new Förderband(Rotation.up,2,Signalcolor.red,Cabletype.notype));
-		world.setTile(0,1,new Förderband(Rotation.up,2,Signalcolor.red,Cabletype.notype));
-
-		world.setTile(4,1,new Computer(Signalcolor.green,Cabletype.notype));
-
-		world.setTile(0,3,new Schalter(Signalcolor.red,Cabletype.notype));
-		world.setTile(3,1,new Schalter(Signalcolor.green,Cabletype.notype));
-
-		world.setTile(3,0,new Lampe(Signalcolor.green,Cabletype.notype));
-
-		world.setTile(3,2,new Entitysensor(Signalcolor.blue,Cabletype.notype));
-		world.setTile(3,3,new Lampe(Signalcolor.blue,Cabletype.notype));
-		world.setTile(4,2,new Computer(Signalcolor.blue,Cabletype.notype));
-
-		world.addEntity(new Box(0,0));
-		world.addEntity(new Box(2,0));
-		world.addEntity(new Box(2,2));
-		world.addEntity(new Box(0,2));
+		world.setTile(1,6,new Computer(Signalcolor.green,Cabletype.notype));
+		/*
+		 * world.setTile(0,0,new Förderband(Rotation.right,2,Signalcolor.red,Cabletype.notype));
+		 * world.setTile(1,0,new Förderband(Rotation.right,2,Signalcolor.red,Cabletype.notype));
+		 * world.setTile(2,0,new Förderband(Rotation.down,1,Signalcolor.green,Cabletype.notype));
+		 * world.setTile(2,1,new Förderband(Rotation.down,1,Signalcolor.green,Cabletype.notype));
+		 * world.setTile(2,2,new Förderband(Rotation.left,1,Signalcolor.green,Cabletype.notype));
+		 * world.setTile(1,2,new Förderband(Rotation.left,1,Signalcolor.green,Cabletype.notype));
+		 * world.setTile(0,2,new Förderband(Rotation.up,2,Signalcolor.red,Cabletype.notype));
+		 * world.setTile(0,1,new Förderband(Rotation.up,2,Signalcolor.red,Cabletype.notype));
+		 * 
+		 * world.setTile(4,1,new Computer(Signalcolor.green,Cabletype.notype));
+		 * 
+		 * world.setTile(0,3,new Schalter(Signalcolor.red,Cabletype.notype));
+		 * world.setTile(3,1,new Schalter(Signalcolor.green,Cabletype.notype));
+		 * 
+		 * world.setTile(3,0,new Lampe(Signalcolor.green,Cabletype.notype));
+		 * 
+		 * world.setTile(3,2,new Entitysensor(Signalcolor.blue,Cabletype.notype));
+		 * world.setTile(3,3,new Lampe(Signalcolor.blue,Cabletype.notype)); world.setTile(4,2,new
+		 * Computer(Signalcolor.blue,Cabletype.notype));
+		 * 
+		 * world.addEntity(new Box(0,0)); world.addEntity(new Box(2,0)); world.addEntity(new
+		 * Box(2,2)); world.addEntity(new Box(0,2));
+		 */
 	}
 
 	public static void createWorldselectionWindow() {

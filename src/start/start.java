@@ -5,6 +5,7 @@ import javax.swing.SwingUtilities;
 
 import Programming.Interpreter;
 import frame.Frame;
+import logic.DebuggingWindow;
 import logic.MainControl;
 
 
@@ -29,6 +30,7 @@ public class start {
 
 				MainControl.createWorld();
 				// MainControl.createWorldselectionWindow();
+				new DebuggingWindow();
 			}
 
 		});

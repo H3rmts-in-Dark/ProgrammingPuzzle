@@ -4,6 +4,9 @@ package Programming;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+
 import entitys.Player;
 
 
@@ -84,13 +87,22 @@ abstract class Method {
 
 class print extends Method {
 
-	public print() {
+	JTextPane textPane;
+
+	public print(JTextPane textPane) {
 		super(Datatypes.notype,Datatypes.alltypes);
+		this.textPane = textPane;
 	}
 
 	@Override
 	Variable<?> runCode(Variable<?>...parameters) {
-		System.out.println(Interpreter.sysoutin + "print to console:" + parameters[0].getValue());
+		try {
+			textPane.getDocument().insertString(textPane.getDocument().getLength(),parameters[0].getValue() + "\n",
+				null);
+			textPane.setCaretPosition(textPane.getDocument().getLength());
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -105,13 +117,22 @@ class print extends Method {
 
 class printerr extends Method {
 
-	public printerr() {
+	JTextPane textPane;
+
+	public printerr(JTextPane textPane) {
 		super(Datatypes.notype,Datatypes.MY_String);
+		this.textPane = textPane;
 	}
 
 	@Override
 	Variable<?> runCode(Variable<?>...parameters) {
-		System.out.println("error: " + Interpreter.sysoutin + "print to console:" + parameters[0].getValue());
+		try {
+			textPane.getDocument().insertString(textPane.getDocument().getLength(),
+				"error:" + parameters[0].getValue() + "\n",null);
+			textPane.setCaretPosition(textPane.getDocument().getLength());
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -213,11 +234,11 @@ class loopbreak extends Method {
 
 
 
-class getPlayerRotation extends Method {
+class getplayerrotation extends Method {
 
 	Player player;
 
-	public getPlayerRotation(Player player) {
+	public getplayerrotation(Player player) {
 		super(Datatypes.MY_String,Datatypes.notype);
 		this.player = player;
 	}
@@ -236,11 +257,11 @@ class getPlayerRotation extends Method {
 
 
 
-class getPlayerX extends Method {
+class getplayerx extends Method {
 
 	Player player;
 
-	public getPlayerX(Player player) {
+	public getplayerx(Player player) {
 		super(Datatypes.MY_int,Datatypes.notype);
 		this.player = player;
 	}
@@ -259,11 +280,11 @@ class getPlayerX extends Method {
 
 
 
-class getPlayerY extends Method {
+class getplayery extends Method {
 
 	Player player;
 
-	public getPlayerY(Player player) {
+	public getplayery(Player player) {
 		super(Datatypes.MY_int,Datatypes.notype);
 		this.player = player;
 	}
@@ -282,11 +303,11 @@ class getPlayerY extends Method {
 
 
 
-class getBlockActivated extends Method {
+class getblockactivated extends Method {
 
 	Player player;
 
-	public getBlockActivated(Player player) {
+	public getblockactivated(Player player) {
 		super(Datatypes.MY_boolean,Datatypes.notype);
 		this.player = player;
 	}
@@ -305,11 +326,11 @@ class getBlockActivated extends Method {
 
 
 
-class getBlockSolid extends Method {
+class getblocksolid extends Method {
 
 	Player player;
 
-	public getBlockSolid(Player player) {
+	public getblocksolid(Player player) {
 		super(Datatypes.MY_boolean,Datatypes.notype);
 		this.player = player;
 	}
@@ -328,11 +349,11 @@ class getBlockSolid extends Method {
 
 
 
-class Playermove extends Method {
+class playermove extends Method {
 
 	Player player;
 
-	public Playermove(Player player) {
+	public playermove(Player player) {
 		super(Datatypes.notype,Datatypes.MY_int);
 		this.player = player;
 	}
@@ -352,11 +373,11 @@ class Playermove extends Method {
 
 
 
-class changePlayerRotation extends Method {
+class changeplayerrotation extends Method {
 
 	Player player;
 
-	public changePlayerRotation(Player player) {
+	public changeplayerrotation(Player player) {
 		super(Datatypes.notype,Datatypes.MY_String);
 		this.player = player;
 	}
@@ -376,11 +397,11 @@ class changePlayerRotation extends Method {
 
 
 
-class Playerinteract extends Method {
+class playerinteract extends Method {
 
 	Player player;
 
-	public Playerinteract(Player player) {
+	public playerinteract(Player player) {
 		super(Datatypes.notype,Datatypes.notype);
 		this.player = player;
 	}
@@ -427,6 +448,11 @@ class MethodList extends ArrayList<Method> {
 			return super.add(method);
 		}
 		throw new UnsupportetMethodNameExeption(method,"duplicate name ",Interpreter.line);
+	}
+
+	@Override
+	public boolean add(Method e) {
+		throw new RuntimeException();
 	}
 
 	@Override

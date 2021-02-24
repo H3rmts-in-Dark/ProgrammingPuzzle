@@ -3,6 +3,7 @@ package Programming;
 
 import java.util.ArrayList;
 
+import javax.swing.JTextPane;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 
@@ -62,12 +63,13 @@ public class Interpreter {
 		}
 	}
 
-	public static void init(Player player)
-		throws UnsupportetVariableNameExeption,UnsupportetMethodNameExeption,InvalidValueException,WrongTypeException {
+	public static void initmethods(Player player,JTextPane pane) throws UnsupportetMethodNameExeption {
 		methods = new MethodList();
 		variables = new VariableList();
 
-		methods.addMethod(new print());
+		methods.addMethod(new print(pane));
+
+		methods.addMethod(new printerr(pane));
 
 		methods.addMethod(new toString());
 
@@ -77,8 +79,12 @@ public class Interpreter {
 
 		methods.addMethod(new loopbreak());
 
-		methods.addMethod(new Playermove(player));
+		methods.addMethod(new playermove(player));
 
+	}
+
+	private static void initvariables()
+		throws UnsupportetVariableNameExeption,InvalidValueException,WrongTypeException {
 		variables.addVariable(new MY_int("sec") {
 
 			@Override
@@ -87,7 +93,11 @@ public class Interpreter {
 			}
 
 		});
+	}
 
+	public static void clear() throws UnsupportetVariableNameExeption,InvalidValueException,WrongTypeException {
+		variables.clear();
+		initvariables();
 	}
 
 	/**
@@ -197,10 +207,50 @@ public class Interpreter {
 				} else {
 					throw new MethodNotFoundExeption(firs,line);
 				}
-			} else { // Var definition
+			} else { // Var
 				String typestr = StrUtils.first(part,' ');
-				Datatypes type = Datatypes.contains(typestr);
-				if (type != null) {
+				Datatypes type = Datatypes.convert(typestr);
+				if (type == null) { // var redef
+					Variable<?> variable = variables.get(typestr);
+					if (variable == null)
+						throw new InvalidDatatypeExeption(typestr,line);
+
+					System.out.println(sysoutin + "name: " + variable.name);
+					String value = StrUtils.part(part,'=',1);
+					Variable<?> set = variables.get(value);
+					Method met = methods.get(StrUtils.first(value,'('));
+					if (set != null) {
+						value = set.getValue().toString();
+						System.out.println(sysoutin + "value from variable: " + set);
+					} else if (met != null) {
+						System.out.println(sysoutin + "method: " + met);
+						String parameters = StrUtils.fromto(part,'(',')');
+						ArrayList<String> params = StrUtils.parts(parameters,',',true);
+						ArrayList<Object> newparams = new ArrayList<>();
+						if (params.size() != met.getParametersize())
+							throw new MethodParametersExeption(params.size(),met.getParametersize(),line);
+						for (String param : params) {
+							if (param.contains("+") || param.contains("-") || param.contains("*")
+								|| param.contains("/")) {
+								newparams.set(params.indexOf(param),calculate(param));
+							} else if (param.contains("=") || param.contains(">") || param.contains("<")
+								|| param.contains("!")) {
+								newparams.add(params.indexOf(param),booleanate(param));
+							} else if (variables.get(param) != null) {
+								newparams.set(params.indexOf(param),variables.get(param));
+							}
+						}
+						value = met.execute(newparams).getType().toString();
+					} else if (part.contains("+") || part.contains("-") || part.contains("*") || part.contains("/")) {
+						value = calculate(value);
+						System.out.println(sysoutin + "value: " + value);
+					} else if (part.contains("=") || part.contains(">") || part.contains("<") || part.contains("!")) {
+						value = booleanate(value);
+						System.out.println(sysoutin + "value: " + value);
+					} else
+						System.out.println(sysoutin + "value: " + value);
+					variable.changeValue(value);
+				} else {// var definition
 					System.out.println(sysoutin + "datatype: " + type);
 					if (StrUtils.parts(StrUtils.part(part,'=',0),' ',true).size() > 2)
 						throw new VariableDeclarationExeption(part,line);
@@ -259,7 +309,7 @@ public class Interpreter {
 								variable = new MY_double(value,name);
 							break;
 						}
-						variables.add(variable);
+						variables.addVariable(variable);
 					} else {
 						System.out.println(sysoutin + "value: " + "no value");
 						Variable<?> variable = null;
@@ -277,11 +327,10 @@ public class Interpreter {
 								variable = new MY_double(name);
 							break;
 						}
-						variables.add(variable);
+						variables.addVariable(variable);
 					}
+				}
 
-				} else
-					throw new InvalidDatatypeExeption(typestr,line);
 			}
 		}
 		System.out.println(sysoutin + "##################\n");
@@ -587,7 +636,7 @@ public class Interpreter {
 	}
 
 	private static boolean checkname(String name) {
-		return Keywords.contains(name) != null || Datatypes.contains(name) != null || name.contains("+")
+		return Keywords.contains(name) != null || Datatypes.convert(name) != null || name.contains("+")
 			|| name.contains("-") || name.contains("*") || name.contains("/");
 	}
 

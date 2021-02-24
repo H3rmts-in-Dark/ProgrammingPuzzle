@@ -1,9 +1,11 @@
 package logic;
 
+
 import java.util.ArrayList;
 
 import abstractclasses.Task;
 import frame.Frame;
+
 
 public class GameTicker extends Thread implements Constants {
 

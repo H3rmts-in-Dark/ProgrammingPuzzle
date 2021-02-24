@@ -42,7 +42,7 @@ public interface Constants {
 	/**
 	 * Ticks Per Second
 	 */
-	public static final Integer TPS = 60;
+	public static final Integer TPS = 40;
 
 	/**
 	 * Frames Per Second

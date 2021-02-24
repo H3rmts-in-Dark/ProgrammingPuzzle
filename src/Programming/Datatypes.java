@@ -8,15 +8,6 @@ enum Datatypes {
 
 	notype,alltypes,MY_int,MY_String,MY_boolean,MY_double;
 
-	static Datatypes contains(String type) {
-		for (Datatypes datatype : Datatypes.values()) {
-			if (datatype == convert(type)) {
-				return datatype;
-			}
-		}
-		return null;
-	}
-
 	static Datatypes convert(String str) {
 		switch (str) {
 			case "String":
@@ -72,7 +63,7 @@ abstract class Variable<T> {
 			setValue(newvalue);
 	}
 
-	public void setValue(T value) {
+	private void setValue(T value) {
 		this.value = value;
 	}
 
@@ -303,6 +294,11 @@ class VariableList extends ArrayList<Variable<?>> {
 			return super.add(variable);
 		}
 		throw new UnsupportetVariableNameExeption(variable,"duplicate name ",Interpreter.line);
+	}
+
+	@Override
+	public boolean add(Variable<?> e) {
+		throw new RuntimeException();
 	}
 
 	@Override

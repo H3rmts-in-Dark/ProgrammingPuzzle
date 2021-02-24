@@ -139,17 +139,18 @@ public abstract class Entity implements Constants {
 
 	public void startmove(int ticksperimagechange,Rotation rotation) {
 		if (movetask == null || movetask.getEnded())
-			movetask = new MoveEntityTask(ticksperimagechange,this,rotation);
+			movetask = new MoveEntityTask(ticksperimagechange,this,rotation,true);
 	}
 
 	public void move() {
-		while (movetask != null || !movetask.getEnded()) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
+		if (movetask != null)
+			while (!movetask.getEnded()) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+				}
 			}
-		}
-		movetask = new MoveEntityTask(ticksperimagechange,this,rotation);
+		movetask = new MoveEntityTask(ticksperimagechange,this,rotation,false);
 		while (!movetask.getEnded()) {
 			try {
 				Thread.sleep(10);

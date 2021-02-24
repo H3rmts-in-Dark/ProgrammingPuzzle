@@ -40,7 +40,9 @@ public class World implements Constants {
 
 		fillempty();
 
-		player = new Player(new Point(1,1),Rotation.right);
+		player = new Player(new Point(3,1),Rotation.right);
+
+		addEntity(player);
 
 		window = new WorldWindow(this);
 		programmingWindow = new ProgrammingWindow(this);
@@ -183,8 +185,6 @@ public class World implements Constants {
 				break;
 				case Effects:
 					System.out.println("effects gibs noch net");
-				// loadLayer((Layers)layerorRotation,animation,(Tile)tileorEntity,name + (layer
-				// == Layers.Floor ? "" : "/" + animation));
 				break;
 			}
 
