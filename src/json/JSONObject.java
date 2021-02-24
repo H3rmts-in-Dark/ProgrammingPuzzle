@@ -401,7 +401,8 @@ public class JSONObject {
 	 */
 	public JSONObject(String baseName,Locale locale) throws JSONException {
 		this();
-		ResourceBundle bundle = ResourceBundle.getBundle(baseName,locale,Thread.currentThread().getContextClassLoader());
+		ResourceBundle bundle = ResourceBundle.getBundle(baseName,locale,
+			Thread.currentThread().getContextClassLoader());
 
 		// Iterate through the keys in the bundle.
 
@@ -574,7 +575,7 @@ public class JSONObject {
 		if (object.equals(Boolean.FALSE) || (object instanceof String && ((String) object).equalsIgnoreCase("false"))) {
 			return false;
 		} else if (object.equals(Boolean.TRUE)
-				|| (object instanceof String && ((String) object).equalsIgnoreCase("true"))) {
+			|| (object instanceof String && ((String) object).equalsIgnoreCase("true"))) {
 			return true;
 		}
 		throw wrongValueFormatException(key,"Boolean",null);
@@ -1383,7 +1384,7 @@ public class JSONObject {
 		for (final Method method : methods) {
 			final int modifiers = method.getModifiers();
 			if (Modifier.isPublic(modifiers) && !Modifier.isStatic(modifiers) && method.getParameterTypes().length == 0
-					&& !method.isBridge() && method.getReturnType() != Void.TYPE && isValidMethodName(method.getName())) {
+				&& !method.isBridge() && method.getReturnType() != Void.TYPE && isValidMethodName(method.getName())) {
 				final String key = getKeyNameFromMethod(method);
 				if (key != null && !key.isEmpty()) {
 					try {
@@ -2235,11 +2236,11 @@ public class JSONObject {
 				return NULL;
 			}
 			if (object instanceof JSONObject || object instanceof JSONArray || NULL.equals(object)
-					|| object instanceof JSONString || object instanceof Byte || object instanceof Character
-					|| object instanceof Short || object instanceof Integer || object instanceof Long
-					|| object instanceof Boolean || object instanceof Float || object instanceof Double
-					|| object instanceof String || object instanceof BigInteger || object instanceof BigDecimal
-					|| object instanceof Enum) {
+				|| object instanceof JSONString || object instanceof Byte || object instanceof Character
+				|| object instanceof Short || object instanceof Integer || object instanceof Long
+				|| object instanceof Boolean || object instanceof Float || object instanceof Double
+				|| object instanceof String || object instanceof BigInteger || object instanceof BigDecimal
+				|| object instanceof Enum) {
 				return object;
 			}
 
@@ -2257,7 +2258,7 @@ public class JSONObject {
 			Package objectPackage = object.getClass().getPackage();
 			String objectPackageName = objectPackage != null ? objectPackage.getName() : "";
 			if (objectPackageName.startsWith("java.") || objectPackageName.startsWith("javax.")
-					|| object.getClass().getClassLoader() == null) {
+				|| object.getClass().getClassLoader() == null) {
 				return object.toString();
 			}
 			return new JSONObject(object);
@@ -2282,7 +2283,7 @@ public class JSONObject {
 
 	@SuppressWarnings("resource")
 	static final Writer writeValue(Writer writer,Object value,int indentFactor,int indent)
-			throws JSONException,IOException {
+		throws JSONException,IOException {
 		if (value == null || value.equals(null)) {
 			writer.write("null");
 		} else if (value instanceof JSONString) {

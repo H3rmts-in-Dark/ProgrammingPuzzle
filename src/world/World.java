@@ -32,6 +32,7 @@ public class World implements Constants {
 
 	private WorldWindow window;
 
+	@SuppressWarnings("unused")
 	private ProgrammingWindow programmingWindow;
 
 	public World(Integer width,Integer height) {

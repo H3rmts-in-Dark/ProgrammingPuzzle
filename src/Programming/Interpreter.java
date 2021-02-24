@@ -104,7 +104,7 @@ public class Interpreter {
 	 * @param text
 	 * @throws CustomExeption
 	 */
-	@SuppressWarnings({"null","incomplete-switch"})
+	@SuppressWarnings({"incomplete-switch","null"})
 	public static void interpretblock(CustStr text) throws CustomExeption {
 		if (text.val.isBlank()) {
 			text.val = "";

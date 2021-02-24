@@ -359,7 +359,7 @@ class playermove extends Method {
 	}
 
 	@Override
-	Variable<?> runCode(Variable<?>...parameters) throws CustomExeption {
+	Variable<?> runCode(Variable<?>...parameters) {
 		player.move((int) parameters[0].getValue());
 		return null;
 	}

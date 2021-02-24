@@ -1,10 +1,12 @@
 package frame;
 
+
 import java.awt.event.KeyEvent;
 
 import logic.DebuggingWindow;
 import logic.MainControl;
 import world.WorldSelectionWindow;
+
 
 public class UserInputInterpreter {
 
@@ -23,7 +25,7 @@ public class UserInputInterpreter {
 			return;
 		} else if (e.getKeyCode() == 8 || e.getKeyCode() == 127) {
 			try {
-				commandString = commandString.substring(0, commandString.length() - 1);
+				commandString = commandString.substring(0,commandString.length() - 1);
 				// System.out.println(commandString);
 			} catch (StringIndexOutOfBoundsException e2) {
 			}
@@ -36,7 +38,7 @@ public class UserInputInterpreter {
 
 	@SuppressWarnings("unused")
 	private static void commandProcessor(String command) {
-		String prccommand = command.replace("\n", "").toLowerCase();
+		String prccommand = command.replace("\n","").toLowerCase();
 		if (prccommand.equals("debug")) {
 			new DebuggingWindow();
 		} else if (prccommand.equals("select")) {

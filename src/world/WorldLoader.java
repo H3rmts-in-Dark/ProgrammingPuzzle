@@ -57,7 +57,7 @@ public class WorldLoader {
 				break;
 			case "förderband":
 				world.setTile(tile.getInt("x"), tile.getInt("y"),
-						new Förderband(Rotation.converter(tile.getString("rotation")), tile.getInt("speed"),
+						new Förderband(Rotation.convert(tile.getString("rotation")), tile.getInt("speed"),
 								Signalcolor.converter(tile.getString("signalcolor")),
 								Cabletype.convert(tile.getString("cabletype"))));
 				break;

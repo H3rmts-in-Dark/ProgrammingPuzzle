@@ -7,8 +7,8 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.Map.Entry;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import abstractclasses.CustomWindow;
