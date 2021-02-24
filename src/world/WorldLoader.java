@@ -43,28 +43,28 @@ public class WorldLoader {
 			case "computer":
 				world.setTile(tile.getInt("x"), tile.getInt("y"),
 						new Computer(Signalcolor.converter(tile.getString("signalcolor")),
-								Cabletype.converter(tile.getString("cabletype"))));
+								Cabletype.convert(tile.getString("cabletype"))));
 				break;
 			case "default":
 				world.setTile(tile.getInt("x"), tile.getInt("y"),
 						new Floor(Signalcolor.converter(tile.getString("signalcolor")),
-								Cabletype.converter(tile.getString("cabletype"))));
+								Cabletype.convert(tile.getString("cabletype"))));
 				break;
 			case "gewichtssensor":
 				world.setTile(tile.getInt("x"), tile.getInt("y"),
 						new GewichtsSensor(Signalcolor.converter(tile.getString("signalcolor")),
-								Cabletype.converter(tile.getString("cabletype"))));
+								Cabletype.convert(tile.getString("cabletype"))));
 				break;
 			case "förderband":
 				world.setTile(tile.getInt("x"), tile.getInt("y"),
 						new Förderband(Rotation.converter(tile.getString("rotation")), tile.getInt("speed"),
 								Signalcolor.converter(tile.getString("signalcolor")),
-								Cabletype.converter(tile.getString("cabletype"))));
+								Cabletype.convert(tile.getString("cabletype"))));
 				break;
 			case "lampe":
 				world.setTile(tile.getInt("x"), tile.getInt("y"),
 						new Lampe(Signalcolor.converter(tile.getString("signalcolor")),
-								Cabletype.converter(tile.getString("cabletype"))));
+								Cabletype.convert(tile.getString("cabletype"))));
 				break;
 			case "tonne":
 				world.setTile(tile.getInt("x"), tile.getInt("y"), new Tonne());
