@@ -1,4 +1,4 @@
-package libraries.org.json;
+package json;
 
 import java.io.IOException;
 import java.util.Collection;

@@ -1,8 +1,20 @@
 /Programming/
 /abstractclasses/
+<<<<<<< HEAD
 /start/
 /logic/
 /tasks/
 /world/
 /entitys/
 /frame/
+=======
+/entitys/
+/frame/
+/json/
+/logic/
+/start/
+/tasks/
+/tiles/
+/world/
+/Enums/
+>>>>>>> bc2303dfecb47db16e83bbda4711bee48b06074f

@@ -57,24 +57,27 @@
         const tileoptions = [null, "computer", "default", "förderband", "gewichtssensor", "lampe", "tonne"]
         const signalcolors = [null, "red", "green", "blue"]
         const rotations = [null, "up", "down", "left", "right"]
+        const cabletypes = ["notype", "n", "o", "s", "w", "no", "ns", "nw", "os", "ow", "sw", "nos", "now", "nsw", "osw", "nosw"]
         var world = {}
     </script>
 
     <body style="display: flex; background-color: powderblue;">
         <span id="worldcontainer"></span>
-        <span style="margin-left: 10px; position:relative">
+        <span style="margin-left: 8px; margin-bottom: 8px; position:relative">
             <div id="tileeditor" style=" visibility: hidden">
                 <pre style="font-family: 'Arial';" id="position">Nothing selected</pre>
                 <pre>Tile: <select id="tileoptions" name="tile" onchange="formeventlistenerfunction()"></select></pre>
                 <pre>Signalcolor: <select id="signalcolors" name="signalcolor"></select></pre>
+                <pre>Cabletype: <select id="cabletypes" name="cabletype"></select></pre>
                 <pre>Rotation: <select id="rotations" name="rotation"></select></pre>
                 <pre>Speed: <input id="speed" style="width: 25px;"></pre>
                 <button onclick="buttonSet()">Set</button>
             </div>
             <div style="position: absolute; bottom: 0;">
+                <pre><button onclick="gCC()" style="font-size: 11px;">Kabelverbindungen Generieren</button></pre>
                 <pre><button onclick="switchTileSeperation()">Tileabstand</button></pre>
                 <pre>Name: <textarea id="name" rows="1" style="width: 50%;">Name</textarea></pre>
-                <pre><button onclick="exportWorld(document.getElementById('name').value)">Export</button><button
+                <pre><button onclick="exportWorld(document.getElementById('name').value)">Export</button> <button
                         onclick="importWorld(document.getElementById('port').value)">Import</button></pre>
             </div>
         </span>
@@ -85,24 +88,26 @@
 
     <script>
         class World {
-            constructor(name, height, width, tiles, entities) {
+            constructor(name, height, width, tiles, entities, description) {
                 this.name = name
                 this.created = new Date().toLocaleString()
                 this.height = height
                 this.width = width
                 this.tiles = tiles
                 this.entities = entities
+                this.description = description
             }
         }
 
         class Tile {
-            constructor(type, signalcolor, rotation, speed, x, y) {
+            constructor(type, signalcolor, rotation, speed, x, y, cabletype) {
                 this.type = type
                 this.signalcolor = signalcolor
                 this.rotation = rotation
                 this.speed = speed
                 this.x = x
                 this.y = y
+                this.cabletype = cabletype
             }
         }
 
@@ -120,20 +125,21 @@
         }
 
         const formeventlistenerfunction = function () {
+            // Zeigt oder Verbirgt einzelne Formelemente
             switch (document.getElementById("tileoptions").value) {
                 case "null":
                 case "tonne":
-                    setVisibilities(false, false, false)
+                    setVisibilities(true, false, false, true)
                     break
                 case "computer":
                 case "default":
                 case "gewichtssensor":
                 case "lampe":
-                    setVisibilities(true, false, false)
+                    setVisibilities(true, false, false, true)
                     break
                 case "förderband":
                 default:
-                    setVisibilities(true, true, true)
+                    setVisibilities(true, true, true, true)
                     break
             }
         }
@@ -178,11 +184,13 @@
             if ((loadTile = getTile(x, y)) != null) {
                 document.getElementById("tileoptions").value = loadTile.type
                 document.getElementById("signalcolors").value = loadTile.signalcolor
+                document.getElementById("cabletypes").value = loadTile.cabletype
                 document.getElementById("rotations").value = loadTile.rotation
                 document.getElementById("speed").value = loadTile.speed
             } else {
                 document.getElementById("tileoptions").value = null
                 document.getElementById("signalcolors").value = null
+                document.getElementById("cabletypes").value = "notype"
                 document.getElementById("rotations").value = null
                 document.getElementById("speed").value = ""
             }
@@ -223,7 +231,7 @@
         }
 
         function getTile(x, y) {
-            for (i = 0; i < world.tiles.length; i++)
+            for (var i = 0; i < world.tiles.length; i++)
                 if (world.tiles[i].x == x && world.tiles[i].y == y)
                     return world.tiles[i]
             return null
@@ -274,10 +282,20 @@
             }
         }
 
+        function addCabletypeOptions() {
+            for (i = 0; i < cabletypes.length; i++) {
+                var option = document.createElement("option")
+                option.value = cabletypes[i]
+                option.innerHTML = cabletypes[i]
+                document.getElementById("cabletypes").append(option)
+            }
+        }
+
         function buttonSet() {
             var tile = JSON.parse(document.getElementById("position").innerHTML)
             tile.type = document.getElementById("tileoptions").value
             tile.signalcolor = document.getElementById("signalcolors").value
+            tile.cabletype = document.getElementById("cabletypes").value
             tile.rotation = document.getElementById("rotations").value
             tile.speed = document.getElementById("speed").value
             setTile(tile)
@@ -292,15 +310,41 @@
                     imgs[i].style.padding = "1px"
         }
 
-        function setVisibilities(signalcolorsetter, rotationsetter, speedsetter) {
+        function setVisibilities(signalcolorsetter, rotationsetter, speedsetter, cablesetter) {
             document.getElementById("signalcolors").parentElement.style.visibility = (signalcolorsetter) ? "visible" : "hidden"
+            document.getElementById("cabletypes").parentElement.style.visibility = (cablesetter) ? "visible" : "hidden"
             document.getElementById("rotations").parentElement.style.visibility = (rotationsetter) ? "visible" : "hidden"
             document.getElementById("speed").parentElement.style.visibility = (speedsetter) ? "visible" : "hidden"
+        }
+
+        function gCC() { generateCableConnections() }
+        function generateCableConnections() {
+            for (var i = 0; i < world.tiles.length; i++) {
+                tile = world.tiles[i]
+                if (tile.signalcolor == null) continue
+                if (!tile.cabletype == "notype") continue
+
+                zwsps = ""
+                if (getTile(tile.x, tile.y - 1) != null)
+                    if (getTile(tile.x, tile.y - 1).signalcolor == tile.signalcolor)
+                        zwsps = zwsps.concat('n')
+                if (getTile(tile.x + 1, tile.y) != null)
+                    if (getTile(tile.x + 1, tile.y).signalcolor == tile.signalcolor)
+                        zwsps = zwsps.concat('o')
+                if (getTile(tile.x, tile.y + 1) != null)
+                    if (getTile(tile.x, tile.y + 1).signalcolor == tile.signalcolor)
+                        zwsps = zwsps.concat('s')
+                if (getTile(tile.x - 1, tile.y) != null)
+                    if (getTile(tile.x - 1, tile.y).signalcolor == tile.signalcolor)
+                        zwsps = zwsps.concat('w')
+                tile.cabletype = zwsps
+            }
         }
 
         addSignalcolorOptions()
         addTileOptions()
         addRotationOptions()
+        addCabletypeOptions()
         createWorld(10, 10)
     </script>
 

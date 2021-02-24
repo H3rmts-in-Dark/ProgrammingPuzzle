@@ -12,9 +12,9 @@ import abstractclasses.Entity;
 import abstractclasses.Tile;
 import world.World;
 
-public class Entitysensor extends Tile {
+public class GewichtsSensor extends Tile {
 
-	public Entitysensor(Signalcolor signalcolor, Cabletype cabletype) {
+	public GewichtsSensor(Signalcolor signalcolor, Cabletype cabletype) {
 		super(Height.FLOORHEIGHT, 0, 0, signalcolor, cabletype);
 	}
 
