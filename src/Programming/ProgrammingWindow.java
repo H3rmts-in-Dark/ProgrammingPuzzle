@@ -88,7 +88,7 @@ public class ProgrammingWindow extends CustomWindow {
 	/* ================================================================= */
 
 	public ProgrammingWindow(World world) {
-		super(700,700,new Point(40,40),"Programming Window",0,false);
+		super(700,700,new Point(40,40),"Programming Window",1,false);
 		this.world = world;
 
 		GenerateProgrammingPane();

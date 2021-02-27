@@ -114,7 +114,6 @@ public class WorldWindow extends CustomWindow {
 		this.zoom = 1f;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void mousePressed(Point point) {
 		Tile tile = getTile(point);

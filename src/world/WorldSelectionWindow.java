@@ -1,5 +1,6 @@
 package world;
 
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
@@ -21,6 +22,8 @@ import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
 
 import abstractclasses.CustomWindow;
+import logic.MainControl;
+
 
 public class WorldSelectionWindow extends CustomWindow {
 
@@ -29,32 +32,32 @@ public class WorldSelectionWindow extends CustomWindow {
 	private ArrayList<Tab> Tabs;
 
 	public WorldSelectionWindow() {
-		super(600, 500, new Point(20, 20), "WorldSelectionWindow", 0, false);
+		super(600,500,new Point(20,20),"WorldSelectionWindow",1,false);
 
 		setResizable(false);
 
 		TabbedPane = new JTabbedPane();
-		TabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
+		TabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,2,true));
 		TabbedPane.setToolTipText("");
 
 		Tabs = new ArrayList<>();
 
 		Tab tab = new Tab("Factory");
 		Tabs.add(tab);
-		TabbedPane.addTab(tab.name, tab);
+		TabbedPane.addTab(tab.name,tab);
 
 		tab = new Tab("Laboratory");
 		Tabs.add(tab);
-		TabbedPane.addTab(tab.name, tab);
+		TabbedPane.addTab(tab.name,tab);
 
 		GroupLayout jInternalFrame1Layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(jInternalFrame1Layout);
 		jInternalFrame1Layout
-				.setHorizontalGroup(jInternalFrame1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(TabbedPane, GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE));
+			.setHorizontalGroup(jInternalFrame1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(TabbedPane,GroupLayout.DEFAULT_SIZE,566,Short.MAX_VALUE));
 
 		jInternalFrame1Layout.setVerticalGroup(jInternalFrame1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(TabbedPane, GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE));
+			.addComponent(TabbedPane,GroupLayout.DEFAULT_SIZE,566,Short.MAX_VALUE));
 	}
 
 	@Override
@@ -63,6 +66,8 @@ public class WorldSelectionWindow extends CustomWindow {
 	}
 
 }
+
+
 
 class Tab extends JPanel {
 
@@ -92,19 +97,25 @@ class Tab extends JPanel {
 		this.name = name;
 
 		worldHandler = new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Click");
 				try {
-					WorldLoader.getWorld(name + "/" + ((AbstractButton) e.getSource()).getText());
+					try {
+						MainControl.deleteWorld();
+					} catch (NullPointerException e2) {
+					}
+					MainControl.setWorld(WorldLoader.getWorld(name + "/" + ((AbstractButton) e.getSource()).getText()));
 				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
+					System.err.println(e1.getMessage());
 				}
 			}
+
 		};
 
 		nameLabel = new JLabel(name);
-		nameLabel.setFont(new Font("Tahoma", 0, 18));
+		nameLabel.setFont(new Font("Tahoma",0,18));
 		nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		World1decription = new JTextArea("");
@@ -142,97 +153,89 @@ class Tab extends JPanel {
 		GroupLayout jPanel5Layout = new GroupLayout(this);
 		setLayout(jPanel5Layout);
 		jPanel5Layout.setHorizontalGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel5Layout.createSequentialGroup().addContainerGap().addGroup(jPanel5Layout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(nameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGroup(jPanel5Layout.createSequentialGroup()
-								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-										.addGroup(jPanel5Layout.createSequentialGroup().addGap(18, 18, 18)
-												.addGroup(jPanel5Layout
-														.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-														.addComponent(World1, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(World1decription, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE))
-												.addGap(18, 18, 18)
-												.addGroup(jPanel5Layout
-														.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-														.addComponent(World2, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(World2decription, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE))
-												.addGap(18, 18, 18)
-												.addGroup(jPanel5Layout
-														.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-														.addComponent(World3, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(World3decription, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE))
-												.addGap(18, 18, 18)
-												.addGroup(jPanel5Layout
-														.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-														.addComponent(World4, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(World4decription, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE))
-												.addGap(18, 18, 18))
-										.addGroup(jPanel5Layout.createSequentialGroup().addGap(18, 18, 18)
-												.addGroup(jPanel5Layout
-														.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-														.addComponent(World5, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(World5decription, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE))
-												.addGap(18, 18, 18)
-												.addGroup(jPanel5Layout
-														.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-														.addComponent(World6, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(World6decription, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE))
-												.addGap(18, 18, 18)
-												.addGroup(jPanel5Layout
-														.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-														.addComponent(World7decription, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(World7, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE))
-												.addGap(18, 18, 18)
-												.addGroup(jPanel5Layout
-														.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-														.addComponent(World8decription, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(World8, GroupLayout.PREFERRED_SIZE, 120,
-																GroupLayout.PREFERRED_SIZE))))
-								.addContainerGap()))));
+			.addGroup(jPanel5Layout.createSequentialGroup().addContainerGap()
+				.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(nameLabel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)
+					.addGroup(jPanel5Layout.createSequentialGroup().addGroup(
+						jPanel5Layout
+							.createParallelGroup(
+								GroupLayout.Alignment.LEADING)
+							.addGroup(jPanel5Layout.createSequentialGroup().addGap(18,18,18)
+								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+									.addComponent(World1,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+									.addComponent(World1decription,GroupLayout.PREFERRED_SIZE,120,
+										GroupLayout.PREFERRED_SIZE))
+								.addGap(18,18,18)
+								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+									.addComponent(World2,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+									.addComponent(World2decription,GroupLayout.PREFERRED_SIZE,120,
+										GroupLayout.PREFERRED_SIZE))
+								.addGap(18,18,18)
+								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+									.addComponent(World3,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+									.addComponent(World3decription,GroupLayout.PREFERRED_SIZE,120,
+										GroupLayout.PREFERRED_SIZE))
+								.addGap(18,18,18)
+								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,
+									false)
+									.addComponent(World4,GroupLayout.PREFERRED_SIZE,120,
+										GroupLayout.PREFERRED_SIZE)
+									.addComponent(World4decription,GroupLayout.PREFERRED_SIZE,120,
+										GroupLayout.PREFERRED_SIZE))
+								.addGap(18,18,18))
+							.addGroup(jPanel5Layout.createSequentialGroup().addGap(18,18,18)
+								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+									.addComponent(World5,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+									.addComponent(World5decription,GroupLayout.PREFERRED_SIZE,120,
+										GroupLayout.PREFERRED_SIZE))
+								.addGap(18,18,18)
+								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+									.addComponent(World6,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+									.addComponent(World6decription,GroupLayout.PREFERRED_SIZE,120,
+										GroupLayout.PREFERRED_SIZE))
+								.addGap(18,18,18)
+								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+									.addComponent(World7decription,GroupLayout.PREFERRED_SIZE,120,
+										GroupLayout.PREFERRED_SIZE)
+									.addComponent(World7,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE))
+								.addGap(18,18,18)
+								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+									.addComponent(World8decription,GroupLayout.PREFERRED_SIZE,120,
+										GroupLayout.PREFERRED_SIZE)
+									.addComponent(World8,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE))))
+						.addContainerGap()))));
 
-		jPanel5Layout.setVerticalGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel5Layout.createSequentialGroup().addContainerGap()
-						.addComponent(nameLabel, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+		jPanel5Layout
+			.setVerticalGroup(
+				jPanel5Layout
+					.createParallelGroup(
+						GroupLayout.Alignment.LEADING)
+					.addGroup(jPanel5Layout.createSequentialGroup().addContainerGap()
+						.addComponent(nameLabel,GroupLayout.PREFERRED_SIZE,30,GroupLayout.PREFERRED_SIZE)
 						.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(World1, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-								.addComponent(World2, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-								.addComponent(World3, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-								.addComponent(World4, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+							.addComponent(World1,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+							.addComponent(World2,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+							.addComponent(World3,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+							.addComponent(World4,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE))
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-								.addComponent(World1decription, GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE)
-								.addComponent(World2decription, GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE)
-								.addComponent(World3decription, GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE)
-								.addComponent(World4decription, GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE))
-						.addGap(18, 18, 18)
+						.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.TRAILING,false)
+							.addComponent(World1decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+							.addComponent(World2decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+							.addComponent(World3decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+							.addComponent(World4decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE))
+						.addGap(18,18,18)
 						.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(World5, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-								.addComponent(World6, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-								.addComponent(World7, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-								.addComponent(World8, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+							.addComponent(World5,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+							.addComponent(World6,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+							.addComponent(World7,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+							.addComponent(World8,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE))
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE, false)
-								.addComponent(World5decription, GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE)
-								.addComponent(World6decription, GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE)
-								.addComponent(World7decription, GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE)
-								.addComponent(World8decription, GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE))
-						.addContainerGap(15, Short.MAX_VALUE)));
+						.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE,false)
+							.addComponent(World5decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+							.addComponent(World6decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+							.addComponent(World7decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+							.addComponent(World8decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE))
+						.addContainerGap(15,Short.MAX_VALUE)));
 	}
 
 }

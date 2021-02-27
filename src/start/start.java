@@ -4,6 +4,7 @@ package start;
 import javax.swing.SwingUtilities;
 
 import frame.Frame;
+import logic.DebuggingWindow;
 import logic.MainControl;
 
 
@@ -25,6 +26,7 @@ public class start {
 				MainControl.start();
 				Frame.getFrame().setVisible(true);
 				MainControl.createWorldselectionWindow();
+				new DebuggingWindow();
 			}
 
 		});

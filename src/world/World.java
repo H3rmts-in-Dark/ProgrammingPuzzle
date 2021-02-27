@@ -41,7 +41,7 @@ public class World implements Constants {
 
 		fillempty();
 
-		player = new Player(new Point(3,1),Rotation.right);
+		player = new Player(new Point(1,1),Rotation.right);
 
 		addEntity(player);
 
@@ -108,6 +108,12 @@ public class World implements Constants {
 		for (int x = 0; x < getWidth(); x++)
 			for (int y = 0; y < getHeight(); y++)
 				setTile(x,y,new Floor(Signalcolor.nocolor,Cabletype.notype));
+	}
+
+	public void delete() {
+		for (int x = 0; x < getWidth(); x++)
+			for (int y = 0; y < getHeight(); y++)
+				getTile(x,y).delete();
 	}
 
 	/*
