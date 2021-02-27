@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyVetoException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -42,11 +43,11 @@ public class WorldSelectionWindow extends CustomWindow {
 
 		Tabs = new ArrayList<>();
 
-		Tab tab = new Tab("Factory");
+		Tab tab = new Tab("Factory",this);
 		Tabs.add(tab);
 		TabbedPane.addTab(tab.name,tab);
 
-		tab = new Tab("Laboratory");
+		tab = new Tab("Laboratory",this);
 		Tabs.add(tab);
 		TabbedPane.addTab(tab.name,tab);
 
@@ -92,7 +93,7 @@ class Tab extends JPanel {
 	JTextArea World8decription;
 	ActionListener worldHandler;
 
-	public Tab(String name) {
+	public Tab(String name,WorldSelectionWindow window) {
 
 		this.name = name;
 
@@ -107,7 +108,8 @@ class Tab extends JPanel {
 					} catch (NullPointerException e2) {
 					}
 					MainControl.setWorld(WorldLoader.getWorld(name + "/" + ((AbstractButton) e.getSource()).getText()));
-				} catch (FileNotFoundException e1) {
+					window.setIcon(true);
+				} catch (FileNotFoundException | PropertyVetoException e1) {
 					System.err.println(e1.getMessage());
 				}
 			}

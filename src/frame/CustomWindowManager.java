@@ -1,6 +1,7 @@
 package frame;
 
 
+import java.awt.Component;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,6 @@ import javax.swing.JLayeredPane;
 
 import abstractclasses.CustomWindow;
 import logic.Constants;
-import logic.Debugger;
 
 
 public class CustomWindowManager extends JLayeredPane implements Constants {
@@ -23,6 +23,7 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 		desktops = new HashMap<>();
 
 		setBounds(rectangle.x,rectangle.y,rectangle.width,rectangle.height);
+		setOpaque(false);
 
 		desktops.put(0,new JDesktopPane());
 		desktops.put(1,new JDesktopPane());
@@ -43,18 +44,16 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 	}
 
 	public void addWindow(int layer,CustomWindow window) {
-		desktops.get(layer).add(window);
-	}
-
-	public void removeWindow(int layer,CustomWindow Window) {
-		desktops.get(layer).remove(Window);
-		Debugger.removeWindow(Window);
+		desktops.get(1).add(window);
 	}
 
 	public ArrayList<CustomWindow> getWindows() {
 		var windows = new ArrayList<CustomWindow>();
 		for (JDesktopPane dp : desktops.values()) {
-			windows.addAll(Arrays.asList((Arrays.asList(dp.getComponents()).toArray(new CustomWindow[0]))));
+			for (Component c : dp.getComponents()) {
+				if (c instanceof CustomWindow)
+					windows.add((CustomWindow) c);
+			}
 		}
 		return windows;
 	}

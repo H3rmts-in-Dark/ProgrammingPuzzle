@@ -29,7 +29,7 @@ public class DescriptionEntityWindow extends CustomWindow {
 		Graphics2D g2 = image.createGraphics();
 		g2.setFont(new Font("Default",Font.BOLD,15));
 		g2.setColor(Color.WHITE);
-		int y = 2;
+		int y = 20;
 		var res = new LinkedHashMap<String,String>();
 		res.put("",entity.getClass().getSimpleName());
 		res.put("Height",String.valueOf(Height.getint(entity.getHeight())));
@@ -38,7 +38,8 @@ public class DescriptionEntityWindow extends CustomWindow {
 		res.put("Rotation",entity.getRotation().toString());
 		entity.getdata(res);
 		for (Entry<String,String> data : res.entrySet()) {
-			g2.drawString(((data.getKey() != "") ? (data.getKey() + ":") : "") + data.getValue(),10,y += 15);
+			g2.drawString(((data.getKey() != "") ? (data.getKey() + ":") : "") + data.getValue(),10,y);
+			y += data.getKey() == "" ? 25 : 15;
 		}
 		g2.dispose();
 		return image;

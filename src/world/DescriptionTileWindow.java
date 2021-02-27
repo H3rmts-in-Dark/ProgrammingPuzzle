@@ -29,9 +29,9 @@ public class DescriptionTileWindow extends CustomWindow {
 		Graphics2D g2 = image.createGraphics();
 		g2.setFont(new Font("Default",Font.BOLD,15));
 		g2.setColor(Color.WHITE);
-		int y = 2;
+		int y = 20;
 		var res = new LinkedHashMap<String,String>();
-		res.put("",tile.getClass().getSimpleName());
+		res.put("",tile.getClass().getSimpleName() + "\n");
 		res.put("Height",String.valueOf(Height.getint(tile.getHeight())));
 		res.put("Position","x:" + tile.getPosition().x + " y:" + tile.getPosition().y);
 		res.put("Rotation",tile.getRotation().toString());
@@ -40,7 +40,8 @@ public class DescriptionTileWindow extends CustomWindow {
 		res.put("Counter",tile.getActualanimationcounter().toString());
 		tile.getdata(res);
 		for (Entry<String,String> data : res.entrySet()) {
-			g2.drawString(((data.getKey() != "") ? (data.getKey() + ":") : "") + data.getValue(),10,y += 15);
+			g2.drawString(((data.getKey() != "") ? (data.getKey() + ":") : "") + data.getValue(),10,y);
+			y += data.getKey() == "" ? 25 : 15;
 		}
 		g2.dispose();
 		return image;

@@ -7,6 +7,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -17,6 +19,7 @@ import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.BoundedRangeModel;
 import javax.swing.GroupLayout;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -29,12 +32,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JPopupMenu.Separator;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditEvent;
@@ -45,6 +51,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
@@ -70,7 +79,6 @@ public class ProgrammingWindow extends CustomWindow {
 	private JMenuItem MenuBarPreferencesItem1;
 	private JCheckBoxMenuItem MenuBarPreferencesItem2;
 	private JCheckBoxMenuItem MenuBarPreferencesItem3;
-	private JMenuItem MenuBarOtherItem1;
 	private JMenuItem MenuBarFileItem1;
 	private JMenuItem MenuBarFileItem3;
 	private JMenuItem MenuBarFileItem4;
@@ -83,12 +91,19 @@ public class ProgrammingWindow extends CustomWindow {
 	private JLabel OutputLabel;
 	private JButton Run;
 	private JButton Stop;
-	private JScrollPane OutputTextPaneScrollPane;
+	private JTabbedPane OutputTabbedPane;
+	private JScrollPane OutputTextfPaneScrollPane;
 	private JTextPane OutputTextPane;
+	private JScrollPane ConsoleTextfPaneScrollPane;
+	private JTextPane ConsoleTextPane;
 	/* ================================================================= */
 
+	private Thread interpretter;
+
+	public static StyleContext styleConstants;
+
 	public ProgrammingWindow(World world) {
-		super(700,700,new Point(40,40),"Programming Window",1,false);
+		super(700,700,new Point(400,40),"Programming Window",1,false);
 		this.world = world;
 
 		GenerateProgrammingPane();
@@ -105,10 +120,10 @@ public class ProgrammingWindow extends CustomWindow {
 			.addGroup(jInternalFrame1Layout.createSequentialGroup()
 				.addComponent(TabbedPane,GroupLayout.PREFERRED_SIZE,457,GroupLayout.PREFERRED_SIZE)
 				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-				.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)));
+				.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,300,GroupLayout.PREFERRED_SIZE)));
 
 		try {
-			Interpreter.initmethods(world.getPlayer(),OutputTextPane);
+			Interpreter.initmethods(world.getPlayer(),OutputTextPane,ConsoleTextPane);
 			Interpreter.clear();
 		} catch (UnsupportetVariableNameExeption | UnsupportetMethodNameExeption | InvalidValueException
 			| WrongTypeException e) {
@@ -130,7 +145,6 @@ public class ProgrammingWindow extends CustomWindow {
 	private void GenerateProgrammingPane() {
 		TabbedPane = new JTabbedPane();
 		TabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,2,true));
-		TabbedPane.setToolTipText("");
 
 		Tabs = new ArrayList<>();
 
@@ -149,12 +163,25 @@ public class ProgrammingWindow extends CustomWindow {
 		Stop.setFont(new Font("Arial",1,10));
 		addListener(Stop);
 
+		OutputTabbedPane = new JTabbedPane();
+		OutputTabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
+
 		OutputTextPane = new JTextPane();
 		OutputTextPane.setEditable(false);
+		OutputTextPane.setOpaque(true);
 		OutputTextPane.setMargin(new Insets(5,5,5,5));
 		OutputTextPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
 
-		OutputTextPaneScrollPane = new JScrollPane(OutputTextPane);
+		ConsoleTextPane = new JTextPane();
+		ConsoleTextPane.setEditable(false);
+		ConsoleTextPane.setMargin(new Insets(5,5,5,5));
+		ConsoleTextPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
+
+		OutputTextfPaneScrollPane = new JScrollPane(OutputTextPane);
+		OutputTabbedPane.addTab("Output",OutputTextfPaneScrollPane);
+
+		ConsoleTextfPaneScrollPane = new JScrollPane(ConsoleTextPane);
+		OutputTabbedPane.addTab("Compiler",ConsoleTextfPaneScrollPane);
 
 		OutputLabel = new JLabel();
 		OutputLabel.setFont(new Font("Arial",1,16));
@@ -167,26 +194,43 @@ public class ProgrammingWindow extends CustomWindow {
 		OutputPanel.setLayout(OutputPanelLayout);
 
 		OutputPanelLayout.setHorizontalGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-			.addGroup(OutputPanelLayout.createSequentialGroup().addContainerGap().addGroup(OutputPanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,82,GroupLayout.PREFERRED_SIZE)
-				.addGroup(OutputPanelLayout.createSequentialGroup()
-					.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(Run,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE)
-						.addComponent(Stop,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(OutputTextPaneScrollPane)))
+			.addGroup(OutputPanelLayout.createSequentialGroup().addContainerGap()
+				.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,82,GroupLayout.PREFERRED_SIZE)
+					.addGroup(OutputPanelLayout.createSequentialGroup()
+						.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+							.addComponent(Run,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE)
+							.addComponent(Stop,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE))
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(OutputTabbedPane)))
 				.addContainerGap()));
 
-		OutputPanelLayout.setVerticalGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-			.addGroup(OutputPanelLayout.createSequentialGroup()
-				.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,22,GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-				.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addGroup(OutputPanelLayout.createSequentialGroup().addComponent(Run)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(Stop)
-						.addGap(0,123,Short.MAX_VALUE))
-					.addComponent(OutputTextPaneScrollPane))
-				.addContainerGap()));
+		OutputPanelLayout.setVerticalGroup(
+			OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(OutputPanelLayout
+				.createParallelGroup().addGroup(OutputPanelLayout.createSequentialGroup()
+
+					.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,22,GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					//
+					.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addGroup(OutputPanelLayout.createSequentialGroup().addComponent(Run)
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(Stop)
+							.addGap(0,123,Short.MAX_VALUE))))
+				.addGroup(
+					OutputPanelLayout.createSequentialGroup().addGap(5).addComponent(OutputTabbedPane).addGap(5))));
+
+	}
+
+	static {
+		styleConstants = new StyleContext();
+		final Style normal = styleConstants.addStyle("normal",null);
+		StyleConstants.setForeground(normal,Color.BLACK);
+		StyleConstants.setFontSize(normal,20);
+		final Style error = styleConstants.addStyle("error",null);
+		StyleConstants.setForeground(error,Color.RED);
+		StyleConstants.setFontSize(error,20);
+		final Style code = styleConstants.addStyle("code",null);
+		StyleConstants.setForeground(code,Color.BLACK);
+		StyleConstants.setFontSize(code,20);
 	}
 
 	public void GenerateMenuBar(Actionlist actions) {
@@ -261,15 +305,11 @@ public class ProgrammingWindow extends CustomWindow {
 		MenuBarOther = new JMenu();
 		MenuBarOther.setText("Other");
 
-		MenuBarOtherItem1 = new JMenuItem("Run");
-		addListener(MenuBarOtherItem1);
-		MenuBarOther.add(MenuBarOtherItem1);
-
 		MenuBarOtherItem2 = new JMenuItem("Stop");
 		addListener(MenuBarOtherItem2);
 		MenuBarOther.add(MenuBarOtherItem2);
 
-		actions.add("Interpret",MenuBarOther);
+		actions.add("Run",MenuBarOther);
 
 		MenuBarOther.add(new Separator());
 
@@ -288,6 +328,14 @@ public class ProgrammingWindow extends CustomWindow {
 
 	public static void addListener(AbstractButton button) {
 		button.addActionListener(new Listener());
+	}
+
+	public Thread getInterpretter() {
+		return interpretter;
+	}
+
+	public void setInterpretter(Thread interpretter) {
+		this.interpretter = interpretter;
 	}
 
 }
@@ -319,27 +367,37 @@ class Tab extends JPanel {
 	private JScrollPane LinecounterPaneScrollPane;
 	private JTextPane LinecounterPane;
 
+	Synchronizer synchronizer;
+
 	public Tab(ProgrammingWindow window) {
 
 		ProgrammingPane = new JTextPane();
 		ProgrammingPane.setEditable(true);
+		ProgrammingPane.setFont(new Font("sansserif",0,20));
 		ProgrammingPane.setMargin(new Insets(5,5,5,5));
 
 		LinecounterPane = new JTextPane();
 		LinecounterPane.setEditable(false);
+		LinecounterPane.setFont(new Font("sansserif",0,20));
 		LinecounterPane.setMargin(new Insets(5,5,5,5));
 
 		setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
 
 		ProgrammingPaneScrollPane = new JScrollPane(ProgrammingPane);
+		LinecounterPaneScrollPane = new JScrollPane(LinecounterPane);
+
+		synchronizer = new Synchronizer(LinecounterPaneScrollPane);
+
 		ProgrammingPaneScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		ProgrammingPaneScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		ProgrammingPaneScrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
+		ProgrammingPaneScrollPane.getVerticalScrollBar().addAdjustmentListener(synchronizer);
 
-		LinecounterPaneScrollPane = new JScrollPane(LinecounterPane);
+		LinecounterPaneScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		LinecounterPaneScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		LinecounterPaneScrollPane.setViewportView(LinecounterPane);
 		LinecounterPaneScrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
+		// LinecounterPaneScrollPane.getVerticalScrollBar().addAdjustmentListener(synchronizer);
+		// LinecounterPaneScrollPane.getVerticalScrollBar().setModel(ProgrammingPaneScrollPane.getVerticalScrollBar().getModel());
 
 		GroupLayout ProgrammingPanelLayout = new GroupLayout(this);
 		ProgrammingPanelLayout.setHorizontalGroup(ProgrammingPanelLayout
@@ -364,7 +422,7 @@ class Tab extends JPanel {
 
 		UndoAction undoAction = new UndoAction(manager);
 		RedoAction redoAction = new RedoAction(manager);
-		InterpretAction interpretAction = new InterpretAction(document);
+		InterpretAction interpretAction = new InterpretAction(document,window);
 
 		redoAction.setUndoAction(undoAction);
 		undoAction.setRedoAction(redoAction);
@@ -403,7 +461,8 @@ class Tab extends JPanel {
 			@Override
 			public void replace(FilterBypass fb,int offset,int length,String text,AttributeSet attrs)
 				throws BadLocationException {
-				super.insertString(fb,offset,text.replace("\t","   "),attrs);
+				super.insertString(fb,offset,text.replace("\t","   "),
+					ProgrammingWindow.styleConstants.getStyle("code"));
 			}
 
 		});
@@ -459,11 +518,40 @@ class Tab extends JPanel {
 
 			for (int i = 1; i <= ProgrammingPane.getText().length()
 				- ProgrammingPane.getText().replaceAll("\n","").length() + 1; i++) {
-				doc.insertString(doc.getLength(),i + "\n",null);
+				doc.insertString(doc.getLength(),i + "\n",ProgrammingWindow.styleConstants.getStyle("code"));
 			}
+			synchronizer.adjustmentValueChanged(new AdjustmentEvent(ProgrammingPaneScrollPane.getVerticalScrollBar(),2,
+				12,ProgrammingPaneScrollPane.getVerticalScrollBar().getValue()));
+
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+	}
+
+}
+
+
+
+class Synchronizer implements AdjustmentListener {
+
+	JScrollBar v2;
+
+	public Synchronizer(JScrollPane sp2) {
+		v2 = sp2.getVerticalScrollBar();
+	}
+
+	@Override
+	public void adjustmentValueChanged(AdjustmentEvent e) {
+		JScrollBar scrollBar = (JScrollBar) e.getSource();
+
+		int value = scrollBar.getValue();
+
+		System.out.println(value + " old:" + v2.getValue());
+
+		v2.setValue(value);
+		
+
+		System.out.println("new:" + v2.getValue());
 	}
 
 }
@@ -493,7 +581,7 @@ class Actionlist extends ArrayList<Action> {
 				return;
 			}
 		}
-		System.out.println(Name + " not found");
+		System.err.println(Name + " not found");
 	}
 
 	public Action get(String Name) {
@@ -592,15 +680,22 @@ class RedoAction extends AbstractAction {
 class InterpretAction extends AbstractAction {
 
 	AbstractDocument document;
+	ProgrammingWindow window;
 
-	public InterpretAction(AbstractDocument doc) {
-		super("Interpret");
+	public InterpretAction(AbstractDocument doc,ProgrammingWindow window) {
+		super("Run");
 		this.document = doc;
+		this.window = window;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		new Thread() {
+		window.getWorld().reset();
+		try {
+			window.getInterpretter().interrupt();
+		} catch (NullPointerException e2) {
+		}
+		window.setInterpretter(new Thread() {
 
 			@Override
 			public void run() {
@@ -612,7 +707,8 @@ class InterpretAction extends AbstractAction {
 				}
 			}
 
-		}.start();
+		});
+		window.getInterpretter().start();
 	}
 
 }

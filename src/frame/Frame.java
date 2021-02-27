@@ -1,11 +1,8 @@
 package frame;
 
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -38,16 +35,6 @@ public class Frame implements Constants {
 
 		frame.getContentPane().add(Windowmanager);
 
-		frame.add(new JComponent() {
-
-			@Override
-			public void paint(Graphics g) {
-				g.setColor(Color.GRAY);
-				g.fillRect(0,0,400,200);
-			}
-
-		});
-
 		// Metal j, Nimbus, Windows,
 
 		for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -73,7 +60,7 @@ public class Frame implements Constants {
 	}
 
 	public static Dimension getMaxDimension() {
-		return new Dimension(1400,1400); // frame.getGraphicsConfiguration().getBounds().getSize();
+		return new Dimension(900,800); // frame.getGraphicsConfiguration().getBounds().getSize();
 	}
 
 	public static int getWidth() {

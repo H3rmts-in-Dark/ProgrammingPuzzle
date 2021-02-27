@@ -17,7 +17,6 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import javax.swing.JInternalFrame;
-import javax.swing.JLayeredPane;
 import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
@@ -44,13 +43,12 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	}
 
 	public CustomWindow(int Widht,int Height,Point defaultPosition,String title,int level,boolean def) {
-		super(title + "  " + new Random().nextInt(999),true,true,true,false);
+		super(title + "  " + new Random().nextInt(999),true,true,true,true);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setVisible(true);
 		setLocation(defaultPosition.x,defaultPosition.y);
 		setSize(Widht,Height);
 		setFocusable(true);
-		setIgnoreRepaint(true);
 
 		if (def) {
 			setLayout(null);
@@ -97,24 +95,19 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 
 			@Override
 			public void internalFrameClosing(InternalFrameEvent e) {
-				Frame.getWindowManager().removeWindow(level,getThis());
+				Debugger.removeWindow(getThis());
 			}
 
 		});
 
 		Frame.getWindowManager().addWindow(level,this);
+		toFront();
 		if (def)
 			drawarea.createBufferStrategy(3);
 	}
 
 	public CustomWindow getThis() {
 		return this;
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		System.out.println(toString());
-		super.paint(g);
 	}
 
 	public void Render() {
@@ -143,7 +136,6 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 				g2.fillRect(0,0,drawarea.getWidth(),drawarea.getHeight());
 				g2.drawImage(drawimage,0,0,null);
 				g2.dispose();
-
 			} while (bs.contentsRestored());
 			bs.show();
 		} while (bs.contentsLost());

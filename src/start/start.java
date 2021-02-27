@@ -26,7 +26,6 @@ public class start {
 				MainControl.start();
 				Frame.getFrame().setVisible(true);
 				MainControl.createWorldselectionWindow();
-				new DebuggingWindow();
 			}
 
 		});

@@ -38,6 +38,7 @@ abstract class Method {
 				parameterlist.add((Variable<?>) paramter);
 			} else
 				try {
+					System.out.println(parameters.indexOf(paramter) + "" + Arrays.asList(parametertypes));
 					switch (parametertypes[parameters.indexOf(paramter)]) {
 						case MY_String:
 						case alltypes:
@@ -98,7 +99,7 @@ class print extends Method {
 	Variable<?> runCode(Variable<?>...parameters) {
 		try {
 			textPane.getDocument().insertString(textPane.getDocument().getLength(),parameters[0].getValue() + "\n",
-				null);
+				ProgrammingWindow.styleConstants.getStyle("normal"));
 			textPane.setCaretPosition(textPane.getDocument().getLength());
 		} catch (BadLocationException e) {
 			e.printStackTrace();
@@ -127,8 +128,8 @@ class printerr extends Method {
 	@Override
 	Variable<?> runCode(Variable<?>...parameters) {
 		try {
-			textPane.getDocument().insertString(textPane.getDocument().getLength(),
-				"error:" + parameters[0].getValue() + "\n",null);
+			textPane.getDocument().insertString(textPane.getDocument().getLength(),parameters[0].getValue() + "\n",
+				ProgrammingWindow.styleConstants.getStyle("error"));
 			textPane.setCaretPosition(textPane.getDocument().getLength());
 		} catch (BadLocationException e) {
 			e.printStackTrace();

@@ -116,6 +116,10 @@ public class World implements Constants {
 				getTile(x,y).delete();
 	}
 
+	public void reset() {
+		System.out.println("reset");
+	}
+
 	/*
 	 * 
 	 * 
