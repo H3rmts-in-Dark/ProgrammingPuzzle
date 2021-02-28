@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
 import Enums.Signalcolor;
 import Enums.Cabletype;
 import Enums.Rotation;
@@ -15,28 +18,12 @@ import json.JSONObject;
 
 public class WorldLoader {
 
-	public static void main(String[] args) {
-		try {
-			World world = getWorld("testworld");
-			System.out.println(world.getTile(1, 1));
-		} catch (FileNotFoundException e) {
-			System.out.println("File not Found");
-		}
-	}
-
-	public static World getWorld(String name) throws FileNotFoundException {
-		World world;
-		String s = "";
-
-		Scanner sc = new Scanner(new File("rsc/worlds/" + name + ".json"));
-		while (sc.hasNextLine())
-			s += sc.nextLine();
-		JSONObject json = new JSONObject(s);
-
-		world = new World(json.getInt("width"), json.getInt("height"));
-
+	public static void getWorld(String name) throws FileNotFoundException {
+		JSONObject json = getJSONOBject(name);
+		World world = new World(json.getInt("width"), json.getInt("height"));
 		JSONArray tiles = json.getJSONArray("tiles");
-		for (int i = 0; i < tiles.length(); i++) {
+
+		for (int i = 0; i < tiles.length(); i++) { // Übersetzer für die Tiles
 			JSONObject tile = (JSONObject) tiles.get(i);
 			System.out.println(tile);
 			switch (tile.getString("type")) {
@@ -73,6 +60,25 @@ public class WorldLoader {
 				break;
 			}
 		}
-		return world;
+	}
+
+	public static String getDescription(String name) {
+		try {
+			return getJSONOBject(name).getString("description");
+		} catch (FileNotFoundException fnfe) {
+			return "File Not Found.";
+		}
+	}
+
+	public static Icon getIcon(String name) {
+		return (Icon) new ImageIcon("rsc/worlds/" + name + ".png");
+	}
+
+	public static JSONObject getJSONOBject(String name) throws FileNotFoundException {
+		String s = "";
+		Scanner sc = new Scanner(new File("rsc/worlds/" + name + ".json"));
+		while (sc.hasNextLine())
+			s += sc.nextLine();
+		return new JSONObject(s);
 	}
 }

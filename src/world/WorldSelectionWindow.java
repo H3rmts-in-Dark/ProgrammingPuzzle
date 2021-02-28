@@ -97,8 +97,9 @@ class Tab extends JPanel {
 				System.out.println("Click");
 				try {
 					WorldLoader.getWorld(name + "/" + ((AbstractButton) e.getSource()).getText());
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
+				} catch (FileNotFoundException fnfe) {
+					System.err.println(
+							"World: " + name + "/" + ((AbstractButton) e.getSource()).getText() + " not found");
 				}
 			}
 		};
@@ -107,36 +108,44 @@ class Tab extends JPanel {
 		nameLabel.setFont(new Font("Tahoma", 0, 18));
 		nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-		World1decription = new JTextArea("");
+		World1decription = new JTextArea(WorldLoader.getDescription(name + "/" + 1));
 		World1 = new JButton("1");
+		World1.setIcon(WorldLoader.getIcon(name + "/" + 1));
 		World1.addActionListener(worldHandler);
 
-		World2decription = new JTextArea("");
+		World2decription = new JTextArea(WorldLoader.getDescription(name + "/" + 2));
 		World2 = new JButton("2");
+		World2.setIcon(WorldLoader.getIcon(name + "/" + 2));
 		World2.addActionListener(worldHandler);
 
-		World3decription = new JTextArea("");
+		World3decription = new JTextArea(WorldLoader.getDescription(name + "/" + 3));
 		World3 = new JButton("3");
+		World3.setIcon(WorldLoader.getIcon(name + "/" + 3));
 		World3.addActionListener(worldHandler);
 
-		World4decription = new JTextArea("");
+		World4decription = new JTextArea(WorldLoader.getDescription(name + "/" + 4));
 		World4 = new JButton("4");
+		World4.setIcon(WorldLoader.getIcon(name + "/" + 4));
 		World4.addActionListener(worldHandler);
 
-		World5decription = new JTextArea("");
+		World5decription = new JTextArea(WorldLoader.getDescription(name + "/" + 5));
 		World5 = new JButton("5");
+		World5.setIcon(WorldLoader.getIcon(name + "/" + 5));
 		World5.addActionListener(worldHandler);
 
-		World6decription = new JTextArea("");
+		World6decription = new JTextArea(WorldLoader.getDescription(name + "/" + 6));
 		World6 = new JButton("6");
+		World6.setIcon(WorldLoader.getIcon(name + "/" + 6));
 		World6.addActionListener(worldHandler);
 
-		World7decription = new JTextArea("");
+		World7decription = new JTextArea(WorldLoader.getDescription(name + "/" + 7));
 		World7 = new JButton("7");
+		World7.setIcon(WorldLoader.getIcon(name + "/" + 7));
 		World7.addActionListener(worldHandler);
 
-		World8decription = new JTextArea("");
+		World8decription = new JTextArea(WorldLoader.getDescription(name + "/" + 8));
 		World8 = new JButton("8");
+		World8.setIcon(WorldLoader.getIcon(name + "/" + 8));
 		World8.addActionListener(worldHandler);
 
 		GroupLayout jPanel5Layout = new GroupLayout(this);
