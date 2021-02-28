@@ -19,7 +19,6 @@ import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.BoundedRangeModel;
 import javax.swing.GroupLayout;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -39,8 +38,6 @@ import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditEvent;
@@ -224,13 +221,13 @@ public class ProgrammingWindow extends CustomWindow {
 		styleConstants = new StyleContext();
 		final Style normal = styleConstants.addStyle("normal",null);
 		StyleConstants.setForeground(normal,Color.BLACK);
-		StyleConstants.setFontSize(normal,20);
+		StyleConstants.setFontSize(normal,15);
 		final Style error = styleConstants.addStyle("error",null);
 		StyleConstants.setForeground(error,Color.RED);
-		StyleConstants.setFontSize(error,20);
+		StyleConstants.setFontSize(error,15);
 		final Style code = styleConstants.addStyle("code",null);
 		StyleConstants.setForeground(code,Color.BLACK);
-		StyleConstants.setFontSize(code,20);
+		StyleConstants.setFontSize(code,17);
 	}
 
 	public void GenerateMenuBar(Actionlist actions) {
@@ -311,6 +308,8 @@ public class ProgrammingWindow extends CustomWindow {
 
 		actions.add("Run",MenuBarOther);
 
+		actions.add("Color",MenuBarOther);
+
 		MenuBarOther.add(new Separator());
 
 		MenuBarOtherItem3 = new JMenuItem("Go to");
@@ -373,12 +372,12 @@ class Tab extends JPanel {
 
 		ProgrammingPane = new JTextPane();
 		ProgrammingPane.setEditable(true);
-		ProgrammingPane.setFont(new Font("sansserif",0,20));
+		ProgrammingPane.setFont(new Font("sansserif",0,17));
 		ProgrammingPane.setMargin(new Insets(5,5,5,5));
 
 		LinecounterPane = new JTextPane();
 		LinecounterPane.setEditable(false);
-		LinecounterPane.setFont(new Font("sansserif",0,20));
+		LinecounterPane.setFont(new Font("sansserif",0,17));
 		LinecounterPane.setMargin(new Insets(5,5,5,5));
 
 		setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
@@ -423,6 +422,7 @@ class Tab extends JPanel {
 		UndoAction undoAction = new UndoAction(manager);
 		RedoAction redoAction = new RedoAction(manager);
 		InterpretAction interpretAction = new InterpretAction(document,window);
+		ColorAction colorAction = new ColorAction(document,window);
 
 		redoAction.setUndoAction(undoAction);
 		undoAction.setRedoAction(redoAction);
@@ -430,6 +430,8 @@ class Tab extends JPanel {
 		actions.append(undoAction);
 
 		actions.append(redoAction);
+
+		actions.append(colorAction);
 
 		actions.append(interpretAction);
 
@@ -546,12 +548,11 @@ class Synchronizer implements AdjustmentListener {
 
 		int value = scrollBar.getValue();
 
-		System.out.println(value + " old:" + v2.getValue());
+		// System.out.println(value + " old:" + v2.getValue());
 
 		v2.setValue(value);
-		
 
-		System.out.println("new:" + v2.getValue());
+		// System.out.println("new:" + v2.getValue());
 	}
 
 }
@@ -715,14 +716,38 @@ class InterpretAction extends AbstractAction {
 
 
 
+class ColorAction extends AbstractAction {
+
+	AbstractDocument document;
+	ProgrammingWindow window;
+
+	public ColorAction(AbstractDocument doc,ProgrammingWindow window) {
+		super("Color");
+		this.document = doc;
+		this.window = window;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		new Thread() {
+
+			@Override
+			public void run() {
+				Interpreter.color(document);
+			}
+
+		}.start();
+	}
+
+}
+
+
+
 class Listener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (((AbstractButton) e.getSource()).getText()) {
-			case "Run":
-				System.out.println("hi");
-			break;
 		}
 	}
 

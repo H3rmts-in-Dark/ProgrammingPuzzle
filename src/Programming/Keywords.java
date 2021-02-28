@@ -130,12 +130,12 @@ class MY_if extends Keyword {
 	boolean run(Variable<?>...parameters) throws CustomExeption {
 		if ((boolean) parameters[0].getValue()) {
 			CustStr str = new CustStr(inner.strip());
-			System.out.println();
+			Interpreter.log("");
 			while (str.val.length() > 0) {
 				try {
 					Interpreter.interpretblock(str);
 				} catch (BreakException | ExitProgramm e) {
-					System.out.println(Interpreter.sysoutin + "##################\n");
+					Interpreter.log(Interpreter.sysoutin + "##################\n");
 					throw e;
 				}
 			}
@@ -157,7 +157,7 @@ class MY_while extends Keyword {
 	boolean run(Variable<?>...parameters) throws CustomExeption {
 		if ((boolean) parameters[0].getValue()) {
 			CustStr str = new CustStr(inner.strip());
-			System.out.println();
+			Interpreter.log("");
 			while (str.val.length() > 0) {
 				try {
 					Interpreter.interpretblock(str);

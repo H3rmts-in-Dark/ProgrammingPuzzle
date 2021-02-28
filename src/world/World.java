@@ -2,6 +2,7 @@ package world;
 
 
 import java.awt.Point;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +33,6 @@ public class World implements Constants {
 
 	private WorldWindow window;
 
-	@SuppressWarnings("unused")
 	private ProgrammingWindow programmingWindow;
 
 	public World(Integer width,Integer height) {
@@ -114,6 +114,13 @@ public class World implements Constants {
 		for (int x = 0; x < getWidth(); x++)
 			for (int y = 0; y < getHeight(); y++)
 				getTile(x,y).delete();
+
+		try {
+			programmingWindow.setClosed(true);
+			window.setClosed(true);
+		} catch (PropertyVetoException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void reset() {

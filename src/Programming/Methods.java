@@ -64,7 +64,7 @@ abstract class Method {
 						Interpreter.line);
 				}
 		}
-		System.out.println(Interpreter.sysoutin + "running " + name + " with parameters " + parameterlist);
+		Interpreter.log(Interpreter.sysoutin + "running " + name + " with parameters " + parameterlist);
 		return runCode(parameterlist.toArray(new Variable<?>[0]));
 	}
 

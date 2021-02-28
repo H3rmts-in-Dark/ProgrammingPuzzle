@@ -9,6 +9,7 @@ import Enums.Height;
 import Enums.Rotation;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
+
 import world.World;
 
 
@@ -75,7 +76,11 @@ public class Player extends Entity implements Playercontroll {
 
 	@Override
 	public void interact() {
-		super.interact();
+		Tile tile = getBlock();
+		if (tile != null)
+			tile.onInteract(this);
+	//	else
+	//		throw new MethodNotFoundExeption(firs,line);
 	}
 
 }

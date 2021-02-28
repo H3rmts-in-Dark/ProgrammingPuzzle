@@ -101,11 +101,12 @@ class Tab extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Click");
 				try {
 					try {
 						MainControl.deleteWorld();
+						System.out.println("del");
 					} catch (NullPointerException e2) {
+						System.out.println("notdel");
 					}
 					MainControl.setWorld(WorldLoader.getWorld(name + "/" + ((AbstractButton) e.getSource()).getText()));
 					window.setIcon(true);

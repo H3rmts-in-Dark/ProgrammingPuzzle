@@ -190,17 +190,6 @@ public abstract class Entity implements Constants {
 		return null;
 	}
 
-	public void interact() {
-		if (getPosition().x > 0)
-			world.getTile(getPosition().x - 1,getPosition().y).onInteract(this);
-		if (getPosition().y > 0)
-			world.getTile(getPosition().x,getPosition().y - 1).onInteract(this);
-		if (getPosition().x < world.getWidth() - 1)
-			world.getTile(getPosition().x + 1,getPosition().y).onInteract(this);
-		if (getPosition().y < world.getHeight() - 1)
-			world.getTile(getPosition().x,getPosition().y + 1).onInteract(this);
-	}
-
 	public void triggerAnimation(Animation animation) {
 		actualanimation = animation;
 		actualanimationcounter = 0;
