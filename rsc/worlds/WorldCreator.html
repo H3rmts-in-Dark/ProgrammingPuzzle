@@ -240,7 +240,7 @@
         function addEntity(Entity) { /* TODO Muss noch gemacht werden*/ }
 
         function exportWorld(name) {
-            document.getElementById("port").value = JSON.stringify(new World(name, world.height, world.width, world.tiles, world.entities))
+            document.getElementById("port").value = JSON.stringify(new World(name, world.height, world.width, world.tiles, world.entities, ""))
         }
 
         function importWorld(newWorld) {
