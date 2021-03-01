@@ -111,6 +111,15 @@
             }
         }
 
+        class Entity {
+            constructor(type, x, y, rotation) { // "player", "box"
+                this.type = type
+                this.x = x
+                this.y = y
+                this.rotation = rotation
+            }
+        }
+
         const onclicklistenerpreset = function () {
             // Übersetzt den Click auf dem Bildschirm zu einem Tile
             if (this.tagName == "TD")

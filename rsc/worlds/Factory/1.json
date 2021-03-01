@@ -1,1 +1,1 @@
-{"name":"Name","created":"24.2.2021, 12:58:11","height":3,"width":5,"tiles":[{"type":"gewichtssensor","signalcolor":"blau","rotation":null,"x":1,"y":1,"cabletype":"n"}],"entities":[],"description":"First Testworld."}
+{"name":"1","created":"24.2.2021, 12:58:11","height":3,"width":5,"tiles":[{"type":"gewichtssensor","signalcolor":"blau","rotation":null,"x":1,"y":1,"cabletype":"n"}],"entities":[{"type":"player","x":0,"y":0,"rotation":"right"}],"description":"First Testworld."}

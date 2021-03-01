@@ -45,7 +45,11 @@ public class Debugger implements Constants {
 	}
 
 	public static void endDraw(CustomWindow wind) {
-		windows.get(wind).enddraw();
+		try {
+			windows.get(wind).enddraw();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 	public static void removeWindow(CustomWindow wind) {
