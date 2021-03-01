@@ -62,8 +62,7 @@ public class WorldLoader {
 				break;
 			}
 		}
-
-		System.out.println("hi");
+		
 		// Entities
 		JSONArray entities = json.getJSONArray("entities");
 		for (int i = 0; i < entities.length(); i++) {
