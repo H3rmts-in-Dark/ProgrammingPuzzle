@@ -1,5 +1,6 @@
 package world;
 
+import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -8,6 +9,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import Enums.Signalcolor;
+import entitys.Box;
+import entitys.Player;
 import Enums.Cabletype;
 import Enums.Rotation;
 import tiles.*;
@@ -25,7 +28,6 @@ public class WorldLoader {
 
 		for (int i = 0; i < tiles.length(); i++) { // Übersetzer für die Tiles
 			JSONObject tile = (JSONObject) tiles.get(i);
-			System.out.println(tile);
 			switch (tile.getString("type")) {
 			case "computer":
 				world.setTile(tile.getInt("x"), tile.getInt("y"),
@@ -56,6 +58,23 @@ public class WorldLoader {
 			case "tonne":
 				world.setTile(tile.getInt("x"), tile.getInt("y"), new Tonne());
 				break;
+			default:
+				break;
+			}
+		}
+
+		System.out.println("hi");
+		// Entities
+		JSONArray entities = json.getJSONArray("entities");
+		for (int i = 0; i < entities.length(); i++) {
+			JSONObject entity = (JSONObject) entities.get(i);
+			switch (entity.getString("type")) {
+			case "player":
+				world.addEntity(new Player(new Point(entity.getInt("x"), entity.getInt("y")),
+						Rotation.convert(entity.getString("rotation"))));
+				break;
+			case "box":
+				world.addEntity(new Box(entity.getInt("x"), entity.getInt("y")));
 			default:
 				break;
 			}

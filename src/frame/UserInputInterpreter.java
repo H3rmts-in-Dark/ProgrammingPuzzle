@@ -43,8 +43,6 @@ public class UserInputInterpreter {
 			new DebuggingWindow();
 		} else if (prccommand.equals("select")) {
 			new WorldSelectionWindow();
-		} else if (prccommand.equals("world")) {
-			MainControl.createWorld();
 		}
 	}
 
