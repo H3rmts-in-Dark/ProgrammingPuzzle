@@ -38,6 +38,8 @@ import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditEvent;
@@ -86,6 +88,7 @@ public class ProgrammingWindow extends CustomWindow {
 
 	private JPanel OutputPanel;
 	private JLabel OutputLabel;
+	private JLabel RunningLabel;
 	private JButton Run;
 	private JButton Stop;
 	private JTabbedPane OutputTabbedPane;
@@ -95,17 +98,13 @@ public class ProgrammingWindow extends CustomWindow {
 	private JTextPane ConsoleTextPane;
 	/* ================================================================= */
 
-	private Thread interpretter;
-
 	public static StyleContext styleConstants;
 
 	public ProgrammingWindow(World world) {
 		super(700,700,new Point(400,40),"Programming Window",1,false);
 		this.world = world;
 
-		GenerateProgrammingPane();
-
-		GenerateOutputPanel();
+		GenerateProgrammingPane(this);
 
 		GroupLayout jInternalFrame1Layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(jInternalFrame1Layout);
@@ -139,26 +138,157 @@ public class ProgrammingWindow extends CustomWindow {
 		return world;
 	}
 
-	private void GenerateProgrammingPane() {
+	public JTextPane getOutputTextPane() {
+		return OutputTextPane;
+	}
+
+	public JTextPane getConsoleTextPane() {
+		return ConsoleTextPane;
+	}
+
+	private void GenerateProgrammingPane(ProgrammingWindow window) {
 		TabbedPane = new JTabbedPane();
 		TabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,2,true));
 
+		TabbedPane.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				Tabs.get(TabbedPane.getSelectedIndex()).updateBars(window);
+			}
+
+		});
+
 		Tabs = new ArrayList<>();
 
-		Tab firstTab = new Tab(this);
-		Tabs.add(firstTab);
-
-		TabbedPane.addTab("Tab",firstTab);
+		addTab("clear","");
 	}
 
-	private void GenerateOutputPanel() {
-		Run = new JButton("Run");
+	public void addTab(String name,String ins) {
+		Tab firstTab = new Tab(this,ins);
+		Tabs.add(firstTab);
+
+		TabbedPane.addTab(name,firstTab);
+	}
+
+	static {
+		styleConstants = new StyleContext();
+		final Style normal = styleConstants.addStyle("normal",null);
+		StyleConstants.setForeground(normal,Color.BLACK);
+		StyleConstants.setFontSize(normal,15);
+		final Style error = styleConstants.addStyle("error",null);
+		StyleConstants.setForeground(error,Color.RED);
+		StyleConstants.setFontSize(error,15);
+		final Style code = styleConstants.addStyle("code",null);
+		StyleConstants.setForeground(code,Color.BLACK);
+		StyleConstants.setFontSize(code,17);
+	}
+
+	public void GenerateMenuBar(Actionlist actions,Tab tab) {
+		MenuBar = new JMenuBar();
+
+		MenuBarFile = new JMenu();
+		MenuBarFile.setText("File");
+
+		MenuBarFileItem1 = new JMenuItem();
+		MenuBarFileItem1.setText("New File");
+		addListener(MenuBarFileItem1,this,tab);
+		MenuBarFile.add(MenuBarFileItem1);
+
+		MenuBarFileItem2 = new JMenuItem();
+		MenuBarFileItem2.setText("Open File");
+		addListener(MenuBarFileItem2,this,tab);
+		MenuBarFile.add(MenuBarFileItem2);
+
+		MenuBarFileItem3 = new JMenuItem();
+		MenuBarFileItem3.setText("Save File");
+		addListener(MenuBarFileItem3,this,tab);
+		MenuBarFile.add(MenuBarFileItem3);
+
+		MenuBarFileItem4 = new JMenuItem();
+		MenuBarFileItem4.setText("Save File as");
+		addListener(MenuBarFileItem4,this,tab);
+		MenuBarFile.add(MenuBarFileItem4);
+
+		MenuBar.add(MenuBarFile);
+
+		MenuBarEdit = new JMenu("Edit");
+
+		actions.add("Undo",MenuBarEdit);
+		actions.add("Redo",MenuBarEdit);
+
+		MenuBarEdit.addSeparator();
+
+		actions.add(DefaultEditorKit.cutAction,MenuBarEdit);
+		actions.add(DefaultEditorKit.copyAction,MenuBarEdit);
+		actions.add(DefaultEditorKit.pasteAction,MenuBarEdit);
+
+		MenuBarEdit.addSeparator();
+
+		actions.add(DefaultEditorKit.selectAllAction,MenuBarEdit);
+
+		MenuBar.add(MenuBarEdit);
+
+		MenuBarPreferences = new JMenu();
+		MenuBarPreferences.setText("Preferences");
+
+		MenuBarPreferencesItem1 = new JMenuItem();
+		MenuBarPreferencesItem1.setText("Theme");
+		addListener(MenuBarPreferencesItem1,this,tab);
+		MenuBarPreferences.add(MenuBarPreferencesItem1);
+
+		MenuBarPreferences.add(new JPopupMenu.Separator());
+
+		MenuBarPreferencesItem2 = new JCheckBoxMenuItem();
+		MenuBarPreferencesItem2.setSelected(true);
+		MenuBarPreferencesItem2.setText("Auto complettion");
+		addListener(MenuBarPreferencesItem2,this,tab);
+		MenuBarPreferences.add(MenuBarPreferencesItem2);
+
+		MenuBarPreferencesItem3 = new JCheckBoxMenuItem();
+		MenuBarPreferencesItem3.setSelected(true);
+		MenuBarPreferencesItem3.setText("Show errors");
+		addListener(MenuBarPreferencesItem3,this,tab);
+		MenuBarPreferences.add(MenuBarPreferencesItem3);
+
+		MenuBar.add(MenuBarPreferences);
+
+		MenuBarOther = new JMenu();
+		MenuBarOther.setText("Other");
+
+		MenuBarOtherItem2 = new JMenuItem("Stop");
+		addListener(MenuBarOtherItem2,this,tab);
+		MenuBarOther.add(MenuBarOtherItem2);
+
+		actions.add("Run",MenuBarOther);
+
+		actions.add("Color",MenuBarOther);
+
+		MenuBarOther.add(new Separator());
+
+		MenuBarOtherItem3 = new JMenuItem("Go to");
+		addListener(MenuBarOtherItem3,this,tab);
+		MenuBarOther.add(MenuBarOtherItem3);
+
+		MenuBarOtherItem4 = new JMenuItem("Find");
+		addListener(MenuBarOtherItem4,this,tab);
+		MenuBarOther.add(MenuBarOtherItem4);
+
+		MenuBar.add(MenuBarOther);
+
+		setJMenuBar(MenuBar);
+	}
+
+	public void GenerateOutputPanel(Actionlist actions,Tab tab) {
+		Run = new JButton(actions.get("Run"));
 		Run.setFont(new Font("Arial",1,10));
-		addListener(Run);
 
 		Stop = new JButton("Stop");
 		Stop.setFont(new Font("Arial",1,10));
-		addListener(Stop);
+		addListener(Stop,this,tab);
+
+		RunningLabel = new JLabel("Stopped");
+		RunningLabel.setFont(new Font("Arial",1,16));
 
 		OutputTabbedPane = new JTabbedPane();
 		OutputTabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
@@ -180,9 +310,8 @@ public class ProgrammingWindow extends CustomWindow {
 		ConsoleTextfPaneScrollPane = new JScrollPane(ConsoleTextPane);
 		OutputTabbedPane.addTab("Compiler",ConsoleTextfPaneScrollPane);
 
-		OutputLabel = new JLabel();
+		OutputLabel = new JLabel("Output");
 		OutputLabel.setFont(new Font("Arial",1,16));
-		OutputLabel.setText("Output");
 
 		OutputPanel = new JPanel();
 		OutputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,2,false));
@@ -217,124 +346,8 @@ public class ProgrammingWindow extends CustomWindow {
 
 	}
 
-	static {
-		styleConstants = new StyleContext();
-		final Style normal = styleConstants.addStyle("normal",null);
-		StyleConstants.setForeground(normal,Color.BLACK);
-		StyleConstants.setFontSize(normal,15);
-		final Style error = styleConstants.addStyle("error",null);
-		StyleConstants.setForeground(error,Color.RED);
-		StyleConstants.setFontSize(error,15);
-		final Style code = styleConstants.addStyle("code",null);
-		StyleConstants.setForeground(code,Color.BLACK);
-		StyleConstants.setFontSize(code,17);
-	}
-
-	public void GenerateMenuBar(Actionlist actions) {
-		MenuBar = new JMenuBar();
-
-		MenuBarFile = new JMenu();
-		MenuBarFile.setText("File");
-
-		MenuBarFileItem1 = new JMenuItem();
-		MenuBarFileItem1.setText("New File");
-		addListener(MenuBarFileItem1);
-		MenuBarFile.add(MenuBarFileItem1);
-
-		MenuBarFileItem2 = new JMenuItem();
-		MenuBarFileItem2.setText("Open File");
-		addListener(MenuBarFileItem2);
-		MenuBarFile.add(MenuBarFileItem2);
-
-		MenuBarFileItem3 = new JMenuItem();
-		MenuBarFileItem3.setText("Save File");
-		addListener(MenuBarFileItem3);
-		MenuBarFile.add(MenuBarFileItem3);
-
-		MenuBarFileItem4 = new JMenuItem();
-		MenuBarFileItem4.setText("Save File as");
-		addListener(MenuBarFileItem4);
-		MenuBarFile.add(MenuBarFileItem4);
-
-		MenuBar.add(MenuBarFile);
-
-		MenuBarEdit = new JMenu("Edit");
-
-		actions.add("Undo",MenuBarEdit);
-		actions.add("Redo",MenuBarEdit);
-
-		MenuBarEdit.addSeparator();
-
-		actions.add(DefaultEditorKit.cutAction,MenuBarEdit);
-		actions.add(DefaultEditorKit.copyAction,MenuBarEdit);
-		actions.add(DefaultEditorKit.pasteAction,MenuBarEdit);
-
-		MenuBarEdit.addSeparator();
-
-		actions.add(DefaultEditorKit.selectAllAction,MenuBarEdit);
-
-		MenuBar.add(MenuBarEdit);
-
-		MenuBarPreferences = new JMenu();
-		MenuBarPreferences.setText("Preferences");
-
-		MenuBarPreferencesItem1 = new JMenuItem();
-		MenuBarPreferencesItem1.setText("Theme");
-		addListener(MenuBarPreferencesItem1);
-		MenuBarPreferences.add(MenuBarPreferencesItem1);
-
-		MenuBarPreferences.add(new JPopupMenu.Separator());
-
-		MenuBarPreferencesItem2 = new JCheckBoxMenuItem();
-		MenuBarPreferencesItem2.setSelected(true);
-		MenuBarPreferencesItem2.setText("Auto complettion");
-		addListener(MenuBarPreferencesItem2);
-		MenuBarPreferences.add(MenuBarPreferencesItem2);
-
-		MenuBarPreferencesItem3 = new JCheckBoxMenuItem();
-		MenuBarPreferencesItem3.setSelected(true);
-		MenuBarPreferencesItem3.setText("Show errors");
-		addListener(MenuBarPreferencesItem3);
-		MenuBarPreferences.add(MenuBarPreferencesItem3);
-
-		MenuBar.add(MenuBarPreferences);
-
-		MenuBarOther = new JMenu();
-		MenuBarOther.setText("Other");
-
-		MenuBarOtherItem2 = new JMenuItem("Stop");
-		addListener(MenuBarOtherItem2);
-		MenuBarOther.add(MenuBarOtherItem2);
-
-		actions.add("Run",MenuBarOther);
-
-		actions.add("Color",MenuBarOther);
-
-		MenuBarOther.add(new Separator());
-
-		MenuBarOtherItem3 = new JMenuItem("Go to");
-		addListener(MenuBarOtherItem3);
-		MenuBarOther.add(MenuBarOtherItem3);
-
-		MenuBarOtherItem4 = new JMenuItem("Find");
-		addListener(MenuBarOtherItem4);
-		MenuBarOther.add(MenuBarOtherItem4);
-
-		MenuBar.add(MenuBarOther);
-
-		setJMenuBar(MenuBar);
-	}
-
-	public static void addListener(AbstractButton button) {
-		button.addActionListener(new Listener());
-	}
-
-	public Thread getInterpretter() {
-		return interpretter;
-	}
-
-	public void setInterpretter(Thread interpretter) {
-		this.interpretter = interpretter;
+	public static void addListener(AbstractButton button,ProgrammingWindow window,Tab tab) {
+		button.addActionListener(new Listener(window,tab));
 	}
 
 }
@@ -368,7 +381,9 @@ class Tab extends JPanel {
 
 	Synchronizer synchronizer;
 
-	public Tab(ProgrammingWindow window) {
+	private Thread interpretter;
+
+	public Tab(ProgrammingWindow window,String start) {
 
 		ProgrammingPane = new JTextPane();
 		ProgrammingPane.setEditable(true);
@@ -421,7 +436,7 @@ class Tab extends JPanel {
 
 		UndoAction undoAction = new UndoAction(manager);
 		RedoAction redoAction = new RedoAction(manager);
-		InterpretAction interpretAction = new InterpretAction(document,window);
+		InterpretAction interpretAction = new InterpretAction(document,window,this);
 		ColorAction colorAction = new ColorAction(document,window);
 
 		redoAction.setUndoAction(undoAction);
@@ -436,7 +451,8 @@ class Tab extends JPanel {
 		actions.append(interpretAction);
 
 		addBindings();
-		window.GenerateMenuBar(actions);
+
+		updateBars(window);
 
 		document.addDocumentListener(new DocumentListener() {
 
@@ -480,6 +496,40 @@ class Tab extends JPanel {
 
 		});
 
+		try {
+			ProgrammingPane.getDocument().insertString(0,start,null);
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public String getName() {
+		try {
+			return ProgrammingPane.getText();
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	public Thread getInterpretter() {
+		return interpretter;
+	}
+
+	public void setInterpretter(Thread interpretter) {
+		this.interpretter = interpretter;
+	}
+
+	public void updateBars(ProgrammingWindow window) {
+		try {
+			Interpreter.initmethods(window.getWorld().getPlayer(),window.getOutputTextPane(),
+				window.getConsoleTextPane());
+		} catch (UnsupportetMethodNameExeption e) {
+			System.err.println(e.getMessage());
+		}
+		window.GenerateMenuBar(actions,this);
+		window.GenerateOutputPanel(actions,this);
 	}
 
 	private void addBindings() {
@@ -627,10 +677,8 @@ class UndoAction extends AbstractAction {
 	protected void updateUndoState() {
 		if (manager.canUndo()) {
 			setEnabled(true);
-			putValue(Action.NAME,manager.getUndoPresentationName());
 		} else {
 			setEnabled(false);
-			putValue(Action.NAME,"Undo");
 		}
 	}
 
@@ -667,10 +715,8 @@ class RedoAction extends AbstractAction {
 	protected void updateRedoState() {
 		if (manager.canRedo()) {
 			setEnabled(true);
-			putValue(Action.NAME,manager.getRedoPresentationName());
 		} else {
 			setEnabled(false);
-			putValue(Action.NAME,"Redo");
 		}
 	}
 
@@ -681,35 +727,39 @@ class RedoAction extends AbstractAction {
 class InterpretAction extends AbstractAction {
 
 	AbstractDocument document;
+	Tab tab;
 	ProgrammingWindow window;
 
-	public InterpretAction(AbstractDocument doc,ProgrammingWindow window) {
+	public InterpretAction(AbstractDocument doc,ProgrammingWindow window,Tab tab) {
 		super("Run");
 		this.document = doc;
 		this.window = window;
+		this.tab = tab;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		window.getWorld().reset();
 		try {
-			window.getInterpretter().interrupt();
+			tab.getInterpretter().interrupt();
 		} catch (NullPointerException e2) {
 		}
-		window.setInterpretter(new Thread() {
+
+		tab.setInterpretter(new Thread() {
 
 			@Override
 			public void run() {
 				try {
 					Interpreter.clear();
 					Interpreter.interpret(document);
-				} catch (UnsupportetVariableNameExeption | InvalidValueException | WrongTypeException e) {
-					e.printStackTrace();
+				} catch (java.lang.Error | UnsupportetVariableNameExeption | InvalidValueException
+					| WrongTypeException e) {
+					System.err.println(e.getMessage());
 				}
 			}
 
 		});
-		window.getInterpretter().start();
+		tab.getInterpretter().start();
 	}
 
 }
@@ -745,9 +795,33 @@ class ColorAction extends AbstractAction {
 
 class Listener implements ActionListener {
 
+	Tab tab;
+	ProgrammingWindow window;
+
+	public Listener(ProgrammingWindow window,Tab tab) {
+		this.window = window;
+		this.tab = tab;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println(((AbstractButton) e.getSource()).getText());
 		switch (((AbstractButton) e.getSource()).getText()) {
+			case "New File":
+				window.addTab("unnamed","");
+			break;
+			case "Open File":
+			break;
+			case "Save File":
+			break;
+			case "Save File as":
+			break;
+			case "Stop":
+				try {
+					tab.getInterpretter().interrupt();
+				} catch (NullPointerException e2) {
+				}
+			break;
 		}
 	}
 

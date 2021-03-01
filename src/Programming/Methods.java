@@ -38,7 +38,6 @@ abstract class Method {
 				parameterlist.add((Variable<?>) paramter);
 			} else
 				try {
-					System.out.println(parameters.indexOf(paramter) + "" + Arrays.asList(parametertypes));
 					switch (parametertypes[parameters.indexOf(paramter)]) {
 						case MY_String:
 						case alltypes:
@@ -181,7 +180,7 @@ class delay extends Method {
 		try {
 			Thread.sleep((long) ((double) (parameters[0].getValue()) * 1000));
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Thread.currentThread().interrupt();
 		}
 		return null;
 	}

@@ -125,18 +125,25 @@ public class Interpreter {
 		Interpreter.log(sysoutin + "##################");
 
 		if (StrUtils.startswith(StrUtils.fullstrip(text.val),Keywords.values())) { // keyword
-			String part = StrUtils.getSection(text.val,'{','}');
-			if (StrUtils.count(part,"\n") > 0)
-				line += StrUtils.count(part,"\n");
-			text.val = StrUtils.removetext(text.val,part);
-			part = StrUtils.fullstrip(part);
-			Interpreter.log(sysoutin + "process: " + StrUtils.removespace(part));
+			String first = StrUtils.first(text.val,'{');
 
-			String name = StrUtils.first(part,'(');
+			String inner = StrUtils.getSection(text.val,'{','}');
+
+			String full = first + inner;
+			if (StrUtils.count(full,"\n") > 0)
+				line += StrUtils.count(full,"\n");
+
+			text.val = StrUtils.removetext(text.val,full);
+
+			first = StrUtils.fullstrip(first);
+
+			Interpreter.log(sysoutin + "process: " + StrUtils.removespace(full));
+
+			String name = StrUtils.first(first,'(');
+
 			Interpreter.log(sysoutin + "name: " + name);
 			Keyword keyword = null;
 
-			String inner = StrUtils.getSection(text.val,'{','}');
 			inner = inner.substring(1,inner.length() - 1);
 			Interpreter.log(sysoutin + "inner block: " + StrUtils.removespace(inner));
 			switch (Keywords.convert(name)) {
@@ -150,7 +157,7 @@ public class Interpreter {
 					keyword = new MY_while(inner);
 				break;
 			}
-			String parameters = StrUtils.getSection(part,'(',')');
+			String parameters = StrUtils.getSection(first,'(',')');
 			ArrayList<Object> newparams;
 			boolean rm = false;
 			try {
@@ -385,7 +392,7 @@ public class Interpreter {
 			try {
 				colorBlock(text,document);
 			} catch (CustomExeption e) {
-				break;
+				System.err.println("coloring line failed");
 			}
 		}
 	}
@@ -466,12 +473,12 @@ public class Interpreter {
 		Interpreter.log(sysoutin + "##################");
 
 		if (StrUtils.startswith(StrUtils.fullstrip(text.val),Keywords.values())) { // keyword
-			String part = StrUtils.getSection(text.val,'{','}');
-			text.val = StrUtils.removetext(text.val,part);
-			part = StrUtils.fullstrip(part);
-			Interpreter.log(sysoutin + "process: " + StrUtils.removespace(part));
+			String first = StrUtils.first(text.val,'{');
+			text.val = StrUtils.removetext(text.val,first);
+			first = StrUtils.fullstrip(first);
+			Interpreter.log(sysoutin + "process: " + StrUtils.removespace(first));
 
-			String name = StrUtils.first(text.val,'(');
+			String name = StrUtils.first(first,'(');
 			Interpreter.log(sysoutin + "name: " + name);
 
 			insertText(doc,name,true,Syles.keyword);
@@ -480,7 +487,7 @@ public class Interpreter {
 			inner = inner.substring(1,inner.length() - 1);
 			Interpreter.log(sysoutin + "inner block: " + StrUtils.removespace(inner));
 
-			String parameters = StrUtils.getSection(part,'(',')');
+			String parameters = StrUtils.getSection(first,'(',')');
 
 			ArrayList<String> params = StrUtils.parts(parameters,',',true);
 			for (String param : params) {
@@ -505,7 +512,6 @@ public class Interpreter {
 			indent = indent.substring(0,indent.length() - 4);
 
 		} else {
-
 			String part = StrUtils.part(text.val,';',0);
 			text.val = StrUtils.removetext(text.val,part + ";");
 			part = StrUtils.fullstrip(part);
