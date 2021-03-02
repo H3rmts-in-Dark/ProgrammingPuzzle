@@ -8,16 +8,22 @@ import java.util.Scanner;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import Enums.Cabletype;
+import Enums.Rotation;
 import Enums.Signalcolor;
 import entitys.Box;
 import entitys.Player;
-import Enums.Cabletype;
-import Enums.Rotation;
-import tiles.*;
-
 // Diese Library haben wir von https://github.com/stleary/JSON-java
 import json.JSONArray;
 import json.JSONObject;
+import tiles.Computer;
+import tiles.Ende;
+import tiles.Floor;
+import tiles.Förderband;
+import tiles.GewichtsSensor;
+import tiles.Lampe;
+import tiles.Tonne;
+import tiles.Wand;
 
 public class WorldLoader {
 
@@ -60,6 +66,9 @@ public class WorldLoader {
 				break;
 			case "wand":
 				world.setTile(tile.getInt("x"), tile.getInt("y"), new Wand());
+				break;
+			case "ende":
+				world.setTile(tile.getInt("x"), tile.getInt("y"), new Ende());
 				break;
 			default:
 				break;

@@ -1,6 +1,10 @@
 ordner in 
 	rsc/object pictures/
-erstellen mit dem Tilenamen
+erstellen mit dem Tilenamen, dann mit ordnern 
+		- deactivatedanimation 
+		- interactanimation
+		- activatedanimation
+	füllen, die jeweils die animationen von 000.png haben sollten
 Klasse erstellen mit dem Ordnernamen in
 	src/tiles
 hinzufügen zu WorldLoader, damit es aus den Welten laden kann

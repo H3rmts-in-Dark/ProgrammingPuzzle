@@ -54,7 +54,7 @@
     </head>
 
     <script>
-        const tileoptions = [null, "computer", "default", "förderband", "gewichtssensor", "lampe", "tonne", "wand"]
+        const tileoptions = [null, "computer", "default", "ende", "förderband", "gewichtssensor", "lampe", "tonne", "wand"]
         const signalcolors = [null, "red", "green", "blue"]
         const rotations = [null, "up", "down", "left", "right"]
         const cabletypes = ["notype", "n", "o", "s", "w", "no", "ns", "nw", "os", "ow", "sw", "nos", "now", "nsw", "osw", "nosw"]
@@ -137,6 +137,7 @@
             // Zeigt oder Verbirgt einzelne Formelemente
             switch (document.getElementById("tileoptions").value) {
                 case "null":
+                case "ende":
                 case "tonne":
                 case "wand":
                     setVisibilities(false, false, false, true)

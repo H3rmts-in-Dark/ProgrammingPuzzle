@@ -4,7 +4,6 @@ package frame;
 import java.awt.event.KeyEvent;
 
 import logic.DebuggingWindow;
-import logic.MainControl;
 import world.WorldSelectionWindow;
 
 
