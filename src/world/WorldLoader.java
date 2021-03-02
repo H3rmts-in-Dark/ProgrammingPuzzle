@@ -58,11 +58,14 @@ public class WorldLoader {
 			case "tonne":
 				world.setTile(tile.getInt("x"), tile.getInt("y"), new Tonne());
 				break;
+			case "wand":
+				world.setTile(tile.getInt("x"), tile.getInt("y"), new Wand());
+				break;
 			default:
 				break;
 			}
 		}
-		
+
 		// Entities
 		JSONArray entities = json.getJSONArray("entities");
 		for (int i = 0; i < entities.length(); i++) {

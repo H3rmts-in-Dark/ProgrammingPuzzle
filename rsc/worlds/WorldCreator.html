@@ -54,7 +54,7 @@
     </head>
 
     <script>
-        const tileoptions = [null, "computer", "default", "förderband", "gewichtssensor", "lampe", "tonne"]
+        const tileoptions = [null, "computer", "default", "förderband", "gewichtssensor", "lampe", "tonne", "wand"]
         const signalcolors = [null, "red", "green", "blue"]
         const rotations = [null, "up", "down", "left", "right"]
         const cabletypes = ["notype", "n", "o", "s", "w", "no", "ns", "nw", "os", "ow", "sw", "nos", "now", "nsw", "osw", "nosw"]
@@ -138,7 +138,8 @@
             switch (document.getElementById("tileoptions").value) {
                 case "null":
                 case "tonne":
-                    setVisibilities(true, false, false, true)
+                case "wand":
+                    setVisibilities(false, false, false, true)
                     break
                 case "computer":
                 case "default":
