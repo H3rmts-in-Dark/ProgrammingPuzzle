@@ -1,75 +1,60 @@
 package frame;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.TreeMap;
 
+import java.awt.Component;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.swing.JDesktopPane;
 import javax.swing.JLayeredPane;
 
 import abstractclasses.CustomWindow;
 import logic.Constants;
-import logic.Debugger;
+
 
 public class CustomWindowManager extends JLayeredPane implements Constants {
 
-	CustomWindow fullscreen;
-	TreeMap<Integer, LinkedList<CustomWindow>> windows;
+	HashMap<Integer,JDesktopPane> desktops;
 
-	ArrayList<CustomWindow> remove;
+	public CustomWindowManager(Rectangle rectangle) {
+		super();
+		desktops = new HashMap<>();
 
-	public CustomWindowManager() {
-		windows = new TreeMap<Integer, LinkedList<CustomWindow>>();
-		remove = new ArrayList<>();
+		setBounds(rectangle.x,rectangle.y,rectangle.width,rectangle.height);
+		setOpaque(false);
+
+		desktops.put(0,new JDesktopPane());
+		desktops.put(1,new JDesktopPane());
+
+		desktops.get(0).setBounds(rectangle.x,rectangle.y,rectangle.width,rectangle.height);
+		desktops.get(1).setBounds(rectangle.x,rectangle.y,rectangle.width,rectangle.height);
+
+		desktops.get(0).setOpaque(false);
+		desktops.get(1).setOpaque(false);
+
+		desktops.get(0).setVisible(true);
+		desktops.get(1).setVisible(true);
+
+		add(desktops.get(0),JLayeredPane.DEFAULT_LAYER);
+		add(desktops.get(1),JLayeredPane.PALETTE_LAYER);
+
+		// System.out.println(Arrays.asList(getComponents()));
 	}
 
-	public void addWindow(int layer, CustomWindow window) {
-		if (windows.get(layer) == null)
-			windows.put(layer, new LinkedList<>());
-		windows.get(layer).add(window);
-		add(window);
-		windowToFront(window);
-	}
-
-	public void removeWindow(CustomWindow Window) {
-		remove.add(Window);
-		Debugger.removeWindow(Window);
-		clean();
+	public void addWindow(int layer,CustomWindow window) {
+		desktops.get(1).add(window);
 	}
 
 	public ArrayList<CustomWindow> getWindows() {
-		ArrayList<CustomWindow> ret = new ArrayList<>();
-		for (LinkedList<CustomWindow> list : windows.values()) {
-			for (int i = 0; i < list.size(); i++) {
-				if (!remove.contains(list.get(i)))
-					ret.add(list.get(i));
-				else
-					list.remove(list.get(i));
+		var windows = new ArrayList<CustomWindow>();
+		for (JDesktopPane dp : desktops.values()) {
+			for (Component c : dp.getComponents()) {
+				if (c instanceof CustomWindow)
+					windows.add((CustomWindow) c);
 			}
 		}
-		return ret;
-	}
-
-	public void windowToFront(CustomWindow window) {
-		window.setLayer(10000);
-		clean();
-	}
-
-	private void clean() {
-		for (LinkedList<CustomWindow> linkedList : windows.values()) {
-			linkedList.sort(null);
-			int actlayer = 0;
-			for (CustomWindow window : linkedList) {
-				window.setLayer(actlayer);
-				actlayer++;
-			}
-		}
-		addComponents();
-	}
-
-	private void addComponents() {
-		for (LinkedList<CustomWindow> linkedList : windows.values())
-			for (CustomWindow customWindow : linkedList)
-				setLayer(customWindow, customWindow.getLayer());
+		return windows;
 	}
 
 }

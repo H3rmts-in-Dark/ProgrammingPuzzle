@@ -1,8 +1,9 @@
 package logic;
 
-import Programming.ProgrammingWindow;
+
 import world.World;
 import world.WorldSelectionWindow;
+
 
 public class MainControl {
 
@@ -24,8 +25,12 @@ public class MainControl {
 		return gameTicker;
 	}
 
-	public static void createProgrammingWindow() {
-		new ProgrammingWindow(world);
+	public static void deleteWorld() {
+		world.delete();
+	}
+
+	public static void setWorld(World world) {
+		MainControl.world = world;
 	}
 
 	public static void createWorldselectionWindow() {

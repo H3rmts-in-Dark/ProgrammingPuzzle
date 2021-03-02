@@ -27,7 +27,7 @@ abstract class Method {
 	}
 
 	@SuppressWarnings("incomplete-switch")
-	public Variable<?> execute(ArrayList<Object> parameters) throws CustomExeption {
+	public Variable<?> execute(ArrayList<Object> parameters) throws CustomExeption,InterruptedException {
 		ArrayList<Variable<?>> parameterlist = new ArrayList<>();
 		for (Object paramter : parameters) {
 			if (paramter instanceof Variable<?>) {
@@ -63,7 +63,7 @@ abstract class Method {
 						Interpreter.line);
 				}
 		}
-		System.out.println(Interpreter.sysoutin + "running " + name + " with parameters " + parameterlist);
+		Interpreter.log(Interpreter.sysoutin + "running " + name + " with parameters " + parameterlist);
 		return runCode(parameterlist.toArray(new Variable<?>[0]));
 	}
 
@@ -79,7 +79,7 @@ abstract class Method {
 		return name;
 	}
 
-	abstract Variable<?> runCode(Variable<?>...parameters) throws CustomExeption;
+	abstract Variable<?> runCode(Variable<?>...parameters) throws CustomExeption,InterruptedException;
 
 }
 
@@ -98,7 +98,7 @@ class print extends Method {
 	Variable<?> runCode(Variable<?>...parameters) {
 		try {
 			textPane.getDocument().insertString(textPane.getDocument().getLength(),parameters[0].getValue() + "\n",
-				null);
+				Interpreter.context.getStyle("normal"));
 			textPane.setCaretPosition(textPane.getDocument().getLength());
 		} catch (BadLocationException e) {
 			e.printStackTrace();
@@ -127,8 +127,8 @@ class printerr extends Method {
 	@Override
 	Variable<?> runCode(Variable<?>...parameters) {
 		try {
-			textPane.getDocument().insertString(textPane.getDocument().getLength(),
-				"error:" + parameters[0].getValue() + "\n",null);
+			textPane.getDocument().insertString(textPane.getDocument().getLength(),parameters[0].getValue() + "\n",
+				Interpreter.context.getStyle("error"));
 			textPane.setCaretPosition(textPane.getDocument().getLength());
 		} catch (BadLocationException e) {
 			e.printStackTrace();
@@ -176,12 +176,8 @@ class delay extends Method {
 	}
 
 	@Override
-	Variable<?> runCode(Variable<?>...parameters) {
-		try {
-			Thread.sleep((long) ((double) (parameters[0].getValue()) * 1000));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	Variable<?> runCode(Variable<?>...parameters) throws InterruptedException {
+		Thread.sleep((long) ((double) (parameters[0].getValue()) * 1000));
 		return null;
 	}
 

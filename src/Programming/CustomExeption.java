@@ -1,7 +1,11 @@
 package Programming;
 
 
-class CustomExeption extends Exception {
+import java.awt.Dimension;
+import java.awt.Point;
+
+
+public class CustomExeption extends Exception {
 
 	public CustomExeption(String exeption,int line) {
 		super(exeption + "  \nin Line: " + line);
@@ -172,6 +176,17 @@ class BooleanateExeption extends CustomExeption {
 	public BooleanateExeption(String calucation,String operator,Datatypes type1,Datatypes type2,int line) {
 		super("error booleanation: " + calucation + "  " + Datatypes.convert(type1) + operator
 			+ Datatypes.convert(type2) + " not suportet",line);
+	}
+
+}
+
+
+
+class WorldOutOfBoundsExeption extends CustomExeption {
+
+	public WorldOutOfBoundsExeption(Point position,Dimension dimension,int line) {
+		super(position.getX() + ":" + position.getY() + " out of Bounds for " + dimension.getWidth() + "*"
+			+ dimension.getHeight(),line);
 	}
 
 }

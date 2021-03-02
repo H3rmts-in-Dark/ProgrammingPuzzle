@@ -1,5 +1,6 @@
 package abstractclasses;
 
+
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Component;
@@ -16,7 +17,6 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import javax.swing.JInternalFrame;
-import javax.swing.JLayeredPane;
 import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
@@ -25,58 +25,50 @@ import frame.Frame;
 import logic.Constants;
 import logic.Debugger;
 
-public abstract class CustomWindow extends JInternalFrame implements Comparable<CustomWindow>, Constants {
 
-	private int layer = 10000;
+public abstract class CustomWindow extends JInternalFrame implements Comparable<CustomWindow>,Constants {
 
 	private Canvas drawarea;
 
 	public CustomWindow(String title) {
-		this(DEFAULTWITH, DEFAULTHEIGHT, title);
+		this(DEFAULTWITH,DEFAULTHEIGHT,title);
 	}
 
-	public CustomWindow(int defaultWidht, int defaultHeight, String title) {
-		this(defaultWidht, defaultHeight, new Point(DEFAULTX, DEFAULTY), title, 1);
+	public CustomWindow(int defaultWidht,int defaultHeight,String title) {
+		this(defaultWidht,defaultHeight,new Point(DEFAULTX,DEFAULTY),title,1);
 	}
 
-	public CustomWindow(int width, int height, Point defaultPosition, String title, int level) {
-		this(width, height, defaultPosition, title, level, true);
+	public CustomWindow(int Widht,int Height,Point defaultPosition,String title,int level) {
+		this(Widht,Height,defaultPosition,title,level,true);
 	}
 
-	public CustomWindow(int width, int height, Point defaultPosition, String title, int level, boolean def) {
-		setClosable(true);
+	public CustomWindow(int Widht,int Height,Point defaultPosition,String title,int level,boolean def) {
+		super(title + "  " + new Random().nextInt(999),true,true,true,true);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		setMaximizable(true);
-		setResizable(true);
 		setVisible(true);
-		setTitle(title);
-		setLocation(defaultPosition.x, defaultPosition.y);
-		setSize(width, height);
-		setTitle(title + "  " + new Random().nextInt(999));
+		setLocation(defaultPosition.x,defaultPosition.y);
+		setSize(Widht,Height);
 		setFocusable(true);
-		setIgnoreRepaint(true);
 
 		if (def) {
 			setLayout(null);
 
 			drawarea = new Canvas();
-			drawarea.setLocation(0, 0);
+			drawarea.setLocation(0,0);
 
-			add(drawarea, JLayeredPane.DEFAULT_LAYER);
+			add(drawarea);
 
 			drawarea.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mousePressed(MouseEvent e) {
-					Frame.getWindowManager().windowToFront(getThis());
-				}
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					getThis().mousePressed(e.getPoint());
 				}
+
 			});
 
 			drawarea.addMouseMotionListener(new MouseAdapter() {
+
 				@Override
 				public void mouseMoved(MouseEvent e) {
 					getThis().mouseMoved(e.getPoint());
@@ -86,13 +78,16 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 				public void mouseDragged(MouseEvent e) {
 					getThis().mouseMoved(e.getPoint());
 				}
+
 			});
 
 			drawarea.addMouseWheelListener(new MouseAdapter() {
+
 				@Override
 				public void mouseWheelMoved(MouseWheelEvent e) {
 					getThis().mouseWheelMoved(e.getWheelRotation());
 				}
+
 			});
 		}
 
@@ -100,11 +95,13 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 
 			@Override
 			public void internalFrameClosing(InternalFrameEvent e) {
-				Frame.getWindowManager().removeWindow(getThis());
+				Debugger.removeWindow(getThis());
 			}
+
 		});
 
-		Frame.getWindowManager().addWindow(level, this);
+		Frame.getWindowManager().addWindow(level,this);
+		toFront();
 		if (def)
 			drawarea.createBufferStrategy(3);
 	}
@@ -136,10 +133,9 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 					drawimage = getErrorImage();
 				}
 				g2.setColor(Color.BLACK);
-				g2.fillRect(0, 0, drawarea.getWidth(), drawarea.getHeight());
-				g2.drawImage(drawimage, 0, 0, null);
+				g2.fillRect(0,0,drawarea.getWidth(),drawarea.getHeight());
+				g2.drawImage(drawimage,0,0,null);
 				g2.dispose();
-
 			} while (bs.contentsRestored());
 			bs.show();
 		} while (bs.contentsLost());
@@ -151,7 +147,7 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	 * Gibt ein BufferedImage zur�ck, das die Ausma�e des Fensters hat.
 	 */
 	protected BufferedImage getEmptyImage() {
-		return new BufferedImage(getImageborders().width, getImageborders().height, BufferedImage.TYPE_INT_RGB);
+		return new BufferedImage(getImageborders().width,getImageborders().height,BufferedImage.TYPE_INT_RGB);
 	}
 
 	/**
@@ -160,26 +156,15 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	 * @return
 	 */
 	public Rectangle getImageborders() {
-		return new Rectangle(0, 0, getWidth(), getHeight());
+		return new Rectangle(0,0,getWidth(),getHeight());
 	}
 
-	@Override
-	public int getLayer() {
-		return layer;
-	}
-
-	@Override
-	public void setLayer(int layer) {
-		this.layer = layer;
-	}
-
-	public void setComponentLocation(int x, int y, Component component) {
-		component.setLocation(x + getX(), y + getY());
+	public void setComponentLocation(int x,int y,Component component) {
+		component.setLocation(x + getX(),y + getY());
 	}
 
 	/**
-	 * Gibt ein Fehlerbild zur�ck, das leicht zu erkennen l�sst, das etwas nicht
-	 * stimmt.
+	 * Gibt ein Fehlerbild zur�ck, das leicht zu erkennen l�sst, das etwas nicht stimmt.
 	 * 
 	 * @return
 	 */
@@ -187,10 +172,10 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 		BufferedImage image = getEmptyImage();
 		Graphics2D g2 = image.createGraphics();
 		g2.setColor(Color.BLUE);
-		g2.fillRect(0, 0, image.getWidth(), image.getHeight());
-		g2.setFont(new Font("Default", Font.BOLD, 20));
+		g2.fillRect(0,0,image.getWidth(),image.getHeight());
+		g2.setFont(new Font("Default",Font.BOLD,20));
 		g2.setColor(Color.BLACK);
-		g2.drawString("Nothing to paint", image.getWidth() / 2 - 60, image.getHeight() / 2);
+		g2.drawString("Nothing to paint",image.getWidth() / 2 - 60,image.getHeight() / 2);
 		g2.dispose();
 		return image;
 	}
@@ -204,7 +189,9 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	}
 
 	/**
-	 * Override this method to process MouseMove-events in windowimage
+	 * <<<<<<< HEAD override to process mousemove events in windowimage leave
+	 * super.Mousemoved(point); ======= Override this method to process MouseMove-events in
+	 * windowimage >>>>>>> master
 	 * 
 	 * @param point
 	 */

@@ -24,9 +24,8 @@ public class DebuggingWindow extends CustomWindow {
 	// OperatingSystemMXBean os = (OperatingSystemMXBean)
 	// ManagementFactory.getOperatingSystemMXBean();
 
-	@SuppressWarnings("unused")
 	public DebuggingWindow() {
-		super(300,400,new Point(20,20),"Debugging",1);
+		super(300,400,new Point(20,20),"Debugging",0);
 		new Task(15,-1) {
 
 			@Override

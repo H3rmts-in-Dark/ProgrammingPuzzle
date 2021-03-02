@@ -35,7 +35,6 @@ public class UserInputInterpreter {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void commandProcessor(String command) {
 		String prccommand = command.replace("\n","").toLowerCase();
 		if (prccommand.equals("debug")) {
