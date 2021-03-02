@@ -37,12 +37,9 @@ public class Interpreter {
 	}
 
 	public static void log(Object str) {
-		try {
-			log.getDocument().insertString(log.getDocument().getLength(),str.toString() + "\n",null);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
+		insertText((AbstractDocument) log.getDocument(),str.toString() + "\n",false,Interpreter.Syles.compliernormal);
 		System.out.println(str.toString());
+		log.setCaretPosition(log.getDocument().getLength());
 	}
 
 	public static void interpret(String str) {
@@ -54,10 +51,14 @@ public class Interpreter {
 
 		while (text.val.length() > 0) {
 			try {
-				interpretblock(text);
-			} catch (CustomExeption e) {
-				// e.printStackTrace();
-				exeption = e.getMessage();
+				try {
+					interpretblock(text);
+				} catch (CustomExeption e) {
+					// e.printStackTrace();
+					exeption = e.getMessage();
+					break;
+				}
+			} catch (InterruptedException e) {
 				break;
 			}
 		}
@@ -65,22 +66,23 @@ public class Interpreter {
 			Thread.sleep(30);
 		} catch (InterruptedException e) {
 		}
-		if (exeption != "")
+		if (exeption != "") {
+			insertText((AbstractDocument) log.getDocument(),exeption,false,Interpreter.Syles.compliererror);
 			System.err.println(exeption);
-		else {
+			System.out.println("rest:" + text.val);
+		} else {
 			Interpreter.log("\n" + variables);
-
 			Interpreter.log("\n" + methods);
 		}
 	}
 
-	public static void initmethods(Player player,JTextPane pane,JTextPane log) throws UnsupportetMethodNameExeption {
+	public static void initmethods(Player player,JTextPane output,JTextPane log) throws UnsupportetMethodNameExeption {
 		methods = new MethodList();
 		variables = new VariableList();
 
-		methods.addMethod(new print(pane));
+		methods.addMethod(new print(output));
 
-		methods.addMethod(new printerr(pane));
+		methods.addMethod(new printerr(output));
 
 		methods.addMethod(new toString());
 
@@ -93,6 +95,7 @@ public class Interpreter {
 		methods.addMethod(new playermove(player));
 
 		Interpreter.log = log;
+		System.out.println("log:" + log.getText());
 	}
 
 	private static void initvariables()
@@ -115,9 +118,10 @@ public class Interpreter {
 	/**
 	 * @param text
 	 * @throws CustomExeption
+	 * @throws InterruptedException
 	 */
 	@SuppressWarnings({"incomplete-switch","null"})
-	public static void interpretblock(CustStr text) throws CustomExeption {
+	public static void interpretblock(CustStr text) throws CustomExeption,InterruptedException {
 		if (text.val.isBlank()) {
 			text.val = "";
 			return;
@@ -133,7 +137,10 @@ public class Interpreter {
 			if (StrUtils.count(full,"\n") > 0)
 				line += StrUtils.count(full,"\n");
 
-			text.val = StrUtils.removetext(text.val,full);
+			System.out.println("bevtext.val:" + text.val);
+			System.out.println("remove:" + full + "{ }");
+			text.val = StrUtils.removetext(text.val,full + "{ }");
+			System.out.println("text.val:" + text.val);
 
 			first = StrUtils.fullstrip(first);
 
@@ -398,10 +405,10 @@ public class Interpreter {
 	}
 
 	public enum Syles {
-		datatype,variable,method,parameters,keyword,clear
+		datatype,variable,method,parameters,keyword,clear,compliernormal,compliererror
 	}
 
-	static StyleContext context;
+	public static StyleContext context;
 
 	static {
 		context = new StyleContext();
@@ -413,24 +420,31 @@ public class Interpreter {
 		StyleConstants.setFontSize(variable,15);
 		final Style method = context.addStyle("method",null);
 		StyleConstants.setForeground(method,Color.GREEN);
-		StyleConstants.setFontSize(method,17);
+		StyleConstants.setFontSize(method,15);
 		final Style parameters = context.addStyle("parameters",null);
 		StyleConstants.setForeground(parameters,Color.ORANGE);
-		StyleConstants.setFontSize(parameters,17);
+		StyleConstants.setFontSize(parameters,15);
 		final Style keyword = context.addStyle("keyword",null);
 		StyleConstants.setForeground(keyword,Color.RED);
-		StyleConstants.setFontSize(keyword,17);
+		StyleConstants.setFontSize(keyword,15);
+		final Style clean = context.addStyle("clean",null);
+		StyleConstants.setForeground(clean,Color.BLACK);
+		StyleConstants.setFontSize(clean,15);
+		final Style compliernormal = context.addStyle("compliernormal",null);
+		StyleConstants.setForeground(compliernormal,Color.BLACK);
+		StyleConstants.setFontSize(compliernormal,12);
+		final Style compliererror = context.addStyle("compliererror",null);
+		StyleConstants.setForeground(compliererror,Color.RED);
+		StyleConstants.setFontSize(compliererror,12);
 	}
 
 	/*
-	 * playermove(2);
-	 * 
-	 * while (i > 0) { print(3); }
+	 * int i = 12; while (i > 0) { print(3); i = i - 2; delay(1); }
 	 * 
 	 */
 
 	public static void insertText(AbstractDocument doc,String str,boolean indent,Interpreter.Syles style) {
-		System.out.println("inserting " + str + " with " + style);
+		// System.out.println("inserting " + str + " with " + style);
 		try {
 			switch (style) {
 				case datatype:
@@ -454,7 +468,18 @@ public class Interpreter {
 						context.getStyle("variable"));
 				break;
 				case clear:
-					doc.insertString(doc.getLength(),(indent ? Interpreter.indent : "") + str,null);
+					doc.insertString(doc.getLength(),(indent ? Interpreter.indent : "") + str,
+						context.getStyle("clean"));
+				break;
+				case compliererror:
+					doc.insertString(doc.getLength(),(indent ? Interpreter.indent : "") + str,
+						context.getStyle("compliererror"));
+				break;
+				case compliernormal:
+					doc.insertString(doc.getLength(),(indent ? Interpreter.indent : "") + str,
+						context.getStyle("compliernormal"));
+				break;
+				default:
 				break;
 			}
 		} catch (BadLocationException e) {
@@ -474,7 +499,6 @@ public class Interpreter {
 
 		if (StrUtils.startswith(StrUtils.fullstrip(text.val),Keywords.values())) { // keyword
 			String first = StrUtils.first(text.val,'{');
-			text.val = StrUtils.removetext(text.val,first);
 			first = StrUtils.fullstrip(first);
 			Interpreter.log(sysoutin + "process: " + StrUtils.removespace(first));
 
@@ -484,6 +508,9 @@ public class Interpreter {
 			insertText(doc,name,true,Syles.keyword);
 
 			String inner = StrUtils.getSection(text.val,'{','}');
+
+			text.val = StrUtils.removetext(text.val,first + inner);
+
 			inner = inner.substring(1,inner.length() - 1);
 			Interpreter.log(sysoutin + "inner block: " + StrUtils.removespace(inner));
 
@@ -597,7 +624,7 @@ public class Interpreter {
 								newparams.add(params.indexOf(param),param);
 							}
 						}
-						value = met.execute(newparams).getValue().toString();
+						// value = met.execute(newparams).getValue().toString();
 					} else if (part.contains("+") || part.contains("-") || part.contains("*") || part.contains("/")) {
 						value = calculate(value);
 						Interpreter.log(sysoutin + "value: " + value);
@@ -643,7 +670,7 @@ public class Interpreter {
 								}
 							}
 							Interpreter.log(newparams);
-							value = met.execute(newparams).getValue().toString();
+							// value = met.execute(newparams).getValue().toString();
 						} else if (part.contains("+") || part.contains("-") || part.contains("*")
 							|| part.contains("/")) {
 							value = calculate(value);

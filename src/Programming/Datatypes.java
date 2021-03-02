@@ -305,7 +305,7 @@ class VariableList extends ArrayList<Variable<?>> {
 	public String toString() {
 		String ret = "VariableList:\n";
 		for (Variable<?> var : this) {
-			ret += "  " + var.toString() + "\n";
+			ret += "    " + var.toString() + "\n";
 		}
 		return ret;
 	}

@@ -67,7 +67,7 @@ abstract class Keyword {
 	}
 
 	@SuppressWarnings("incomplete-switch")
-	public boolean execute(ArrayList<Object> parameters) throws CustomExeption {
+	public boolean execute(ArrayList<Object> parameters) throws CustomExeption,InterruptedException {
 		ArrayList<Variable<?>> parameterlist = new ArrayList<>();
 		for (Object paramter : parameters) {
 			if (paramter instanceof Variable<?>) {
@@ -114,7 +114,7 @@ abstract class Keyword {
 		return name;
 	}
 
-	abstract boolean run(Variable<?>...parameters) throws CustomExeption;
+	abstract boolean run(Variable<?>...parameters) throws CustomExeption,InterruptedException;
 
 }
 
@@ -127,7 +127,7 @@ class MY_if extends Keyword {
 	}
 
 	@Override
-	boolean run(Variable<?>...parameters) throws CustomExeption {
+	boolean run(Variable<?>...parameters) throws CustomExeption,InterruptedException {
 		if ((boolean) parameters[0].getValue()) {
 			CustStr str = new CustStr(inner.strip());
 			Interpreter.log("");
@@ -154,7 +154,7 @@ class MY_while extends Keyword {
 	}
 
 	@Override
-	boolean run(Variable<?>...parameters) throws CustomExeption {
+	boolean run(Variable<?>...parameters) throws CustomExeption,InterruptedException {
 		if ((boolean) parameters[0].getValue()) {
 			CustStr str = new CustStr(inner.strip());
 			Interpreter.log("");

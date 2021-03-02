@@ -114,7 +114,6 @@ public class World implements Constants {
 		for (int x = 0; x < getWidth(); x++)
 			for (int y = 0; y < getHeight(); y++)
 				getTile(x,y).delete();
-
 		try {
 			programmingWindow.setClosed(true);
 			window.setClosed(true);

@@ -4,7 +4,6 @@ package frame;
 import java.awt.Component;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.JDesktopPane;
@@ -40,7 +39,7 @@ public class CustomWindowManager extends JLayeredPane implements Constants {
 		add(desktops.get(0),JLayeredPane.DEFAULT_LAYER);
 		add(desktops.get(1),JLayeredPane.PALETTE_LAYER);
 
-		System.out.println(Arrays.asList(getComponents()));
+//		System.out.println(Arrays.asList(getComponents()));
 	}
 
 	public void addWindow(int layer,CustomWindow window) {

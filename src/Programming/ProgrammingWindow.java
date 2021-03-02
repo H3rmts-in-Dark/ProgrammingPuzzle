@@ -12,8 +12,13 @@ import java.awt.event.AdjustmentListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
@@ -24,10 +29,12 @@ import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JPopupMenu.Separator;
@@ -44,15 +51,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
@@ -79,7 +84,6 @@ public class ProgrammingWindow extends CustomWindow {
 	private JCheckBoxMenuItem MenuBarPreferencesItem2;
 	private JCheckBoxMenuItem MenuBarPreferencesItem3;
 	private JMenuItem MenuBarFileItem1;
-	private JMenuItem MenuBarFileItem3;
 	private JMenuItem MenuBarFileItem4;
 	/* ================================================================= */
 	private JTabbedPane TabbedPane;
@@ -97,8 +101,6 @@ public class ProgrammingWindow extends CustomWindow {
 	private JScrollPane ConsoleTextfPaneScrollPane;
 	private JTextPane ConsoleTextPane;
 	/* ================================================================= */
-
-	public static StyleContext styleConstants;
 
 	public ProgrammingWindow(World world) {
 		super(700,700,new Point(400,40),"Programming Window",1,false);
@@ -161,27 +163,16 @@ public class ProgrammingWindow extends CustomWindow {
 
 		Tabs = new ArrayList<>();
 
-		addTab("clear","");
+		addTab("clear");
 	}
 
-	public void addTab(String name,String ins) {
-		Tab firstTab = new Tab(this,ins);
-		Tabs.add(firstTab);
+	public Tab addTab(String name) {
+		Tab addTab = new Tab(this);
+		Tabs.add(addTab);
 
-		TabbedPane.addTab(name,firstTab);
-	}
-
-	static {
-		styleConstants = new StyleContext();
-		final Style normal = styleConstants.addStyle("normal",null);
-		StyleConstants.setForeground(normal,Color.BLACK);
-		StyleConstants.setFontSize(normal,15);
-		final Style error = styleConstants.addStyle("error",null);
-		StyleConstants.setForeground(error,Color.RED);
-		StyleConstants.setFontSize(error,15);
-		final Style code = styleConstants.addStyle("code",null);
-		StyleConstants.setForeground(code,Color.BLACK);
-		StyleConstants.setFontSize(code,17);
+		TabbedPane.addTab(name,addTab);
+		TabbedPane.setSelectedComponent(addTab);
+		return addTab;
 	}
 
 	public void GenerateMenuBar(Actionlist actions,Tab tab) {
@@ -199,11 +190,6 @@ public class ProgrammingWindow extends CustomWindow {
 		MenuBarFileItem2.setText("Open File");
 		addListener(MenuBarFileItem2,this,tab);
 		MenuBarFile.add(MenuBarFileItem2);
-
-		MenuBarFileItem3 = new JMenuItem();
-		MenuBarFileItem3.setText("Save File");
-		addListener(MenuBarFileItem3,this,tab);
-		MenuBarFile.add(MenuBarFileItem3);
 
 		MenuBarFileItem4 = new JMenuItem();
 		MenuBarFileItem4.setText("Save File as");
@@ -279,7 +265,9 @@ public class ProgrammingWindow extends CustomWindow {
 		setJMenuBar(MenuBar);
 	}
 
-	public void GenerateOutputPanel(Actionlist actions,Tab tab) {
+	public JTextPane[] GenerateOutputPanel(Actionlist actions,Tab tab) {
+		getContentPane().setLayout(null);
+
 		Run = new JButton(actions.get("Run"));
 		Run.setFont(new Font("Arial",1,10));
 
@@ -287,15 +275,11 @@ public class ProgrammingWindow extends CustomWindow {
 		Stop.setFont(new Font("Arial",1,10));
 		addListener(Stop,this,tab);
 
-		RunningLabel = new JLabel("Stopped");
-		RunningLabel.setFont(new Font("Arial",1,16));
-
 		OutputTabbedPane = new JTabbedPane();
 		OutputTabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
 
 		OutputTextPane = new JTextPane();
 		OutputTextPane.setEditable(false);
-		OutputTextPane.setOpaque(true);
 		OutputTextPane.setMargin(new Insets(5,5,5,5));
 		OutputTextPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
 
@@ -313,6 +297,10 @@ public class ProgrammingWindow extends CustomWindow {
 		OutputLabel = new JLabel("Output");
 		OutputLabel.setFont(new Font("Arial",1,16));
 
+		RunningLabel = new JLabel("Stopped");
+		getRunningLabel().setForeground(Color.RED);
+		getRunningLabel().setFont(new Font("Arial",1,12));
+
 		OutputPanel = new JPanel();
 		OutputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,2,false));
 
@@ -325,29 +313,52 @@ public class ProgrammingWindow extends CustomWindow {
 					.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,82,GroupLayout.PREFERRED_SIZE)
 					.addGroup(OutputPanelLayout.createSequentialGroup()
 						.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+							.addComponent(getRunningLabel(),GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE)
 							.addComponent(Run,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE)
 							.addComponent(Stop,GroupLayout.PREFERRED_SIZE,53,GroupLayout.PREFERRED_SIZE))
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(OutputTabbedPane)))
 				.addContainerGap()));
 
-		OutputPanelLayout.setVerticalGroup(
-			OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(OutputPanelLayout
-				.createParallelGroup().addGroup(OutputPanelLayout.createSequentialGroup()
-
+		OutputPanelLayout.setVerticalGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+			.addGroup(OutputPanelLayout.createParallelGroup()
+				.addGroup(OutputPanelLayout.createSequentialGroup()
 					.addComponent(OutputLabel,GroupLayout.PREFERRED_SIZE,22,GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-					//
 					.addGroup(OutputPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(OutputPanelLayout.createSequentialGroup().addComponent(Run)
-							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(Stop)
-							.addGap(0,123,Short.MAX_VALUE))))
+						.addGroup(OutputPanelLayout.createSequentialGroup().addGap(15,15,15)
+							.addComponent(getRunningLabel()).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addComponent(Run).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addComponent(Stop).addGap(0,123,Short.MAX_VALUE))))
 				.addGroup(
 					OutputPanelLayout.createSequentialGroup().addGap(5).addComponent(OutputTabbedPane).addGap(5))));
+
+		GroupLayout jInternalFrame1Layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(jInternalFrame1Layout);
+		jInternalFrame1Layout
+			.setHorizontalGroup(jInternalFrame1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(TabbedPane,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)
+				.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE));
+		jInternalFrame1Layout.setVerticalGroup(jInternalFrame1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+			.addGroup(jInternalFrame1Layout.createSequentialGroup()
+				.addComponent(TabbedPane,GroupLayout.PREFERRED_SIZE,457,GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+				.addComponent(OutputPanel,GroupLayout.DEFAULT_SIZE,300,GroupLayout.PREFERRED_SIZE)));
+
+		repaint();
+
+		JTextPane[] ret = new JTextPane[2];
+		ret[0] = OutputTextPane;
+		ret[1] = ConsoleTextPane;
+		return ret;
 
 	}
 
 	public static void addListener(AbstractButton button,ProgrammingWindow window,Tab tab) {
 		button.addActionListener(new Listener(window,tab));
+	}
+
+	public JLabel getRunningLabel() {
+		return RunningLabel;
 	}
 
 }
@@ -383,7 +394,7 @@ class Tab extends JPanel {
 
 	private Thread interpretter;
 
-	public Tab(ProgrammingWindow window,String start) {
+	public Tab(ProgrammingWindow window) {
 
 		ProgrammingPane = new JTextPane();
 		ProgrammingPane.setEditable(true);
@@ -479,8 +490,7 @@ class Tab extends JPanel {
 			@Override
 			public void replace(FilterBypass fb,int offset,int length,String text,AttributeSet attrs)
 				throws BadLocationException {
-				super.insertString(fb,offset,text.replace("\t","   "),
-					ProgrammingWindow.styleConstants.getStyle("code"));
+				super.insertString(fb,offset,text.replace("\t","   "),Interpreter.context.getStyle("code"));
 			}
 
 		});
@@ -495,12 +505,6 @@ class Tab extends JPanel {
 			}
 
 		});
-
-		try {
-			ProgrammingPane.getDocument().insertString(0,start,null);
-		} catch (BadLocationException e1) {
-			e1.printStackTrace();
-		}
 
 	}
 
@@ -521,15 +525,19 @@ class Tab extends JPanel {
 		this.interpretter = interpretter;
 	}
 
+	public JTextPane getProgrammingPane() {
+		return ProgrammingPane;
+	}
+
 	public void updateBars(ProgrammingWindow window) {
+		window.GenerateMenuBar(actions,this);
+		JTextPane[] panes = window.GenerateOutputPanel(actions,this);
 		try {
-			Interpreter.initmethods(window.getWorld().getPlayer(),window.getOutputTextPane(),
-				window.getConsoleTextPane());
+			System.out.println(Arrays.asList(panes));
+			Interpreter.initmethods(window.getWorld().getPlayer(),panes[0],panes[1]);
 		} catch (UnsupportetMethodNameExeption e) {
 			System.err.println(e.getMessage());
 		}
-		window.GenerateMenuBar(actions,this);
-		window.GenerateOutputPanel(actions,this);
 	}
 
 	private void addBindings() {
@@ -570,7 +578,7 @@ class Tab extends JPanel {
 
 			for (int i = 1; i <= ProgrammingPane.getText().length()
 				- ProgrammingPane.getText().replaceAll("\n","").length() + 1; i++) {
-				doc.insertString(doc.getLength(),i + "\n",ProgrammingWindow.styleConstants.getStyle("code"));
+				doc.insertString(doc.getLength(),i + "\n",Interpreter.context.getStyle("clean"));
 			}
 			synchronizer.adjustmentValueChanged(new AdjustmentEvent(ProgrammingPaneScrollPane.getVerticalScrollBar(),2,
 				12,ProgrammingPaneScrollPane.getVerticalScrollBar().getValue()));
@@ -745,6 +753,14 @@ class InterpretAction extends AbstractAction {
 		} catch (NullPointerException e2) {
 		}
 
+		// window.getConsoleTextPane().setText("");
+		// window.getOutputTextPane().setText("");
+
+		window.getRunningLabel().setText("Running");
+		window.getRunningLabel().setForeground(Color.GREEN);
+
+		window.repaint();
+
 		tab.setInterpretter(new Thread() {
 
 			@Override
@@ -760,6 +776,9 @@ class InterpretAction extends AbstractAction {
 
 		});
 		tab.getInterpretter().start();
+
+		window.getRunningLabel().setText("Stopped");
+		window.getRunningLabel().setForeground(Color.RED);
 	}
 
 }
@@ -803,24 +822,72 @@ class Listener implements ActionListener {
 		this.tab = tab;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(((AbstractButton) e.getSource()).getText());
 		switch (((AbstractButton) e.getSource()).getText()) {
 			case "New File":
-				window.addTab("unnamed","");
+				window.addTab("unnamed");
 			break;
 			case "Open File":
-			break;
-			case "Save File":
+				JFileChooser fc = new JFileChooser(new File("rsc/saves/"));
+				fc.setDialogTitle("Select a File");
+
+				fc.showSaveDialog(null);
+
+				File file = fc.getSelectedFile();
+				if (!new FileNameExtensionFilter("programming files","epl").accept(file)) {
+					System.err.println("invalid file");
+					break;
+				}
+				Tab ntab = window.addTab(file.getName());
+
+				Scanner sc;
+				try {
+					sc = new Scanner(file);
+					while (sc.hasNextLine())
+						ntab.getProgrammingPane().getDocument().insertString(
+							ntab.getProgrammingPane().getDocument().getLength(),sc.nextLine() + "\n",
+							Interpreter.context.getStyle("clean"));
+					sc.close();
+				} catch (FileNotFoundException | BadLocationException e1) {
+					e1.printStackTrace();
+				}
 			break;
 			case "Save File as":
+				final JFileChooser fc1 = new JFileChooser(new File("rsc/saves/"));
+				fc1.setDialogTitle("Save File");
+				fc1.setDialogType(JFileChooser.SAVE_DIALOG);
+				fc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+				fc1.showSaveDialog(null);
+
+				File file1 = fc1.getSelectedFile();
+				if (!new FileNameExtensionFilter("programming files","epl").accept(file1)) {
+					file1 = new File(file1.getPath() + ".epl");
+				}
+
+				if (!file1.exists() || (file1.exists() && JOptionPane.showConfirmDialog(null,"File exists, overwrite?",
+					"Overwrite",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)) {
+					FileWriter wr;
+					try {
+						wr = new FileWriter(file1);
+						wr.write(tab.getProgrammingPane().getText());
+						wr.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+
 			break;
 			case "Stop":
 				try {
 					tab.getInterpretter().interrupt();
 				} catch (NullPointerException e2) {
 				}
+				window.getRunningLabel().setText("Stopped");
+				window.getRunningLabel().setForeground(Color.RED);
 			break;
 		}
 	}
