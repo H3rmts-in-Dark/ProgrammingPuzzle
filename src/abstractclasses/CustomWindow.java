@@ -39,11 +39,11 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 		this(defaultWidht, defaultHeight, new Point(DEFAULTX, DEFAULTY), title, 1);
 	}
 
-	public CustomWindow(int Widht, int Height, Point defaultPosition, String title, int level) {
-		this(Widht, Height, defaultPosition, title, level, true);
+	public CustomWindow(int width, int height, Point defaultPosition, String title, int level) {
+		this(width, height, defaultPosition, title, level, true);
 	}
 
-	public CustomWindow(int Widht, int Height, Point defaultPosition, String title, int level, boolean def) {
+	public CustomWindow(int width, int height, Point defaultPosition, String title, int level, boolean def) {
 		setClosable(true);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setMaximizable(true);
@@ -51,7 +51,7 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 		setVisible(true);
 		setTitle(title);
 		setLocation(defaultPosition.x, defaultPosition.y);
-		setSize(Widht, Height);
+		setSize(width, height);
 		setTitle(title + "  " + new Random().nextInt(999));
 		setFocusable(true);
 		setIgnoreRepaint(true);
@@ -65,7 +65,6 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 			add(drawarea, JLayeredPane.DEFAULT_LAYER);
 
 			drawarea.addMouseListener(new MouseAdapter() {
-
 				@Override
 				public void mousePressed(MouseEvent e) {
 					Frame.getWindowManager().windowToFront(getThis());
@@ -75,11 +74,9 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 				public void mouseReleased(MouseEvent e) {
 					getThis().mousePressed(e.getPoint());
 				}
-
 			});
 
 			drawarea.addMouseMotionListener(new MouseAdapter() {
-
 				@Override
 				public void mouseMoved(MouseEvent e) {
 					getThis().mouseMoved(e.getPoint());
@@ -89,16 +86,13 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 				public void mouseDragged(MouseEvent e) {
 					getThis().mouseMoved(e.getPoint());
 				}
-
 			});
 
 			drawarea.addMouseWheelListener(new MouseAdapter() {
-
 				@Override
 				public void mouseWheelMoved(MouseWheelEvent e) {
 					getThis().mouseWheelMoved(e.getWheelRotation());
 				}
-
 			});
 		}
 
@@ -108,7 +102,6 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 			public void internalFrameClosing(InternalFrameEvent e) {
 				Frame.getWindowManager().removeWindow(getThis());
 			}
-
 		});
 
 		Frame.getWindowManager().addWindow(level, this);
@@ -203,7 +196,7 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	}
 
 	/**
-	 * override to process click events in windowimage
+	 * Override this method to process Click-events in windowimage
 	 * 
 	 * @param point
 	 */
@@ -211,8 +204,7 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	}
 
 	/**
-	 * override to process mousemove events in windowimage leave
-	 * super.Mousemoved(point);
+	 * Override this method to process MouseMove-events in windowimage
 	 * 
 	 * @param point
 	 */
@@ -220,7 +212,7 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	}
 
 	/**
-	 * override to process mouseWheelmove events in windowimage
+	 * Override this method to process MouseWheelMove-events in windowimage
 	 * 
 	 * @param direction
 	 */

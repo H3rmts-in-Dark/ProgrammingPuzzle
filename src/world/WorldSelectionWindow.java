@@ -23,6 +23,11 @@ import javax.swing.SwingConstants;
 import abstractclasses.CustomWindow;
 
 public class WorldSelectionWindow extends CustomWindow {
+	
+	/**
+	 * Namen hier hinzufügen, damit der Ordner mit den Welten in "rsc/worlds/" ausgelesen wird
+	 */
+	private final String[] tabs = { "Testing", "Factory", "Laboratory" };
 
 	JTabbedPane TabbedPane;
 
@@ -38,14 +43,11 @@ public class WorldSelectionWindow extends CustomWindow {
 		TabbedPane.setToolTipText("");
 
 		Tabs = new ArrayList<>();
-
-		Tab tab = new Tab("Factory");
-		Tabs.add(tab);
-		TabbedPane.addTab(tab.name, tab);
-
-		tab = new Tab("Laboratory");
-		Tabs.add(tab);
-		TabbedPane.addTab(tab.name, tab);
+		for (String tabname : tabs) {
+			Tab tab = new Tab(tabname);
+			Tabs.add(tab);
+			TabbedPane.addTab(tab.name, tab);
+		}
 
 		GroupLayout jInternalFrame1Layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(jInternalFrame1Layout);
@@ -82,6 +84,7 @@ class Tab extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Click");
 				try {
+					// TODO Hier fehlt die Methode, die alle Fenster schließt, die mit der Welt zu tun haben
 					WorldLoader.getWorld(name + "/" + ((AbstractButton) e.getSource()).getText());
 				} catch (FileNotFoundException fnfe) {
 					System.err.println(
