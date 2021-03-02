@@ -28,12 +28,17 @@ import logic.MainControl;
 
 public class WorldSelectionWindow extends CustomWindow {
 
+	/**
+	 * Namen hier hinzufügen, damit der Ordner mit den Welten in "rsc/worlds/" ausgelesen wird
+	 */
+	private final String[] tabs = {"Testing","Factory","Laboratory"};
+
 	JTabbedPane TabbedPane;
 
 	private ArrayList<Tab> Tabs;
 
 	public WorldSelectionWindow() {
-		super(600,500,new Point(20,20),"WorldSelectionWindow",1,false);
+		super(600,500,new Point(20,20),"WorldSelectionWindow",0,false);
 
 		setResizable(false);
 
@@ -42,14 +47,11 @@ public class WorldSelectionWindow extends CustomWindow {
 		TabbedPane.setToolTipText("");
 
 		Tabs = new ArrayList<>();
-
-		Tab tab = new Tab("Factory",this);
-		Tabs.add(tab);
-		TabbedPane.addTab(tab.name,tab);
-
-		tab = new Tab("Laboratory",this);
-		Tabs.add(tab);
-		TabbedPane.addTab(tab.name,tab);
+		for (String tabname : tabs) {
+			Tab tab = new Tab(tabname,this);
+			Tabs.add(tab);
+			TabbedPane.addTab(tab.name,tab);
+		}
 
 		GroupLayout jInternalFrame1Layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(jInternalFrame1Layout);
@@ -75,22 +77,8 @@ class Tab extends JPanel {
 	String name;
 
 	JLabel nameLabel;
-	JButton World1;
-	JButton World2;
-	JButton World3;
-	JButton World4;
-	JButton World5;
-	JButton World6;
-	JButton World7;
-	JButton World8;
-	JTextArea World1decription;
-	JTextArea World2decription;
-	JTextArea World3decription;
-	JTextArea World4decription;
-	JTextArea World5decription;
-	JTextArea World6decription;
-	JTextArea World7decription;
-	JTextArea World8decription;
+	JButton[] worldbuttons = new JButton[8];
+	JTextArea[] worlddescriptions = new JTextArea[8];
 	ActionListener worldHandler;
 
 	public Tab(String name,WorldSelectionWindow window) {
@@ -104,9 +92,7 @@ class Tab extends JPanel {
 				try {
 					try {
 						MainControl.deleteWorld();
-						System.out.println("del");
 					} catch (NullPointerException e2) {
-						System.out.println("notdel");
 					}
 					MainControl.setWorld(WorldLoader.getWorld(name + "/" + ((AbstractButton) e.getSource()).getText()));
 					window.setIcon(true);
@@ -121,124 +107,100 @@ class Tab extends JPanel {
 		nameLabel.setFont(new Font("Tahoma",0,18));
 		nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-		World1decription = new JTextArea("");
-		World1 = new JButton("1");
-		World1.addActionListener(worldHandler);
-
-		World2decription = new JTextArea("");
-		World2 = new JButton("2");
-		World2.addActionListener(worldHandler);
-
-		World3decription = new JTextArea("");
-		World3 = new JButton("3");
-		World3.addActionListener(worldHandler);
-
-		World4decription = new JTextArea("");
-		World4 = new JButton("4");
-		World4.addActionListener(worldHandler);
-
-		World5decription = new JTextArea("");
-		World5 = new JButton("5");
-		World5.addActionListener(worldHandler);
-
-		World6decription = new JTextArea("");
-		World6 = new JButton("6");
-		World6.addActionListener(worldHandler);
-
-		World7decription = new JTextArea("");
-		World7 = new JButton("7");
-		World7.addActionListener(worldHandler);
-
-		World8decription = new JTextArea("");
-		World8 = new JButton("8");
-		World8.addActionListener(worldHandler);
+		for (int i = 1; i <= worldbuttons.length; i++) {
+			worlddescriptions[i - 1] = new JTextArea(WorldLoader.getDescription(name + "/" + i));
+			worldbuttons[i - 1] = new JButton(i + "");
+			worldbuttons[i - 1].setIcon(WorldLoader.getIcon(name + "/" + i));
+			worldbuttons[i - 1].addActionListener(worldHandler);
+		}
 
 		GroupLayout jPanel5Layout = new GroupLayout(this);
 		setLayout(jPanel5Layout);
-		jPanel5Layout.setHorizontalGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-			.addGroup(jPanel5Layout.createSequentialGroup().addContainerGap()
-				.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(nameLabel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)
-					.addGroup(jPanel5Layout.createSequentialGroup().addGroup(
-						jPanel5Layout
-							.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
-							.addGroup(jPanel5Layout.createSequentialGroup().addGap(18,18,18)
-								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
-									.addComponent(World1,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-									.addComponent(World1decription,GroupLayout.PREFERRED_SIZE,120,
-										GroupLayout.PREFERRED_SIZE))
-								.addGap(18,18,18)
-								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
-									.addComponent(World2,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-									.addComponent(World2decription,GroupLayout.PREFERRED_SIZE,120,
-										GroupLayout.PREFERRED_SIZE))
-								.addGap(18,18,18)
-								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
-									.addComponent(World3,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-									.addComponent(World3decription,GroupLayout.PREFERRED_SIZE,120,
-										GroupLayout.PREFERRED_SIZE))
-								.addGap(18,18,18)
-								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,
-									false)
-									.addComponent(World4,GroupLayout.PREFERRED_SIZE,120,
-										GroupLayout.PREFERRED_SIZE)
-									.addComponent(World4decription,GroupLayout.PREFERRED_SIZE,120,
-										GroupLayout.PREFERRED_SIZE))
-								.addGap(18,18,18))
-							.addGroup(jPanel5Layout.createSequentialGroup().addGap(18,18,18)
-								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
-									.addComponent(World5,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-									.addComponent(World5decription,GroupLayout.PREFERRED_SIZE,120,
-										GroupLayout.PREFERRED_SIZE))
-								.addGap(18,18,18)
-								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
-									.addComponent(World6,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-									.addComponent(World6decription,GroupLayout.PREFERRED_SIZE,120,
-										GroupLayout.PREFERRED_SIZE))
-								.addGap(18,18,18)
-								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
-									.addComponent(World7decription,GroupLayout.PREFERRED_SIZE,120,
-										GroupLayout.PREFERRED_SIZE)
-									.addComponent(World7,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE))
-								.addGap(18,18,18)
-								.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
-									.addComponent(World8decription,GroupLayout.PREFERRED_SIZE,120,
-										GroupLayout.PREFERRED_SIZE)
-									.addComponent(World8,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE))))
-						.addContainerGap()))));
-
 		jPanel5Layout
-			.setVerticalGroup(
-				jPanel5Layout
-					.createParallelGroup(
-						GroupLayout.Alignment.LEADING)
-					.addGroup(jPanel5Layout.createSequentialGroup().addContainerGap()
-						.addComponent(nameLabel,GroupLayout.PREFERRED_SIZE,30,GroupLayout.PREFERRED_SIZE)
-						.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-							.addComponent(World1,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-							.addComponent(World2,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-							.addComponent(World3,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-							.addComponent(World4,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.TRAILING,false)
-							.addComponent(World1decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
-							.addComponent(World2decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
-							.addComponent(World3decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
-							.addComponent(World4decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE))
-						.addGap(18,18,18)
-						.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-							.addComponent(World5,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-							.addComponent(World6,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-							.addComponent(World7,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
-							.addComponent(World8,GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE,false)
-							.addComponent(World5decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
-							.addComponent(World6decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
-							.addComponent(World7decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
-							.addComponent(World8decription,GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE))
-						.addContainerGap(15,Short.MAX_VALUE)));
+			.setHorizontalGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(jPanel5Layout.createSequentialGroup().addContainerGap()
+					.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(nameLabel,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE,Short.MAX_VALUE)
+						.addGroup(jPanel5Layout.createSequentialGroup()
+							.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addGroup(jPanel5Layout.createSequentialGroup().addGap(18,18,18)
+									.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+										.addComponent(worldbuttons[0],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE)
+										.addComponent(worlddescriptions[0],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE))
+									.addGap(18,18,18)
+									.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+										.addComponent(worldbuttons[1],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE)
+										.addComponent(worlddescriptions[1],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE))
+									.addGap(18,18,18)
+									.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+										.addComponent(worldbuttons[2],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE)
+										.addComponent(worlddescriptions[2],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE))
+									.addGap(18,18,18)
+									.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+										.addComponent(worldbuttons[3],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE)
+										.addComponent(worlddescriptions[3],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE))
+									.addGap(18,18,18))
+								.addGroup(jPanel5Layout.createSequentialGroup().addGap(18,18,18)
+									.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+										.addComponent(worldbuttons[4],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE)
+										.addComponent(worlddescriptions[4],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE))
+									.addGap(18,18,18)
+									.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+										.addComponent(worldbuttons[5],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE)
+										.addComponent(worlddescriptions[5],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE))
+									.addGap(18,18,18)
+									.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+										.addComponent(worlddescriptions[6],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE)
+										.addComponent(worldbuttons[6],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE))
+									.addGap(18,18,18)
+									.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING,false)
+										.addComponent(worlddescriptions[7],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE)
+										.addComponent(worldbuttons[7],GroupLayout.PREFERRED_SIZE,120,
+											GroupLayout.PREFERRED_SIZE))))
+							.addContainerGap()))));
+
+		jPanel5Layout.setVerticalGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+			.addGroup(jPanel5Layout.createSequentialGroup().addContainerGap()
+				.addComponent(nameLabel,GroupLayout.PREFERRED_SIZE,30,GroupLayout.PREFERRED_SIZE)
+				.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(worldbuttons[0],GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+					.addComponent(worldbuttons[1],GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+					.addComponent(worldbuttons[2],GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+					.addComponent(worldbuttons[3],GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+				.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.TRAILING,false)
+					.addComponent(worlddescriptions[0],GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+					.addComponent(worlddescriptions[1],GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+					.addComponent(worlddescriptions[2],GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+					.addComponent(worlddescriptions[3],GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE))
+				.addGap(18,18,18)
+				.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(worldbuttons[4],GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+					.addComponent(worldbuttons[5],GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+					.addComponent(worldbuttons[6],GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE)
+					.addComponent(worldbuttons[7],GroupLayout.PREFERRED_SIZE,120,GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+				.addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE,false)
+					.addComponent(worlddescriptions[4],GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+					.addComponent(worlddescriptions[5],GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+					.addComponent(worlddescriptions[6],GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE)
+					.addComponent(worlddescriptions[7],GroupLayout.PREFERRED_SIZE,60,Short.MAX_VALUE))
+				.addContainerGap(15,Short.MAX_VALUE)));
 	}
 
 }

@@ -1,0 +1,18 @@
+ordner in 
+	rsc/object pictures/
+erstellen mit dem Tilenamen, dann mit ordnern 
+		- deactivatedanimation 
+		- interactanimation
+		- activatedanimation
+	füllen, die jeweils die animationen von 000.png haben sollten
+Klasse erstellen mit dem Ordnernamen in
+	src/tiles
+hinzufügen zu WorldLoader, damit es aus den Welten laden kann
+bild hinzufügen in 
+	rsc/worlds/Images
+zu ImagePaths hinzufügen in
+	rsc/worlds/Hosting.js
+zu tileoptions hinzufügen in
+	rsc/worlds/WorldCreator.html
+einstellen was gesehen werden kann in formeventlistenerfunction in
+	rsc/worlds/WorldCreator.html

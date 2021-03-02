@@ -1,6 +1,5 @@
 package entitys;
 
-
 import java.awt.Point;
 import java.util.LinkedHashMap;
 
@@ -12,20 +11,19 @@ import abstractclasses.Tile;
 
 import world.World;
 
-
 public class Player extends Entity implements Playercontroll {
 
-	public Player(Point position,Rotation rotation) {
-		super(position,0,0,rotation,2);
+	public Player(Point position, Rotation rotation) {
+		super(position, 0, 0, rotation, 2);
 	}
 
 	@Override
 	public void loadAnimations() {
-		World.load(Rotation.right,Animation.deactivatedanimation,this);
+		World.load(Rotation.right, Animation.deactivatedanimation, this);
 	}
 
 	@Override
-	public void getdata(LinkedHashMap<String,String> List) {
+	public void getdata(LinkedHashMap<String, String> List) {
 
 	}
 
@@ -84,8 +82,6 @@ public class Player extends Entity implements Playercontroll {
 	}
 
 }
-
-
 
 interface Playercontroll {
 

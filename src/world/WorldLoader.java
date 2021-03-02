@@ -1,37 +1,41 @@
 package world;
 
 
+import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import Enums.Signalcolor;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
 import Enums.Cabletype;
 import Enums.Rotation;
-import tiles.*;
-
+import Enums.Signalcolor;
+import entitys.Box;
+import entitys.Player;
 // Diese Library haben wir von https://github.com/stleary/JSON-java
 import json.JSONArray;
 import json.JSONObject;
+import tiles.Computer;
+import tiles.Ende;
+import tiles.Floor;
+import tiles.Förderband;
+import tiles.GewichtsSensor;
+import tiles.Lampe;
+import tiles.Tonne;
+import tiles.Wand;
 
 
 public class WorldLoader {
 
 	public static World getWorld(String name) throws FileNotFoundException {
-		World world;
-		String s = "";
-
-		Scanner sc = new Scanner(new File("rsc/worlds/" + name + ".json"));
-		while (sc.hasNextLine())
-			s += sc.nextLine();
-		JSONObject json = new JSONObject(s);
-
-		world = new World(json.getInt("width"),json.getInt("height"));
-
+		JSONObject json = getJSONOBject(name);
+		World world = new World(json.getInt("width"),json.getInt("height"));
 		JSONArray tiles = json.getJSONArray("tiles");
-		for (int i = 0; i < tiles.length(); i++) {
+
+		for (int i = 0; i < tiles.length(); i++) { // Übersetzer für die Tiles
 			JSONObject tile = (JSONObject) tiles.get(i);
-			// System.out.println(tile);
 			switch (tile.getString("type")) {
 				case "computer":
 					world.setTile(tile.getInt("x"),tile.getInt("y"),
@@ -62,12 +66,52 @@ public class WorldLoader {
 				case "tonne":
 					world.setTile(tile.getInt("x"),tile.getInt("y"),new Tonne());
 				break;
+				case "wand":
+					world.setTile(tile.getInt("x"),tile.getInt("y"),new Wand());
+				break;
+				case "ende":
+					world.setTile(tile.getInt("x"),tile.getInt("y"),new Ende());
+				break;
 				default:
 				break;
 			}
 		}
-	//	world.setTile(11,5,new Schalter(Signalcolor.blue,Cabletype.nos));
+
+		// Entities
+		JSONArray entities = json.getJSONArray("entities");
+		for (int i = 0; i < entities.length(); i++) {
+			JSONObject entity = (JSONObject) entities.get(i);
+			switch (entity.getString("type")) {
+				case "player":
+					world.addEntity(new Player(new Point(entity.getInt("x"),entity.getInt("y")),
+						Rotation.convert(entity.getString("rotation"))));
+				break;
+				case "box":
+					world.addEntity(new Box(entity.getInt("x"),entity.getInt("y")));
+				break;
+			}
+		}
 		return world;
+	}
+
+	public static String getDescription(String name) {
+		try {
+			return getJSONOBject(name).getString("description");
+		} catch (FileNotFoundException fnfe) {
+			return "File Not Found.";
+		}
+	}
+
+	public static Icon getIcon(String name) {
+		return new ImageIcon("rsc/worlds/" + name + ".png");
+	}
+
+	public static JSONObject getJSONOBject(String name) throws FileNotFoundException {
+		String s = "";
+		Scanner sc = new Scanner(new File("rsc/worlds/" + name + ".json"));
+		while (sc.hasNextLine())
+			s += sc.nextLine();
+		return new JSONObject(s);
 	}
 
 }

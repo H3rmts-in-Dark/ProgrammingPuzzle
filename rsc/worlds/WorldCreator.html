@@ -54,7 +54,7 @@
     </head>
 
     <script>
-        const tileoptions = [null, "computer", "default", "förderband", "gewichtssensor", "lampe", "tonne"]
+        const tileoptions = [null, "computer", "default", "ende", "förderband", "gewichtssensor", "lampe", "tonne", "wand"]
         const signalcolors = [null, "red", "green", "blue"]
         const rotations = [null, "up", "down", "left", "right"]
         const cabletypes = ["notype", "n", "o", "s", "w", "no", "ns", "nw", "os", "ow", "sw", "nos", "now", "nsw", "osw", "nosw"]
@@ -111,6 +111,15 @@
             }
         }
 
+        class Entity {
+            constructor(type, x, y, rotation) { // "player", "box"
+                this.type = type
+                this.x = x
+                this.y = y
+                this.rotation = rotation
+            }
+        }
+
         const onclicklistenerpreset = function () {
             // Übersetzt den Click auf dem Bildschirm zu einem Tile
             if (this.tagName == "TD")
@@ -128,8 +137,10 @@
             // Zeigt oder Verbirgt einzelne Formelemente
             switch (document.getElementById("tileoptions").value) {
                 case "null":
+                case "ende":
                 case "tonne":
-                    setVisibilities(true, false, false, true)
+                case "wand":
+                    setVisibilities(false, false, false, true)
                     break
                 case "computer":
                 case "default":
@@ -240,7 +251,7 @@
         function addEntity(Entity) { /* TODO Muss noch gemacht werden*/ }
 
         function exportWorld(name) {
-            document.getElementById("port").value = JSON.stringify(new World(name, world.height, world.width, world.tiles, world.entities))
+            document.getElementById("port").value = JSON.stringify(new World(name, world.height, world.width, world.tiles, world.entities, ""))
         }
 
         function importWorld(newWorld) {

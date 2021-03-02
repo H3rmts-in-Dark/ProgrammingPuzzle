@@ -181,7 +181,7 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	}
 
 	/**
-	 * override to process click events in windowimage
+	 * Override this method to process Click-events in windowimage
 	 * 
 	 * @param point
 	 */
@@ -189,7 +189,9 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	}
 
 	/**
-	 * override to process mousemove events in windowimage leave super.Mousemoved(point);
+	 * <<<<<<< HEAD override to process mousemove events in windowimage leave
+	 * super.Mousemoved(point); ======= Override this method to process MouseMove-events in
+	 * windowimage >>>>>>> master
 	 * 
 	 * @param point
 	 */
@@ -197,7 +199,7 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	}
 
 	/**
-	 * override to process mouseWheelmove events in windowimage
+	 * Override this method to process MouseWheelMove-events in windowimage
 	 * 
 	 * @param direction
 	 */

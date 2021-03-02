@@ -2,7 +2,7 @@
 const http = require("http")
 const fs = require("fs")
 const ImagePaths = ["computer", "default", "favicon", "foerderband-down", "foerderband-left", "foerderband-right", "foerderband-up",
-    "gewichtssensor", "lampe", "schalter", "tonne"]
+    "gewichtssensor", "lampe", "schalter", "tonne", "wand", "ende"]
 
 var WorldCreator = ""
 var Images = {}
