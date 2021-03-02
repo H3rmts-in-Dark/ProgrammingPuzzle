@@ -3,9 +3,11 @@ package tiles;
 import java.util.LinkedHashMap;
 
 import Enums.Animation;
+import Enums.Cabletype;
 import Enums.Height;
 import Enums.Layer;
 import Enums.Rotation;
+import Enums.Signalcolor;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
 import world.World;
@@ -13,7 +15,7 @@ import world.World;
 public class Ende extends Tile {
 
 	public Ende() {
-		super(Height.FLOORHEIGHT, 0, 0, null, null);
+		super(Height.FLOORHEIGHT, 0, 0, Signalcolor.nocolor, Cabletype.notype);
 	}
 
 	@Override
@@ -24,7 +26,6 @@ public class Ende extends Tile {
 
 	@Override
 	public void getdata(LinkedHashMap<String, String> List) {
-
 	}
 
 	@Override

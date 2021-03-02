@@ -84,6 +84,15 @@
             "cabletype": "notype",
             "rotation": "null",
             "speed": ""
+        },
+        {
+            "x": 3,
+            "y": 1,
+            "type": "ende",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
         }
     ],
     "entities": [

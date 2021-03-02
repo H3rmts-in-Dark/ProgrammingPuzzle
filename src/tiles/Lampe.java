@@ -26,7 +26,6 @@ public class Lampe extends Tile {
 
 	@Override
 	public void getdata(LinkedHashMap<String, String> List) {
-
 	}
 
 }

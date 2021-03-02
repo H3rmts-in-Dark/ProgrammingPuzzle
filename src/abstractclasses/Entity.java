@@ -63,7 +63,6 @@ public abstract class Entity implements Constants {
 
 		loadAnimations();
 		triggerAnimation(Animation.deactivatedanimation);
-
 	}
 
 	public abstract void loadAnimations();
