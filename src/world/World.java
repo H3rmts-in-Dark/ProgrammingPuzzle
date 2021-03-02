@@ -29,7 +29,7 @@ public class World implements Constants {
 
 	private ArrayList<Entity> entitylist;
 
-	private Player player;
+	Player player;
 
 	private WorldWindow window;
 
@@ -40,11 +40,6 @@ public class World implements Constants {
 		entitylist = new ArrayList<>();
 
 		fillempty();
-
-		player = new Player(new Point(1,1),Rotation.right);
-
-		addEntity(player);
-
 		window = new WorldWindow(this);
 		programmingWindow = new ProgrammingWindow(this);
 	}

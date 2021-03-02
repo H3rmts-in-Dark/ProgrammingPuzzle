@@ -1,0 +1,269 @@
+{
+    "name": "World 2",
+    "created": "2.3.2021, 22:41:30",
+    "height": 6,
+    "width": 6,
+    "tiles": [
+        {
+            "x": 0,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "os",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 3,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 4,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 5,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "sw",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 1,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 2,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "nos",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 3,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 4,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 5,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "n",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 5,
+            "y": 1,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 5,
+            "y": 2,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 5,
+            "y": 3,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 5,
+            "y": 4,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 5,
+            "y": 5,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "n",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 1,
+            "y": 1,
+            "type": "gewichtssensor",
+            "signalcolor": "blue",
+            "cabletype": "o",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 1,
+            "type": "default",
+            "signalcolor": "blue",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 3,
+            "y": 1,
+            "type": "default",
+            "signalcolor": "blue",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 4,
+            "y": 1,
+            "type": "computer",
+            "signalcolor": "blue",
+            "cabletype": "w",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 1,
+            "y": 2,
+            "type": "ende",
+            "signalcolor": "null",
+            "cabletype": "",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 1,
+            "y": 3,
+            "type": "computer",
+            "signalcolor": "red",
+            "cabletype": "o",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 3,
+            "type": "default",
+            "signalcolor": "red",
+            "cabletype": "sw",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 4,
+            "type": "lampe",
+            "signalcolor": "red",
+            "cabletype": "no",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 3,
+            "y": 3,
+            "type": "tonne",
+            "signalcolor": "null",
+            "cabletype": "",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 3,
+            "y": 4,
+            "type": "default",
+            "signalcolor": "red",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 4,
+            "y": 4,
+            "type": "förderband",
+            "signalcolor": "red",
+            "cabletype": "nw",
+            "rotation": "up",
+            "speed": "1"
+        },
+        {
+            "x": 4,
+            "y": 3,
+            "type": "gewichtssensor",
+            "signalcolor": "red",
+            "cabletype": "s",
+            "rotation": "null",
+            "speed": ""
+        }
+    ],
+    "entities": [
+        {
+            "type": "player",
+            "x": 4,
+            "y": 2,
+            "rotation": "left"
+        }
+    ],
+    "description": "Zweite Welt, in der man mehrmals den Fortbewegungsbefehl benutzen muss."
+}

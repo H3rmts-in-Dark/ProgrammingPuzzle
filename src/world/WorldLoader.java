@@ -1,6 +1,5 @@
 package world;
 
-
 import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,53 +25,52 @@ import tiles.Lampe;
 import tiles.Tonne;
 import tiles.Wand;
 
-
 public class WorldLoader {
 
 	public static World getWorld(String name) throws FileNotFoundException {
 		JSONObject json = getJSONOBject(name);
-		World world = new World(json.getInt("width"),json.getInt("height"));
+		World world = new World(json.getInt("width"), json.getInt("height"));
 		JSONArray tiles = json.getJSONArray("tiles");
 
 		for (int i = 0; i < tiles.length(); i++) { // Übersetzer für die Tiles
 			JSONObject tile = (JSONObject) tiles.get(i);
 			switch (tile.getString("type")) {
-				case "computer":
-					world.setTile(tile.getInt("x"),tile.getInt("y"),
+			case "computer":
+				world.setTile(tile.getInt("x"), tile.getInt("y"),
 						new Computer(Signalcolor.converter(tile.getString("signalcolor")),
-							Cabletype.convert(tile.getString("cabletype"))));
+								Cabletype.convert(tile.getString("cabletype"))));
 				break;
-				case "default":
-					world.setTile(tile.getInt("x"),tile.getInt("y"),
+			case "default":
+				world.setTile(tile.getInt("x"), tile.getInt("y"),
 						new Floor(Signalcolor.converter(tile.getString("signalcolor")),
-							Cabletype.convert(tile.getString("cabletype"))));
+								Cabletype.convert(tile.getString("cabletype"))));
 				break;
-				case "gewichtssensor":
-					world.setTile(tile.getInt("x"),tile.getInt("y"),
+			case "gewichtssensor":
+				world.setTile(tile.getInt("x"), tile.getInt("y"),
 						new GewichtsSensor(Signalcolor.converter(tile.getString("signalcolor")),
-							Cabletype.convert(tile.getString("cabletype"))));
+								Cabletype.convert(tile.getString("cabletype"))));
 				break;
-				case "förderband":
-					world.setTile(tile.getInt("x"),tile.getInt("y"),
-						new Förderband(Rotation.convert(tile.getString("rotation")),tile.getInt("speed"),
-							Signalcolor.converter(tile.getString("signalcolor")),
-							Cabletype.convert(tile.getString("cabletype"))));
+			case "förderband":
+				world.setTile(tile.getInt("x"), tile.getInt("y"),
+						new Förderband(Rotation.convert(tile.getString("rotation")), tile.getInt("speed"),
+								Signalcolor.converter(tile.getString("signalcolor")),
+								Cabletype.convert(tile.getString("cabletype"))));
 				break;
-				case "lampe":
-					world.setTile(tile.getInt("x"),tile.getInt("y"),
+			case "lampe":
+				world.setTile(tile.getInt("x"), tile.getInt("y"),
 						new Lampe(Signalcolor.converter(tile.getString("signalcolor")),
-							Cabletype.convert(tile.getString("cabletype"))));
+								Cabletype.convert(tile.getString("cabletype"))));
 				break;
-				case "tonne":
-					world.setTile(tile.getInt("x"),tile.getInt("y"),new Tonne());
+			case "tonne":
+				world.setTile(tile.getInt("x"), tile.getInt("y"), new Tonne());
 				break;
-				case "wand":
-					world.setTile(tile.getInt("x"),tile.getInt("y"),new Wand());
+			case "wand":
+				world.setTile(tile.getInt("x"), tile.getInt("y"), new Wand());
 				break;
-				case "ende":
-					world.setTile(tile.getInt("x"),tile.getInt("y"),new Ende());
+			case "ende":
+				world.setTile(tile.getInt("x"), tile.getInt("y"), new Ende());
 				break;
-				default:
+			default:
 				break;
 			}
 		}
@@ -82,12 +80,13 @@ public class WorldLoader {
 		for (int i = 0; i < entities.length(); i++) {
 			JSONObject entity = (JSONObject) entities.get(i);
 			switch (entity.getString("type")) {
-				case "player":
-					world.addEntity(new Player(new Point(entity.getInt("x"),entity.getInt("y")),
-						Rotation.convert(entity.getString("rotation"))));
+			case "player":
+				world.player = new Player(new Point(entity.getInt("x"), entity.getInt("y")),
+						Rotation.convert(entity.getString("rotation")));
+				world.addEntity(world.player);
 				break;
-				case "box":
-					world.addEntity(new Box(entity.getInt("x"),entity.getInt("y")));
+			case "box":
+				world.addEntity(new Box(entity.getInt("x"), entity.getInt("y")));
 				break;
 			}
 		}
