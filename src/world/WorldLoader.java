@@ -22,6 +22,7 @@ import tiles.Floor;
 import tiles.Förderband;
 import tiles.GewichtsSensor;
 import tiles.Lampe;
+import tiles.Schalter;
 import tiles.Tonne;
 import tiles.Wand;
 
@@ -70,6 +71,10 @@ public class WorldLoader {
 			case "ende":
 				world.setTile(tile.getInt("x"), tile.getInt("y"), new Ende());
 				break;
+			case "schalter":
+				world.setTile(tile.getInt("x"), tile.getInt("y"),
+						new Schalter(Signalcolor.converter(tile.getString("signalcolor")),
+								Cabletype.convert(tile.getString("cabletype"))));
 			default:
 				break;
 			}

@@ -14,7 +14,7 @@ public enum Cabletype {
 			return s;
 		case "w":
 			return w;
-		case "sn":
+		case "ns":
 			return ns;
 		case "no":
 			return no;
@@ -22,19 +22,19 @@ public enum Cabletype {
 			return nw;
 		case "sw":
 			return sw;
-		case "so":
+		case "os":
 			return os;
-		case "wo":
+		case "ow":
 			return ow;
-		case "nws":
+		case "nsw":
 			return nsw;
 		case "osw":
 			return osw;
-		case "wno":
+		case "now":
 			return now;
 		case "nos":
 			return nos;
-		case "m":
+		case "nosw":
 			return nosw;
 		default:
 			return notype;

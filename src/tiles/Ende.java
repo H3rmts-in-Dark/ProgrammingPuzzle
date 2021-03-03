@@ -10,6 +10,7 @@ import Enums.Rotation;
 import Enums.Signalcolor;
 import abstractclasses.Entity;
 import abstractclasses.Tile;
+import logic.MainControl;
 import world.World;
 
 public class Ende extends Tile {
@@ -30,6 +31,6 @@ public class Ende extends Tile {
 
 	@Override
 	public void onSteppedUpon(Entity entity) {
-		// TODO Hier fehlt die Methode, die alle Fenster schließt, die mit der Welt zu tun haben
+		MainControl.getWorld().delete();
 	}
 }
