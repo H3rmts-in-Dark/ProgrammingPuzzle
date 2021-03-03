@@ -14,7 +14,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 import javax.swing.JInternalFrame;
 import javax.swing.WindowConstants;
@@ -43,7 +42,7 @@ public abstract class CustomWindow extends JInternalFrame implements Comparable<
 	}
 
 	public CustomWindow(int Widht,int Height,Point defaultPosition,String title,int level,boolean def) {
-		super(title + "  " + new Random().nextInt(999),true,true,true,true);
+		super(title,true,true,true,true); // + " " + new Random().nextInt(999)
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setVisible(true);
 		setLocation(defaultPosition.x,defaultPosition.y);

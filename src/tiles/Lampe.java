@@ -16,7 +16,7 @@ import world.World;
 public class Lampe extends Tile {
 
 	public Lampe(Signalcolor signalcolor,Cabletype cabletype) {
-		super(Height.UNPASSABLE,0,-16,signalcolor,cabletype);
+		super(Height.UNPASSABLE,0,-6,signalcolor,cabletype);
 	}
 
 	@Override
