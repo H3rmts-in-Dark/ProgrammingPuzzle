@@ -60,7 +60,7 @@ public class Frame implements Constants {
 	}
 
 	public static Dimension getMaxDimension() {
-		return new Dimension(900,800); // frame.getGraphicsConfiguration().getBounds().getSize();
+		return frame.getGraphicsConfiguration().getBounds().getSize();// new Dimension(900,800);
 	}
 
 	public static int getWidth() {
