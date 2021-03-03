@@ -84,6 +84,7 @@ public class ProgrammingWindow extends CustomWindow {
 	private JCheckBoxMenuItem MenuBarPreferencesItem2;
 	private JCheckBoxMenuItem MenuBarPreferencesItem3;
 	private JMenuItem MenuBarFileItem1;
+	private JMenuItem MenuBarFileItem3;
 	private JMenuItem MenuBarFileItem4;
 	/* ================================================================= */
 	private JTabbedPane TabbedPane;
@@ -175,6 +176,11 @@ public class ProgrammingWindow extends CustomWindow {
 		return addTab;
 	}
 
+	public void deleteTab(Tab tab) {
+		Tabs.remove(tab);
+		TabbedPane.remove(tab);
+	}
+
 	public void GenerateMenuBar(Actionlist actions,Tab tab) {
 		MenuBar = new JMenuBar();
 
@@ -190,6 +196,11 @@ public class ProgrammingWindow extends CustomWindow {
 		MenuBarFileItem2.setText("Open File");
 		addListener(MenuBarFileItem2,this,tab);
 		MenuBarFile.add(MenuBarFileItem2);
+
+		MenuBarFileItem3 = new JMenuItem();
+		MenuBarFileItem3.setText("Close Tab");
+		addListener(MenuBarFileItem3,this,tab);
+		MenuBarFile.add(MenuBarFileItem3);
 
 		MenuBarFileItem4 = new JMenuItem();
 		MenuBarFileItem4.setText("Save File as");
@@ -359,6 +370,16 @@ public class ProgrammingWindow extends CustomWindow {
 
 	public JLabel getRunningLabel() {
 		return RunningLabel;
+	}
+
+	public void close() {
+		System.out.println("closing programming window");
+		for (Tab tab : Tabs) {
+			try {
+				tab.getInterpretter().interrupt();
+			} catch (NullPointerException e) {
+			}
+		}
 	}
 
 }
@@ -854,6 +875,9 @@ class Listener implements ActionListener {
 				} catch (FileNotFoundException | BadLocationException e1) {
 					e1.printStackTrace();
 				}
+			break;
+			case "Close Tab":
+				window.deleteTab(tab);
 			break;
 			case "Save File as":
 				final JFileChooser fc1 = new JFileChooser(new File("rsc/saves/"));

@@ -29,7 +29,6 @@ public class Player extends Entity implements Playercontroll {
 
 	@Override
 	public void getdata(LinkedHashMap<String,String> List) {
-
 	}
 
 	@Override

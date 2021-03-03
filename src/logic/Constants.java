@@ -22,7 +22,7 @@ public interface Constants {
 	public static final Float MAXZOOM = 2.8f;
 	public static final Float MINZOOM = 0.4f;
 
-	public static final String CROSS_COLOR = "red";
+	public static final String CROSS_COLOR = "green";
 
 	/**
 	 * SCALE_FAST: Ist nicht so schön, benötigt aber weniger RAM und dauert lönger um nach dem
