@@ -126,7 +126,7 @@ public class Interpreter {
 	 */
 	@SuppressWarnings({"incomplete-switch","null"})
 	public static void interpretblock(CustStr text) throws CustomExeption,InterruptedException {
-		if (text.val.isBlank()) {
+		if (text.val.isBlank() || Thread.interrupted()) {
 			text.val = "";
 			return;
 		}

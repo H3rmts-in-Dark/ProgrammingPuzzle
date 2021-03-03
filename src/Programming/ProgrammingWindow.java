@@ -376,7 +376,9 @@ public class ProgrammingWindow extends CustomWindow {
 		System.out.println("closing programming window");
 		for (Tab tab : Tabs) {
 			try {
+				System.out.println("cl");
 				tab.getInterpretter().interrupt();
+				System.out.println("closed");
 			} catch (NullPointerException e) {
 			}
 		}
