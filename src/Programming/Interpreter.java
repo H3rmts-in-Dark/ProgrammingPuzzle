@@ -81,29 +81,23 @@ public class Interpreter {
 		variables = new VariableList();
 
 		methods.addMethod(new print(output));
-
 		methods.addMethod(new printerr(output));
-
 		methods.addMethod(new toString());
-
 		methods.addMethod(new delay());
-
 		methods.addMethod(new exit());
-
 		methods.addMethod(new loopbreak());
 
+		methods.addMethod(new playermove(player));
+		methods.addMethod(new changeplayerrotation(player));
+		methods.addMethod(new playerinteract(player));
 		methods.addMethod(new getplayerrotation(player));
 		methods.addMethod(new getplayerx(player));
 		methods.addMethod(new getplayery(player));
 		methods.addMethod(new getblockactivated(player));
 		methods.addMethod(new getblocksolid(player));
+		methods.addMethod(new playerturn(player));
 
-		methods.addMethod(new playermove(player));
-
-		methods.addMethod(new changeplayerrotation(player));
-
-		methods.addMethod(new playerinteract(player));
-
+		System.out.println("Player: " + player);
 		Interpreter.log = log;
 		System.out.println("log:" + log.getText());
 	}

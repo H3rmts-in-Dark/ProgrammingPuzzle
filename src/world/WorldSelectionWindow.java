@@ -91,7 +91,7 @@ class Tab extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					try {
-						MainControl.deleteWorld();
+						MainControl.getWorld().delete();
 					} catch (NullPointerException e2) {
 					}
 					MainControl.setWorld(WorldLoader.getWorld(name + "/" + ((AbstractButton) e.getSource()).getText()));

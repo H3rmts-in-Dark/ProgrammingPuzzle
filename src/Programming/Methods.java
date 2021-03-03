@@ -415,7 +415,27 @@ class playerinteract extends Method {
 
 }
 
+class playerturn extends Method {
 
+	Player player;
+
+	public playerturn(Player player) {
+		super(Datatypes.notype,Datatypes.MY_String);
+		this.player = player;
+	}
+
+	@Override
+	Variable<?> runCode(Variable<?>...parameters) {
+		player.turn((String) parameters[0].getValue());
+		return null;
+	}
+
+	@Override
+	String getDescription() {
+		return "changes the Rotation of the player to x";
+	}
+
+}
 
 class MethodList extends ArrayList<Method> {
 

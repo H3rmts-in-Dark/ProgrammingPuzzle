@@ -1,0 +1,416 @@
+{
+    "name": "Name",
+    "created": "3.3.2021, 01:46:26",
+    "height": 8,
+    "width": 9,
+    "tiles": [
+        {
+            "x": 0,
+            "y": 7,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "n",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 6,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 5,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 4,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 3,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 2,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 1,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "os",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 3,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 4,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 5,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 6,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 7,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ow",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 8,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "sw",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 8,
+            "y": 1,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 8,
+            "y": 2,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "nsw",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 8,
+            "y": 3,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 8,
+            "y": 4,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 8,
+            "y": 5,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 8,
+            "y": 6,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 8,
+            "y": 7,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "n",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 1,
+            "y": 2,
+            "type": "förderband",
+            "signalcolor": "blue",
+            "cabletype": "o",
+            "rotation": "right",
+            "speed": "1"
+        },
+        {
+            "x": 2,
+            "y": 2,
+            "type": "förderband",
+            "signalcolor": "blue",
+            "cabletype": "ow",
+            "rotation": "right",
+            "speed": "1"
+        },
+        {
+            "x": 3,
+            "y": 2,
+            "type": "förderband",
+            "signalcolor": "blue",
+            "cabletype": "ow",
+            "rotation": "right",
+            "speed": "1"
+        },
+        {
+            "x": 4,
+            "y": 2,
+            "type": "förderband",
+            "signalcolor": "blue",
+            "cabletype": "ow",
+            "rotation": "right",
+            "speed": "1"
+        },
+        {
+            "x": 5,
+            "y": 2,
+            "type": "förderband",
+            "signalcolor": "blue",
+            "cabletype": "ow",
+            "rotation": "right",
+            "speed": "1"
+        },
+        {
+            "x": 7,
+            "y": 2,
+            "type": "null",
+            "signalcolor": "null",
+            "cabletype": "o",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 6,
+            "y": 3,
+            "type": "förderband",
+            "signalcolor": "blue",
+            "cabletype": "ns",
+            "rotation": "down",
+            "speed": "1"
+        },
+        {
+            "x": 6,
+            "y": 4,
+            "type": "förderband",
+            "signalcolor": "blue",
+            "cabletype": "ns",
+            "rotation": "down",
+            "speed": "1"
+        },
+        {
+            "x": 6,
+            "y": 5,
+            "type": "förderband",
+            "signalcolor": "blue",
+            "cabletype": "ns",
+            "rotation": "down",
+            "speed": "1"
+        },
+        {
+            "x": 6,
+            "y": 6,
+            "type": "förderband",
+            "signalcolor": "blue",
+            "cabletype": "nw",
+            "rotation": "down",
+            "speed": "1"
+        },
+        {
+            "x": 4,
+            "y": 6,
+            "type": "tonne",
+            "signalcolor": "null",
+            "cabletype": "w",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 3,
+            "y": 6,
+            "type": "tonne",
+            "signalcolor": "null",
+            "cabletype": "o",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 6,
+            "type": "lampe",
+            "signalcolor": "red",
+            "cabletype": "n",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 5,
+            "type": "computer",
+            "signalcolor": "red",
+            "cabletype": "ns",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 4,
+            "type": "gewichtssensor",
+            "signalcolor": "red",
+            "cabletype": "os",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 3,
+            "y": 4,
+            "type": "förderband",
+            "signalcolor": "red",
+            "cabletype": "ow",
+            "rotation": "left",
+            "speed": "1"
+        },
+        {
+            "x": 4,
+            "y": 4,
+            "type": "förderband",
+            "signalcolor": "red",
+            "cabletype": "w",
+            "rotation": "left",
+            "speed": "1"
+        },
+        {
+            "x": 5,
+            "y": 6,
+            "type": "lampe",
+            "signalcolor": "blue",
+            "cabletype": "o",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 6,
+            "y": 2,
+            "type": "schalter",
+            "signalcolor": "blue",
+            "cabletype": "sw",
+            "rotation": "null",
+            "speed": "1"
+        },
+        {
+            "x": 3,
+            "y": 5,
+            "type": "ende",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        }
+    ],
+    "entities": [
+        {
+            "type": "player",
+            "x": 1,
+            "y": 1,
+            "rotation": "right"
+        },
+        {
+            "type": "box",
+            "x": 3,
+            "y": 2,
+            "rotation": ""
+        },
+        {
+            "type": "box",
+            "x": 6,
+            "y": 4,
+            "rotation": ""
+        }
+    ],
+    "description": "While Schleifen"
+}

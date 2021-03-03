@@ -25,20 +25,15 @@ public class MainControl {
 		return gameTicker;
 	}
 
-	public static void deleteWorld() {
-		world.delete();
-	}
-
 	public static void setWorld(World world) {
 		MainControl.world = world;
-	}
-	
-	public static World getWorld() {
-		return world;
 	}
 
 	public static void createWorldselectionWindow() {
 		new WorldSelectionWindow();
 	}
 
+	public static World getWorld() {
+		return world;
+	}
 }

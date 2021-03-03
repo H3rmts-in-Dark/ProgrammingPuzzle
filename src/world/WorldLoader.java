@@ -23,6 +23,7 @@ import tiles.Floor;
 import tiles.Förderband;
 import tiles.GewichtsSensor;
 import tiles.Lampe;
+import tiles.Schalter;
 import tiles.Tonne;
 import tiles.Wand;
 
@@ -72,7 +73,10 @@ public class WorldLoader {
 				case "ende":
 					world.setTile(tile.getInt("x"),tile.getInt("y"),new Ende());
 				break;
-				default:
+				case "schalter":
+					world.setTile(tile.getInt("x"),tile.getInt("y"),
+						new Schalter(Signalcolor.converter(tile.getString("signalcolor")),
+							Cabletype.convert(tile.getString("cabletype"))));
 				break;
 			}
 		}
@@ -83,8 +87,9 @@ public class WorldLoader {
 			JSONObject entity = (JSONObject) entities.get(i);
 			switch (entity.getString("type")) {
 				case "player":
-					world.addEntity(new Player(new Point(entity.getInt("x"),entity.getInt("y")),
-						Rotation.convert(entity.getString("rotation"))));
+					world.player = new Player(new Point(entity.getInt("x"),entity.getInt("y")),
+						Rotation.convert(entity.getString("rotation")));
+					world.addEntity(world.player);
 				break;
 				case "box":
 					world.addEntity(new Box(entity.getInt("x"),entity.getInt("y")));

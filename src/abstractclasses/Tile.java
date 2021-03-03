@@ -37,7 +37,7 @@ public abstract class Tile implements Constants {
 
 	private int ticksperimagechange;
 
-	private HashMap<Rotation,HashMap<Animation,ArrayList<String>>> objektanimations = new HashMap<>();
+	protected HashMap<Rotation,HashMap<Animation,ArrayList<String>>> objektanimations = new HashMap<>();
 	private HashMap<Layer,HashMap<Animation,String>> pictures = new HashMap<>();
 
 	protected HashMap<Layer,Animation> animations = new HashMap<>();

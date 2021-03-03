@@ -17,7 +17,7 @@ import world.World;
 public class Schalter extends Tile {
 
 	public Schalter(Signalcolor signalcolor,Cabletype cabletype) {
-		super(Height.FLOORHEIGHT,0,-10,signalcolor,cabletype);
+		super(Height.UNPASSABLE,0,-10,signalcolor,cabletype);
 	}
 
 	@Override

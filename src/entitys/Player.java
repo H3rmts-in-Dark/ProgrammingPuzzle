@@ -20,6 +20,9 @@ public class Player extends Entity implements Playercontroll {
 	@Override
 	public void loadAnimations() {
 		World.load(Rotation.right, Animation.deactivatedanimation, this);
+		World.load(Rotation.left, Animation.deactivatedanimation, this);
+		World.load(Rotation.up, Animation.deactivatedanimation, this);
+		World.load(Rotation.down, Animation.deactivatedanimation, this);
 	}
 
 	@Override
@@ -54,15 +57,15 @@ public class Player extends Entity implements Playercontroll {
 	public String getBlockSolid() {
 		Tile t = super.getBlock();
 		if (t != null && (Height.getint(t.getHeight()) <= Height.getint(super.getHeight())))
-			return String.valueOf(true);
-		return String.valueOf(false);
+			return String.valueOf(false);
+		return String.valueOf(true);
 	}
 
 	@Override
 	public void move(int s) {
-		for (int i = 0; i < s; i++) {
-			super.move();
-		}
+		for (int i = 0; i < s; i++)
+			if (!Boolean.parseBoolean(getBlockSolid()))
+				super.move();
 	}
 
 	@Override
@@ -77,8 +80,42 @@ public class Player extends Entity implements Playercontroll {
 		Tile tile = getBlock();
 		if (tile != null)
 			tile.onInteract(this);
-	//	else
-	//		throw new MethodNotFoundExeption(firs,line);
+		// else
+		// throw new MethodNotFoundExeption(firs,line);
+	}
+
+	@Override
+	public void turn(String s) {
+		if (!(s == "right" || s == "left"))
+			return;
+		switch (rotation) {
+		case down:
+			if (s == "right")
+				rotation = Rotation.left;
+			else
+				rotation = Rotation.right;
+			break;
+		case left:
+			if (s == "right")
+				rotation = Rotation.up;
+			else
+				rotation = Rotation.down;
+			break;
+		case right:
+			if (s == "right")
+				rotation = Rotation.down;
+			else
+				rotation = Rotation.up;
+			break;
+		case up:
+			if (s == "right")
+				rotation = Rotation.right;
+			else
+				rotation = Rotation.left;
+			break;
+		case norotation:
+			break;
+		}
 	}
 
 }
@@ -100,5 +137,7 @@ interface Playercontroll {
 	void changeRotation(String s);
 
 	void interact();
+
+	void turn(String s);
 
 }

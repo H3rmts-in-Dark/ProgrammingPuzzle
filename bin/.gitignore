@@ -1,7 +1,15 @@
+/Programming/
+/abstractclasses/
+/entitys/
 /frame/
+/json/
+/logic/
+/start/
+/tasks/
 /tiles/
 /world/
 /Enums/
+<<<<<<< HEAD
 /Programming/
 /logic/
 /abstractclasses/
@@ -9,3 +17,5 @@
 /json/
 /start/
 /tasks/
+=======
+>>>>>>> main/MID
