@@ -432,7 +432,7 @@ class playerturn extends Method {
 
 	@Override
 	String getDescription() {
-		return "changes the Rotation of the player to x";
+		return "rotates the player in x dir";
 	}
 
 }

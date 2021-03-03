@@ -1,6 +1,7 @@
 
 package abstractclasses;
 
+
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -17,9 +18,10 @@ import tasks.MoveEntityTask;
 import world.Images;
 import world.World;
 
+
 /**
- * Die Grundklasse aller Entities. Um als ein Entity klassifiziert zu werden,
- * muss das Objekt / Lebewesen sich bewegen k�nnen.
+ * Die Grundklasse aller Entities. Um als ein Entity klassifiziert zu werden, muss das
+ * Objekt / Lebewesen sich bewegen k�nnen.
  */
 
 public abstract class Entity implements Constants {
@@ -33,7 +35,7 @@ public abstract class Entity implements Constants {
 
 	private int ticksperimagechange;
 
-	public HashMap<Rotation, HashMap<Animation, ArrayList<String>>> animations = new HashMap<>();
+	public HashMap<Rotation,HashMap<Animation,ArrayList<String>>> animations = new HashMap<>();
 
 	protected Animation actualanimation = null;
 	protected int actualanimationcounter = 0;
@@ -44,14 +46,14 @@ public abstract class Entity implements Constants {
 	private World world;
 
 	protected Entity(Point position) {
-		this(position, 0, 0);
+		this(position,0,0);
 	}
 
-	protected Entity(Point position, int relativedrawX, int relativedrawY) {
-		this(position, relativedrawX, relativedrawY, Rotation.norotation, DEFAULTIMAGECHANGETICKDELAY);
+	protected Entity(Point position,int relativedrawX,int relativedrawY) {
+		this(position,relativedrawX,relativedrawY,Rotation.norotation,DEFAULTIMAGECHANGETICKDELAY);
 	}
 
-	protected Entity(Point position, int relativedrawX, int relativedrawY, Rotation rotation, int ticksperimagechange) {
+	protected Entity(Point position,int relativedrawX,int relativedrawY,Rotation rotation,int ticksperimagechange) {
 		setHeight(Height.UNPASSABLE);
 		this.relativedrawX = relativedrawX;
 		this.relativedrawY = relativedrawY;
@@ -65,7 +67,7 @@ public abstract class Entity implements Constants {
 
 	public abstract void loadAnimations();
 
-	public abstract void getdata(LinkedHashMap<String, String> List);
+	public abstract void getdata(LinkedHashMap<String,String> List);
 
 	public void setPixelPosition(Point position) {
 		this.pixelposition = position;
@@ -88,11 +90,11 @@ public abstract class Entity implements Constants {
 	}
 
 	public void setPosition(Point position) {
-		this.pixelposition = new Point(position.x * DEFAULTIMAGEWIDHTHEIGHT, position.y * DEFAULTIMAGEWIDHTHEIGHT);
+		this.pixelposition = new Point(position.x * DEFAULTIMAGEWIDHTHEIGHT,position.y * DEFAULTIMAGEWIDHTHEIGHT);
 	}
 
 	public Point getPosition() {
-		return new Point(pixelposition.x / DEFAULTIMAGEWIDHTHEIGHT, pixelposition.y / DEFAULTIMAGEWIDHTHEIGHT);
+		return new Point(pixelposition.x / DEFAULTIMAGEWIDHTHEIGHT,pixelposition.y / DEFAULTIMAGEWIDHTHEIGHT);
 	}
 
 	public int getRelativedrawX() {
@@ -134,9 +136,9 @@ public abstract class Entity implements Constants {
 		actualanimationcounter++;
 	}
 
-	public void startmove(int ticksperimagechange, Rotation rotation) {
+	public void startmove(int ticksperimagechange,Rotation rotation) {
 		if (movetask == null || movetask.getEnded())
-			movetask = new MoveEntityTask(ticksperimagechange, this, rotation, true);
+			movetask = new MoveEntityTask(ticksperimagechange,this,rotation,true);
 	}
 
 	public void move() {
@@ -147,7 +149,7 @@ public abstract class Entity implements Constants {
 				} catch (InterruptedException e) {
 				}
 			}
-		movetask = new MoveEntityTask(ticksperimagechange, this, rotation, false);
+		movetask = new MoveEntityTask(ticksperimagechange,this,rotation,false);
 		while (!movetask.getEnded()) {
 			try {
 				Thread.sleep(50);
@@ -158,32 +160,32 @@ public abstract class Entity implements Constants {
 
 	public void move(Rotation direction) {
 		switch (direction) {
-		case down:
-			pixelposition.y++;
+			case down:
+				pixelposition.y++;
 			break;
-		case left:
-			pixelposition.x--;
+			case left:
+				pixelposition.x--;
 			break;
-		case right:
-			pixelposition.x++;
+			case right:
+				pixelposition.x++;
 			break;
-		case up:
-			pixelposition.y--;
+			case up:
+				pixelposition.y--;
 			break;
-		case norotation:
+			case norotation:
 			break;
 		}
 	}
 
 	public Tile getBlock() {
 		if (getPosition().x > 0 && rotation == Rotation.left)
-			return world.getTile(getPosition().x - 1, getPosition().y);
+			return world.getTile(getPosition().x - 1,getPosition().y);
 		if (getPosition().y > 0 && rotation == Rotation.up)
-			return world.getTile(getPosition().x, getPosition().y - 1);
+			return world.getTile(getPosition().x,getPosition().y - 1);
 		if (getPosition().x < world.getWidth() - 1 && rotation == Rotation.right)
-			return world.getTile(getPosition().x + 1, getPosition().y);
+			return world.getTile(getPosition().x + 1,getPosition().y);
 		if (getPosition().y < world.getHeight() - 1 && rotation == Rotation.down)
-			return world.getTile(getPosition().x, getPosition().y + 1);
+			return world.getTile(getPosition().x,getPosition().y + 1);
 		return null;
 	}
 
@@ -194,8 +196,8 @@ public abstract class Entity implements Constants {
 			task.end();
 		} catch (NullPointerException e) {
 		}
-		task = new ChangeEntityImageTask(ticksperimagechange, this, animations.get(rotation).get(animation).size() - 1,
-				animation);
+		task = new ChangeEntityImageTask(ticksperimagechange,this,animations.get(rotation).get(animation).size() - 1,
+			animation);
 	}
 
 }

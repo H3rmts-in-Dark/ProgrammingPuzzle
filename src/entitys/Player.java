@@ -1,5 +1,6 @@
 package entitys;
 
+
 import java.awt.Point;
 import java.util.LinkedHashMap;
 
@@ -11,22 +12,23 @@ import abstractclasses.Tile;
 
 import world.World;
 
+
 public class Player extends Entity implements Playercontroll {
 
-	public Player(Point position, Rotation rotation) {
-		super(position, 0, 0, rotation, 2);
+	public Player(Point position,Rotation rotation) {
+		super(position,0,0,rotation,1);
 	}
 
 	@Override
 	public void loadAnimations() {
-		World.load(Rotation.right, Animation.deactivatedanimation, this);
-		World.load(Rotation.left, Animation.deactivatedanimation, this);
-		World.load(Rotation.up, Animation.deactivatedanimation, this);
-		World.load(Rotation.down, Animation.deactivatedanimation, this);
+		World.load(Rotation.right,Animation.deactivatedanimation,this);
+		World.load(Rotation.left,Animation.deactivatedanimation,this);
+		World.load(Rotation.up,Animation.deactivatedanimation,this);
+		World.load(Rotation.down,Animation.deactivatedanimation,this);
 	}
 
 	@Override
-	public void getdata(LinkedHashMap<String, String> List) {
+	public void getdata(LinkedHashMap<String,String> List) {
 
 	}
 
@@ -86,39 +88,41 @@ public class Player extends Entity implements Playercontroll {
 
 	@Override
 	public void turn(String s) {
-		if (!(s == "right" || s == "left"))
+		if (!(s.equals("right") || s.equals("left")))
 			return;
 		switch (rotation) {
-		case down:
-			if (s == "right")
-				rotation = Rotation.left;
-			else
-				rotation = Rotation.right;
+			case down:
+				if (s.equals("right"))
+					setRotation(Rotation.left);
+				else
+					setRotation(Rotation.right);
 			break;
-		case left:
-			if (s == "right")
-				rotation = Rotation.up;
-			else
-				rotation = Rotation.down;
+			case left:
+				if (s.equals("right"))
+					setRotation(Rotation.up);
+				else
+					setRotation(Rotation.down);
 			break;
-		case right:
-			if (s == "right")
-				rotation = Rotation.down;
-			else
-				rotation = Rotation.up;
+			case right:
+				if (s.equals("right"))
+					setRotation(Rotation.down);
+				else
+					setRotation(Rotation.up);
 			break;
-		case up:
-			if (s == "right")
-				rotation = Rotation.right;
-			else
-				rotation = Rotation.left;
+			case up:
+				if (s.equals("right"))
+					setRotation(Rotation.right);
+				else
+					setRotation(Rotation.left);
 			break;
-		case norotation:
+			case norotation:
 			break;
 		}
 	}
 
 }
+
+
 
 interface Playercontroll {
 
