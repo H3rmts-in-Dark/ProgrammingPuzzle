@@ -33,7 +33,6 @@ public class Computer extends Tile {
 
 	@Override
 	public void getdata(LinkedHashMap<String, String> list) {
-
 	}
 
 }

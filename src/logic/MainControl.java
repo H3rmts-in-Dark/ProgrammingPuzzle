@@ -32,6 +32,10 @@ public class MainControl {
 	public static void setWorld(World world) {
 		MainControl.world = world;
 	}
+	
+	public static World getWorld() {
+		return world;
+	}
 
 	public static void createWorldselectionWindow() {
 		new WorldSelectionWindow();
