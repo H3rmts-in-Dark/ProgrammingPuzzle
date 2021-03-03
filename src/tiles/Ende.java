@@ -24,11 +24,10 @@ public class Ende extends Tile {
 
 	@Override
 	public void getdata(LinkedHashMap<String, String> List) {
-
 	}
 
 	@Override
 	public void onSteppedUpon(Entity entity) {
-		// TODO Hier fehlt die Methode, die alle Fenster schließt, die mit der Welt zu tun haben
+		System.out.println("Finished Level");
 	}
 }

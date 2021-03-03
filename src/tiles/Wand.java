@@ -27,6 +27,7 @@ public class Wand extends Tile {
 
 	@Override
 	public void getdata(LinkedHashMap<String,String> List) {
+
 	}
 
 }

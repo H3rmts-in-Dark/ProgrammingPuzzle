@@ -14,7 +14,7 @@ public enum Layer {
 	/**
 	 * load with loadAnimation not with loadPicture
 	 */
-	Objects,Entitys,
+	Objects,
 	/**
 	 * load with loadPicture can be more than 1
 	 */

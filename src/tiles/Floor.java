@@ -19,12 +19,10 @@ public class Floor extends Tile {
 	@Override
 	public void loadAnimations() {
 		World.load(Layer.Floor, Animation.noanimation, this, "Default");
-		World.load(Layer.Floor, Animation.noanimation, this, "Default");
 	}
 
 	@Override
 	public void getdata(LinkedHashMap<String, String> list) {
-		list.put("Hehe", "LLuuul");
 	}
 
 }

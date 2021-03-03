@@ -9,7 +9,7 @@ import abstractclasses.Tile;
 
 public class Empty extends Tile {
 
-	protected Empty() {
+	public Empty() {
 		super(Height.UNPASSABLE, 0, 0, Signalcolor.nocolor, Cabletype.notype);
 	}
 

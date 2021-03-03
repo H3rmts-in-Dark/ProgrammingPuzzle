@@ -92,7 +92,17 @@ public class Interpreter {
 
 		methods.addMethod(new loopbreak());
 
+		methods.addMethod(new getplayerrotation(player));
+		methods.addMethod(new getplayerx(player));
+		methods.addMethod(new getplayery(player));
+		methods.addMethod(new getblockactivated(player));
+		methods.addMethod(new getblocksolid(player));
+
 		methods.addMethod(new playermove(player));
+
+		methods.addMethod(new changeplayerrotation(player));
+
+		methods.addMethod(new playerinteract(player));
 
 		Interpreter.log = log;
 		System.out.println("log:" + log.getText());

@@ -95,6 +95,7 @@ class Tab extends JPanel {
 					} catch (NullPointerException e2) {
 					}
 					MainControl.setWorld(WorldLoader.getWorld(name + "/" + ((AbstractButton) e.getSource()).getText()));
+					MainControl.getWorld().show();
 					window.setIcon(true);
 				} catch (FileNotFoundException | PropertyVetoException e1) {
 					System.err.println(e1.getMessage());
@@ -112,6 +113,7 @@ class Tab extends JPanel {
 			worldbuttons[i - 1] = new JButton(i + "");
 			worldbuttons[i - 1].setIcon(WorldLoader.getIcon(name + "/" + i));
 			worldbuttons[i - 1].addActionListener(worldHandler);
+			worldbuttons[i - 1].setFont(new Font("Tahoma",0,13));
 		}
 
 		GroupLayout jPanel5Layout = new GroupLayout(this);
