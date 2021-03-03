@@ -1,0 +1,242 @@
+{
+    "name": "World 4",
+    "created": "3.3.2021,08:40:50",
+    "height": 6,
+    "width": 7,
+    "tiles": [
+        {
+            "x": 0,
+            "y": 5,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 4,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 3,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 2,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 1,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 0,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 3,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 4,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 5,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 6,
+            "y": 0,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 6,
+            "y": 1,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 6,
+            "y": 2,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 6,
+            "y": 3,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 6,
+            "y": 4,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 6,
+            "y": 5,
+            "type": "wand",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 2,
+            "type": "gewichtssensor",
+            "signalcolor": "blue",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 3,
+            "y": 2,
+            "type": "computer",
+            "signalcolor": "blue",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 4,
+            "y": 2,
+            "type": "lampe",
+            "signalcolor": "blue",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 2,
+            "y": 4,
+            "type": "förderband",
+            "signalcolor": "red",
+            "cabletype": "notype",
+            "rotation": "right",
+            "speed": "1"
+        },
+        {
+            "x": 3,
+            "y": 4,
+            "type": "gewichtssensor",
+            "signalcolor": "red",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        },
+        {
+            "x": 4,
+            "y": 4,
+            "type": "förderband",
+            "signalcolor": "red",
+            "cabletype": "notype",
+            "rotation": "left",
+            "speed": "1"
+        },
+        {
+            "x": 5,
+            "y": 4,
+            "type": "förderband",
+            "signalcolor": "red",
+            "cabletype": "notype",
+            "rotation": "left",
+            "speed": "1"
+        },
+        {
+            "x": 5,
+            "y": 5,
+            "type": "ende",
+            "signalcolor": "null",
+            "cabletype": "notype",
+            "rotation": "null",
+            "speed": ""
+        }
+    ],
+    "entities": [
+        {
+            "type": "player",
+            "x": 5,
+            "y": 1,
+            "rotation": "down"
+        }
+    ],
+    "description": "Vierte World."
+}
